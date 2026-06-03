@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage';
 import DetalleAnimalPage from './pages/DetalleAnimalPage';
 import AnimalesPage from './pages/AnimalesPage';
 import AdopcionesPage from './pages/AdopcionesPage';
+import AcogidasPage from './pages/AcogidasPage';
 import UsuariosPage from './pages/UsuariosPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -73,7 +74,7 @@ function AppShell() {
           : <PlaceholderPage titulo="Sin acceso" icon="🔒" />;
 
       case 'acogidas':
-        return <PlaceholderPage titulo="Acogidas" icon="🏡" />;
+        return <AcogidasPage />;
 
       case 'voluntarios':
         return <UsuariosPage />;

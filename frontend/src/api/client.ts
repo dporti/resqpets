@@ -64,6 +64,30 @@ export const api = {
     request('PUT', `/usuarios/${id}`, data),
   deleteUsuario: (id: number) => request('DELETE', `/usuarios/${id}`),
 
+  // Acogidas — Familias
+  getFamilias: (params?: Record<string, string>) => {
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return request<import('../types').FosterFamily[]>('GET', `/acogidas/familias${qs}`);
+  },
+  getFamilia: (id: number) => request<import('../types').FosterFamily>('GET', `/acogidas/familias/${id}`),
+  createFamilia: (data: object) => request<import('../types').FosterFamily>('POST', '/acogidas/familias', data),
+  updateFamilia: (id: number, data: object) => request<import('../types').FosterFamily>('PUT', `/acogidas/familias/${id}`, data),
+  asignarAnimal: (familiaId: number, data: object) =>
+    request<import('../types').FosterAssignment>('POST', `/acogidas/familias/${familiaId}/asignar`, data),
+
+  // Acogidas — Activas / historial
+  getActivas: () => request<import('../types').FosterAssignment[]>('GET', '/acogidas/activas'),
+  getHistorial: (params?: Record<string, string>) => {
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return request<import('../types').FosterAssignment[]>('GET', `/acogidas/historial${qs}`);
+  },
+  getContactos: (assignmentId: number) =>
+    request<import('../types').FosterContact[]>('GET', `/acogidas/assignments/${assignmentId}/contactos`),
+  createContacto: (assignmentId: number, data: object) =>
+    request<import('../types').FosterContact>('POST', `/acogidas/assignments/${assignmentId}/contacto`, data),
+  finalizarAcogida: (assignmentId: number, data: object) =>
+    request<{ ok: boolean }>('POST', `/acogidas/assignments/${assignmentId}/finalizar`, data),
+
   // Adopciones — Solicitudes
   getSolicitudes: (params?: Record<string, string>) => {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';

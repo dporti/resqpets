@@ -231,6 +231,94 @@ export interface AdoptionExpedient {
   completed_at?: string;
 }
 
+export type FamilyStatus = 'available' | 'full' | 'paused' | 'inactive';
+
+export interface FosterFamily {
+  id: number;
+  refugio_id: number;
+  nombre: string;
+  email?: string;
+  telefono?: string;
+  direccion?: string;
+  ciudad?: string;
+  zona?: string;
+  max_animales: number;
+  animales_actuales: number;
+  acepta_perros: boolean;
+  acepta_gatos: boolean;
+  acepta_otros: boolean;
+  acepta_pequeño: boolean;
+  acepta_mediano: boolean;
+  acepta_grande: boolean;
+  acepta_necesidades_especiales: boolean;
+  acepta_cachorros: boolean;
+  acepta_seniors: boolean;
+  tiene_jardin: boolean;
+  otros_animales_casa?: string;
+  ninos_casa: boolean;
+  edades_ninos?: string;
+  notas?: string;
+  estado: FamilyStatus;
+  karma_puntos: number;
+  avatar_url?: string;
+  fecha_alta?: string;
+  acogidas_activas_count?: number;
+  acogidas_total?: number;
+  acogidas_activas?: FosterAssignment[];
+  historial?: FosterAssignment[];
+  karma_historial?: KarmaEvent[];
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface FosterAssignment {
+  id: number;
+  refugio_id: number;
+  animal_id?: number;
+  familia_id?: number;
+  iniciada_at: string;
+  fin_estimado_at?: string;
+  finalizada_at?: string;
+  estado: 'active' | 'completed' | 'cancelled';
+  motivo_fin?: string;
+  valoracion?: number;
+  notas_valoracion?: string;
+  notas_coordinador?: string;
+  animal_nombre?: string;
+  animal_especie?: string;
+  animal_raza?: string;
+  animal_foto?: string;
+  familia_nombre?: string;
+  familia_zona?: string;
+  familia_telefono?: string;
+  dias_acogida?: number;
+  dias_totales?: number;
+  ultimo_contacto?: string;
+  created_at: string;
+}
+
+export interface FosterContact {
+  id: number;
+  assignment_id: number;
+  tipo: string;
+  contactado_at: string;
+  estado_animal: string;
+  notas?: string;
+  requiere_accion: boolean;
+  descripcion_accion?: string;
+  usuario_nombre?: string;
+  created_at: string;
+}
+
+export interface KarmaEvent {
+  id: number;
+  entity_type: string;
+  entity_id: number;
+  puntos: number;
+  razon?: string;
+  created_at: string;
+}
+
 export interface HealthEvent {
   id: number;
   animal_id: number;

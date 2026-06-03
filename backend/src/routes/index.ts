@@ -7,6 +7,10 @@ import { getHealthEvents, createHealthEvent, deleteHealthEvent } from '../contro
 import { getBehaviorEvaluations, createBehaviorEvaluation } from '../controllers/behavior.controller';
 import { getDocuments, createDocument, deleteDocument } from '../controllers/documents.controller';
 import {
+  getFamilias, getFamilia, createFamilia, updateFamilia, asignarAnimal,
+  getActivas, getHistorial, createContacto, getContactos, finalizarAcogida,
+} from '../controllers/acogidas.controller';
+import {
   getSolicitudes, getSolicitud, createSolicitud, updateSolicitud, cambiarEstado,
   programarEntrevista, aprobarSolicitud, getExpedientes, getExpediente,
   toggleChecklist, cerrarExpediente,
@@ -54,6 +58,18 @@ router.delete('/animales/:id/documents/:docId', authenticate, requirePermiso('an
 
 // ── INSTAGRAM COPY ────────────────────────────────────
 router.post('/animales/:id/instagram', authenticate, requirePermiso('animales:update'), generateInstagram);
+
+// ── ACOGIDAS ──────────────────────────────────────────
+router.get('/acogidas/familias',                   authenticate, requirePermiso('animales:read'), getFamilias);
+router.post('/acogidas/familias',                  authenticate, requirePermiso('animales:update'), createFamilia);
+router.get('/acogidas/familias/:id',               authenticate, requirePermiso('animales:read'), getFamilia);
+router.put('/acogidas/familias/:id',               authenticate, requirePermiso('animales:update'), updateFamilia);
+router.post('/acogidas/familias/:id/asignar',      authenticate, requirePermiso('animales:update'), asignarAnimal);
+router.get('/acogidas/activas',                    authenticate, requirePermiso('animales:read'), getActivas);
+router.get('/acogidas/historial',                  authenticate, requirePermiso('animales:read'), getHistorial);
+router.get('/acogidas/assignments/:id/contactos',  authenticate, requirePermiso('animales:read'), getContactos);
+router.post('/acogidas/assignments/:id/contacto',  authenticate, requirePermiso('animales:read'), createContacto);
+router.post('/acogidas/assignments/:id/finalizar', authenticate, requirePermiso('animales:update'), finalizarAcogida);
 
 // ── ADOPCIONES ────────────────────────────────────────
 router.get('/adopciones/solicitudes', authenticate, requirePermiso('adopciones:read'), getSolicitudes);
