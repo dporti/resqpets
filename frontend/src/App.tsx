@@ -8,6 +8,7 @@ import AnimalesPage from './pages/AnimalesPage';
 import AdopcionesPage from './pages/AdopcionesPage';
 import AcogidasPage from './pages/AcogidasPage';
 import VoluntariosPage from './pages/VoluntariosPage';
+import AvisosPage from './pages/AvisosPage';
 import UsuariosPage from './pages/UsuariosPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -81,7 +82,7 @@ function AppShell() {
         return <VoluntariosPage />;
 
       case 'avisos':
-        return <PlaceholderPage titulo="Avisos y rescates" icon="🔔" />;
+        return <AvisosPage />;
 
       case 'donaciones':
         return can('donaciones:read')
@@ -120,9 +121,5 @@ function AppShell() {
 }
 
 export default function App() {
-  return (
-    <AnimalListProvider>
-      <AppShell />
-    </AnimalListProvider>
-  );
+  return <AppShell />;
 }

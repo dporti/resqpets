@@ -64,6 +64,41 @@ export const api = {
     request('PUT', `/usuarios/${id}`, data),
   deleteUsuario: (id: number) => request('DELETE', `/usuarios/${id}`),
 
+  // SOS Pet — público
+  getSosPublic: () => request<import('../types').SosAlert[]>('GET', '/sos/public'),
+  getSosPublicOne: (id: number) => request<import('../types').SosAlert>('GET', `/sos/public/${id}`),
+  createSosPublic: (data: object) => request<import('../types').SosAlert>('POST', '/sos/public', data),
+
+  // SOS Pet — privado
+  getSosAlertas: (params?: Record<string, string>) => {
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return request<import('../types').SosAlert[]>('GET', `/sos${qs}`);
+  },
+  getSosAlerta: (id: number) => request<import('../types').SosAlert>('GET', `/sos/${id}`),
+  updateSosAlerta: (id: number, data: object) => request<import('../types').SosAlert>('PUT', `/sos/${id}`, data),
+  addSosUpdate: (id: number, contenido: string) => request('POST', `/sos/${id}/update`, { contenido }),
+  convertirARescate: (id: number) => request<{ ok: boolean; animal_id: number; id_interno: string }>('POST', `/sos/${id}/rescatar`, {}),
+
+  // SOS foto upload (reutiliza uploadFoto pero a bucket sos-photos)
+  uploadSosFoto: (file: File) => {
+    const token = localStorage.getItem('resqpet_token');
+    const fd = new FormData();
+    fd.append('file', file);
+    // Upload directly to Supabase Storage
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+    if (!supabaseUrl || !supabaseKey) return Promise.reject(new Error('VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY no configurados'));
+    const path = `sos/${Date.now()}_${file.name}`;
+    return fetch(`${supabaseUrl}/storage/v1/object/sos-photos/${path}`, {
+      method: 'POST',
+      headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}`, 'Content-Type': file.type, 'x-upsert': 'true' },
+      body: file,
+    }).then(async r => {
+      if (!r.ok) throw new Error(await r.text());
+      return `${supabaseUrl}/storage/v1/object/public/sos-photos/${path}`;
+    });
+  },
+
   // Voluntarios
   getVoluntarios: () => request<import('../types').VoluntarioStats[]>('GET', '/voluntarios'),
   getVoluntario: (id: number) => request<import('../types').VoluntarioStats>('GET', `/voluntarios/${id}`),

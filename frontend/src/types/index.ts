@@ -231,6 +231,63 @@ export interface AdoptionExpedient {
   completed_at?: string;
 }
 
+export type SosType = 'lost' | 'found';
+export type SosUrgencia = 'high' | 'medium' | 'low';
+export type SosEstado = 'active' | 'rescued' | 'resolved' | 'false_alarm';
+
+export interface SosAlert {
+  id: number;
+  refugio_id?: number;
+  tipo: SosType;
+  urgencia: SosUrgencia;
+  estado: SosEstado;
+  especie?: string;
+  raza?: string;
+  color?: string;
+  tamaño?: string;
+  lleva_collar?: boolean;
+  señas_particulares?: string;
+  nombre_animal?: string;
+  descripcion?: string;
+  fotos: string[];
+  latitud?: number;
+  longitud?: number;
+  ubicacion_descripcion?: string;
+  visto_en?: string;
+  reportero_nombre?: string;
+  reportero_telefono?: string;
+  reportero_email?: string;
+  quiere_notificaciones?: boolean;
+  codigo_referencia?: string;
+  es_publico?: boolean;
+  convertido_a_animal_id?: number;
+  updates?: SosUpdate[];
+  coincidencias?: SosMatch[];
+  updates_count?: number;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface SosUpdate {
+  id: number;
+  sos_alert_id: number;
+  contenido: string;
+  autor?: string;
+  created_at: string;
+}
+
+export interface SosMatch {
+  id: number;
+  tipo: SosType;
+  especie?: string;
+  raza?: string;
+  color?: string;
+  fotos: string[];
+  codigo_referencia?: string;
+  estado: SosEstado;
+  similitud: number;
+}
+
 export type TaskStatus = 'pending' | 'in_progress' | 'blocked' | 'completed';
 export type TaskPriority = 'alta' | 'media' | 'baja';
 export type TaskCategoria = 'medica' | 'acogida' | 'administrativa' | 'difusion' | 'transporte' | 'adopcion' | 'mantenimiento';

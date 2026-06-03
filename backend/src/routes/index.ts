@@ -7,6 +7,10 @@ import { getHealthEvents, createHealthEvent, deleteHealthEvent } from '../contro
 import { getBehaviorEvaluations, createBehaviorEvaluation } from '../controllers/behavior.controller';
 import { getDocuments, createDocument, deleteDocument } from '../controllers/documents.controller';
 import {
+  getPublicAlertas, getPublicAlerta, createPublicAlerta,
+  getAlertas, getAlerta, updateAlerta, addUpdate, convertirARescate,
+} from '../controllers/sos.controller';
+import {
   getVoluntarios, getVoluntario, updateVoluntario,
   getTasks, createTask, updateTask, completeTask, deleteTask, getRankings,
 } from '../controllers/voluntarios.controller';
@@ -62,6 +66,18 @@ router.delete('/animales/:id/documents/:docId', authenticate, requirePermiso('an
 
 // ── INSTAGRAM COPY ────────────────────────────────────
 router.post('/animales/:id/instagram', authenticate, requirePermiso('animales:update'), generateInstagram);
+
+// ── SOS PET (público, sin auth) ───────────────────────
+router.get('/sos/public',       getPublicAlertas);
+router.get('/sos/public/:id',   getPublicAlerta);
+router.post('/sos/public',      createPublicAlerta);
+
+// ── SOS PET (privado) ─────────────────────────────────
+router.get('/sos',              authenticate, requirePermiso('avisos:read'), getAlertas);
+router.get('/sos/:id',          authenticate, requirePermiso('avisos:read'), getAlerta);
+router.put('/sos/:id',          authenticate, requirePermiso('animales:update'), updateAlerta);
+router.post('/sos/:id/update',  authenticate, requirePermiso('animales:update'), addUpdate);
+router.post('/sos/:id/rescatar', authenticate, requirePermiso('animales:create'), convertirARescate);
 
 // ── VOLUNTARIOS + TAREAS ──────────────────────────────
 router.get('/voluntarios',              authenticate, requirePermiso('usuarios:read'), getVoluntarios);
