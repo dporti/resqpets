@@ -7,6 +7,10 @@ import { getHealthEvents, createHealthEvent, deleteHealthEvent } from '../contro
 import { getBehaviorEvaluations, createBehaviorEvaluation } from '../controllers/behavior.controller';
 import { getDocuments, createDocument, deleteDocument } from '../controllers/documents.controller';
 import {
+  getVoluntarios, getVoluntario, updateVoluntario,
+  getTasks, createTask, updateTask, completeTask, deleteTask, getRankings,
+} from '../controllers/voluntarios.controller';
+import {
   getFamilias, getFamilia, createFamilia, updateFamilia, asignarAnimal,
   getActivas, getHistorial, createContacto, getContactos, finalizarAcogida,
 } from '../controllers/acogidas.controller';
@@ -58,6 +62,17 @@ router.delete('/animales/:id/documents/:docId', authenticate, requirePermiso('an
 
 // ── INSTAGRAM COPY ────────────────────────────────────
 router.post('/animales/:id/instagram', authenticate, requirePermiso('animales:update'), generateInstagram);
+
+// ── VOLUNTARIOS + TAREAS ──────────────────────────────
+router.get('/voluntarios',              authenticate, requirePermiso('usuarios:read'), getVoluntarios);
+router.get('/voluntarios/:id',          authenticate, requirePermiso('usuarios:read'), getVoluntario);
+router.put('/voluntarios/:id',          authenticate, requirePermiso('animales:update'), updateVoluntario);
+router.get('/tareas',                   authenticate, requirePermiso('animales:read'), getTasks);
+router.post('/tareas',                  authenticate, requirePermiso('animales:update'), createTask);
+router.put('/tareas/:id',               authenticate, requirePermiso('animales:update'), updateTask);
+router.post('/tareas/:id/completar',    authenticate, requirePermiso('animales:read'), completeTask);
+router.delete('/tareas/:id',            authenticate, requirePermiso('animales:update'), deleteTask);
+router.get('/rankings',                 authenticate, requirePermiso('animales:read'), getRankings);
 
 // ── ACOGIDAS ──────────────────────────────────────────
 router.get('/acogidas/familias',                   authenticate, requirePermiso('animales:read'), getFamilias);

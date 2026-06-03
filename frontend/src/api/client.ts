@@ -64,6 +64,27 @@ export const api = {
     request('PUT', `/usuarios/${id}`, data),
   deleteUsuario: (id: number) => request('DELETE', `/usuarios/${id}`),
 
+  // Voluntarios
+  getVoluntarios: () => request<import('../types').VoluntarioStats[]>('GET', '/voluntarios'),
+  getVoluntario: (id: number) => request<import('../types').VoluntarioStats>('GET', `/voluntarios/${id}`),
+  updateVoluntario: (id: number, data: object) => request<import('../types').VoluntarioStats>('PUT', `/voluntarios/${id}`, data),
+
+  // Tareas
+  getTasks: (params?: Record<string, string>) => {
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return request<import('../types').Task[]>('GET', `/tareas${qs}`);
+  },
+  createTask: (data: object) => request<import('../types').Task>('POST', '/tareas', data),
+  updateTask: (id: number, data: object) => request<import('../types').Task>('PUT', `/tareas/${id}`, data),
+  completeTask: (id: number) => request<{ ok: boolean; nuevo_estado: string }>('POST', `/tareas/${id}/completar`, {}),
+  deleteTask: (id: number) => request('DELETE', `/tareas/${id}`),
+
+  // Rankings
+  getRankings: (periodo?: string) => {
+    const qs = periodo ? `?periodo=${periodo}` : '';
+    return request<{ voluntarios: import('../types').RankingEntry[]; familias: import('../types').RankingEntry[] }>('GET', `/rankings${qs}`);
+  },
+
   // Acogidas — Familias
   getFamilias: (params?: Record<string, string>) => {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';

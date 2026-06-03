@@ -7,6 +7,7 @@ import DetalleAnimalPage from './pages/DetalleAnimalPage';
 import AnimalesPage from './pages/AnimalesPage';
 import AdopcionesPage from './pages/AdopcionesPage';
 import AcogidasPage from './pages/AcogidasPage';
+import VoluntariosPage from './pages/VoluntariosPage';
 import UsuariosPage from './pages/UsuariosPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -77,7 +78,7 @@ function AppShell() {
         return <AcogidasPage />;
 
       case 'voluntarios':
-        return <UsuariosPage />;
+        return <VoluntariosPage />;
 
       case 'avisos':
         return <PlaceholderPage titulo="Avisos y rescates" icon="🔔" />;

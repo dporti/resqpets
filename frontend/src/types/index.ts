@@ -231,6 +231,66 @@ export interface AdoptionExpedient {
   completed_at?: string;
 }
 
+export type TaskStatus = 'pending' | 'in_progress' | 'blocked' | 'completed';
+export type TaskPriority = 'alta' | 'media' | 'baja';
+export type TaskCategoria = 'medica' | 'acogida' | 'administrativa' | 'difusion' | 'transporte' | 'adopcion' | 'mantenimiento';
+
+export interface Task {
+  id: number;
+  refugio_id: number;
+  titulo: string;
+  descripcion?: string;
+  categoria: TaskCategoria;
+  prioridad: TaskPriority;
+  estado: TaskStatus;
+  animal_id?: number;
+  animal_nombre?: string;
+  animal_especie?: string;
+  asignado_a: number[];
+  asignados_info?: { id: number; nombre: string; avatar_url?: string }[];
+  creado_por?: number;
+  creador_info?: { id: number; nombre: string };
+  fecha_limite?: string;
+  es_recurrente?: boolean;
+  frecuencia?: string;
+  fin_recurrencia?: string;
+  completada_at?: string;
+  completada_por?: number;
+  notas?: string;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface VoluntarioStats extends User {
+  karma_puntos: number;
+  especialidades?: string[];
+  bio?: string;
+  es_disponible?: boolean;
+  ultima_actividad?: string;
+  racha_dias?: number;
+  tareas_mes?: number;
+  tareas_total?: number;
+  tareas_pendientes?: number;
+  karma_historial?: KarmaEvent[];
+  tareas?: Task[];
+}
+
+export interface RankingEntry {
+  id: number;
+  nombre: string;
+  rol?: string;
+  avatar_url?: string;
+  karma_total: number;
+  karma_periodo: number;
+  racha_dias?: number;
+  tareas_total?: number;
+  tareas_mes?: number;
+  // foster family fields
+  estado?: string;
+  acogidas_total?: number;
+  dias_totales?: number;
+}
+
 export type FamilyStatus = 'available' | 'full' | 'paused' | 'inactive';
 
 export interface FosterFamily {
