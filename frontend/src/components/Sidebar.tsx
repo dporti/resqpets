@@ -1,0 +1,95 @@
+import { useAuth } from '../context/AuthContext';
+
+interface Props {
+  vista: string;
+  setVista: (v: string) => void;
+}
+
+const NAV_ITEMS = [
+  { id: 'inicio',        icon: '🏠', label: 'Inicio' },
+  { id: 'animales',      icon: '🐾', label: 'Animales' },
+  { id: 'adopciones',    icon: '❤️', label: 'Adopciones',  permiso: 'adopciones:read' },
+  { id: 'acogidas',      icon: '🏡', label: 'Acogidas' },
+  { id: 'voluntarios',   icon: '👥', label: 'Voluntarios', permiso: 'usuarios:read' },
+  { id: 'avisos',        icon: '🔔', label: 'Avisos' },
+  { id: 'donaciones',    icon: '💝', label: 'Donaciones',  permiso: 'donaciones:read' },
+  { id: 'reportes',      icon: '📊', label: 'Reportes',    permiso: 'reportes:read' },
+  { id: 'calendario',    icon: '📅', label: 'Calendario' },
+  { id: 'mensajes',      icon: '✉️',  label: 'Mensajes' },
+  { id: 'configuracion', icon: '⚙️',  label: 'Config',      permiso: 'config:manage' },
+];
+
+export default function Sidebar({ vista, setVista }: Props) {
+  const { can, user, logout } = useAuth();
+
+  return (
+    <div style={{
+      width: 220, flexShrink: 0, background: '#fff', borderRight: '1px solid #e5e7eb',
+      display: 'flex', flexDirection: 'column', height: '100vh', position: 'sticky', top: 0,
+      fontFamily: "'Inter', sans-serif",
+    }}>
+      {/* Logo */}
+      <div style={{
+        padding: '20px 16px 14px', borderBottom: '1px solid #f3f4f6',
+        display: 'flex', alignItems: 'center', gap: 10,
+      }}>
+        <div style={{
+          width: 32, height: 32, background: '#16a34a', borderRadius: 8,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
+        }}>🐾</div>
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: '#111', lineHeight: 1.2 }}>ResQPet</div>
+          <div style={{ fontSize: 11, color: '#9ca3af', lineHeight: 1.2 }}>{user?.refugioNombre || 'Protectora'}</div>
+        </div>
+      </div>
+
+      {/* Nav */}
+      <nav style={{ flex: 1, padding: '8px 8px', overflowY: 'auto' }}>
+        {NAV_ITEMS.map(item => {
+          if (item.permiso && !can(item.permiso)) return null;
+          const active = vista === item.id;
+          return (
+            <button key={item.id} onClick={() => setVista(item.id)} style={{
+              display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+              padding: '8px 10px', borderRadius: 7, border: 'none', cursor: 'pointer',
+              background: active ? '#f0fdf4' : 'transparent',
+              color: active ? '#16a34a' : '#374151',
+              fontWeight: active ? 600 : 400, fontSize: 13.5,
+              fontFamily: "'Inter', sans-serif", marginBottom: 2,
+              transition: 'background 0.15s',
+            }}>
+              <span style={{ fontSize: 16 }}>{item.icon}</span>
+              {item.label}
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* User footer */}
+      <div style={{
+        padding: '12px 12px', borderTop: '1px solid #f3f4f6',
+        display: 'flex', alignItems: 'center', gap: 10,
+      }}>
+        <div style={{
+          width: 32, height: 32, borderRadius: 16, background: '#dcfce7',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 14, fontWeight: 700, color: '#16a34a', flexShrink: 0,
+        }}>
+          {user?.nombre?.charAt(0).toUpperCase()}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {user?.nombre}
+          </div>
+          <div style={{ fontSize: 11, color: '#9ca3af', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {user?.rol}
+          </div>
+        </div>
+        <button onClick={logout} title="Cerrar sesión" style={{
+          background: 'none', border: 'none', cursor: 'pointer', fontSize: 16,
+          color: '#9ca3af', padding: 4, borderRadius: 4, flexShrink: 0,
+        }}>⏻</button>
+      </div>
+    </div>
+  );
+}
