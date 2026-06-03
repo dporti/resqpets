@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from './context/AuthContext';
+import { AnimalListProvider } from './context/AnimalListContext';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import DetalleAnimalPage from './pages/DetalleAnimalPage';
@@ -51,7 +52,11 @@ function AppShell() {
 
   const renderContent = () => {
     if (vista === 'detalle' && animalActivo) {
-      return <DetalleAnimalPage animalId={animalActivo.id} onVolver={volverLista} />;
+      return <DetalleAnimalPage
+        animalId={animalActivo.id}
+        onVolver={volverLista}
+        onNavigate={(id) => { setAnimalActivo({ ...animalActivo, id }); }}
+      />;
     }
 
     switch (vista) {
@@ -112,5 +117,9 @@ function AppShell() {
 }
 
 export default function App() {
-  return <AppShell />;
+  return (
+    <AnimalListProvider>
+      <AppShell />
+    </AnimalListProvider>
+  );
 }

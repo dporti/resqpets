@@ -64,6 +64,48 @@ export const api = {
     request('PUT', `/usuarios/${id}`, data),
   deleteUsuario: (id: number) => request('DELETE', `/usuarios/${id}`),
 
+  // Fotos
+  uploadFoto: (animalId: number, file: File) => {
+    const token = localStorage.getItem('resqpet_token');
+    const fd = new FormData();
+    fd.append('file', file);
+    return fetch(`/api/animales/${animalId}/fotos`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: fd,
+    }).then(r => r.json());
+  },
+  deleteFoto: (animalId: number, fotoId: number) =>
+    request('DELETE', `/animales/${animalId}/fotos/${fotoId}`),
+  setPrincipal: (animalId: number, fotoId: number) =>
+    request('PUT', `/animales/${animalId}/fotos/${fotoId}/principal`, {}),
+
+  // Eventos médicos
+  getHealthEvents: (animalId: number) =>
+    request<import('../types').HealthEvent[]>('GET', `/animales/${animalId}/health`),
+  createHealthEvent: (animalId: number, data: object) =>
+    request<import('../types').HealthEvent>('POST', `/animales/${animalId}/health`, data),
+  deleteHealthEvent: (animalId: number, eventId: number) =>
+    request('DELETE', `/animales/${animalId}/health/${eventId}`),
+
+  // Evaluaciones de comportamiento
+  getBehaviorEvaluations: (animalId: number) =>
+    request<import('../types').BehaviorEvaluation[]>('GET', `/animales/${animalId}/behavior`),
+  createBehaviorEvaluation: (animalId: number, data: object) =>
+    request<import('../types').BehaviorEvaluation>('POST', `/animales/${animalId}/behavior`, data),
+
+  // Documentos
+  getDocuments: (animalId: number) =>
+    request<import('../types').AnimalDocument[]>('GET', `/animales/${animalId}/documents`),
+  createDocument: (animalId: number, data: object) =>
+    request<import('../types').AnimalDocument>('POST', `/animales/${animalId}/documents`, data),
+  deleteDocument: (animalId: number, docId: number) =>
+    request('DELETE', `/animales/${animalId}/documents/${docId}`),
+
+  // Instagram copy
+  generateInstagram: (animalId: number) =>
+    request<{ texto: string }>('POST', `/animales/${animalId}/instagram`),
+
   // Avisos
   getAvisos: () => request<import('../types').Aviso[]>('GET', '/avisos'),
 

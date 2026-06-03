@@ -4,6 +4,7 @@ import { api } from '../api/client';
 import { Badge, AnimalAvatar, Spinner, EmptyState, formatDateTime } from '../components/ui';
 import TopBar from '../components/TopBar';
 import { useAuth } from '../context/AuthContext';
+import { useAnimalList } from '../context/AnimalListContext';
 import AnimalForm from './AnimalForm';
 
 interface Props {
@@ -24,6 +25,7 @@ const LIMIT = 20;
 
 export default function AnimalesPage({ onVerAnimal }: Props) {
   const { can } = useAuth();
+  const { setList } = useAnimalList();
   const [animales, setAnimales] = useState<Animal[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -45,6 +47,7 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
       const res = await api.getAnimales(params);
       setAnimales(res.data);
       setTotal(res.total);
+      setList(res.data.map(a => ({ id: a.id, nombre: a.nombre })));
     } catch (e) {
       console.error(e);
     } finally {

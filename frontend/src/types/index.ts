@@ -138,6 +138,54 @@ export interface Evento {
   createdAt: string;
 }
 
+export interface HealthEvent {
+  id: number;
+  animal_id: number;
+  tipo: string;
+  fecha: string;
+  titulo: string;
+  descripcion?: string;
+  created_by?: number;
+  created_at: string;
+  usuario_nombre?: string;
+}
+
+export interface BehaviorEvaluation {
+  id: number;
+  animal_id: number;
+  fecha: string;
+  evaluador?: string;
+  nivel_actividad: number;
+  soc_perros: number;
+  soc_gatos: number;
+  soc_niños: number;
+  hogar_ideal?: string;
+  experiencia_previa?: string;
+  notas?: string;
+  created_by?: number;
+  created_at: string;
+  usuario_nombre?: string;
+}
+
+export interface AnimalDocument {
+  id: number;
+  animal_id: number;
+  tipo: string;
+  nombre: string;
+  file_url: string;
+  subido_por?: number;
+  created_at: string;
+  usuario_nombre?: string;
+}
+
+export interface AnimalFotoFull {
+  id: number;
+  animal_id: number;
+  url: string;
+  es_principal: boolean;
+  created_at?: string;
+}
+
 export interface Actividad {
   id: number;
   refugioId: number;
