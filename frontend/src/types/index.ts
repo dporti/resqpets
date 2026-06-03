@@ -17,6 +17,7 @@ export interface Animal {
   id: number;
   refugioId: number;
   idInterno?: string;
+  id_interno?: string;
   nombre: string;
   especie: 'perro' | 'gato' | 'otro';
   raza?: string;
@@ -35,6 +36,7 @@ export interface Animal {
   desparasitado?: boolean;
   microchip?: boolean;
   numMicrochip?: string;
+  num_microchip?: string;
   pasaporte?: boolean;
   procedencia?: string;
   fechaEntrada?: string;
@@ -47,13 +49,13 @@ export interface Animal {
   señasParticulares?: string;
   señas_particulares?: string;
   nivelActividad?: number;
-  nivel_actividad?: number;
+  nivel_actividad: number;
   socPerros?: number;
-  soc_perros?: number;
+  soc_perros: number;
   socGatos?: number;
-  soc_gatos?: number;
+  soc_gatos: number;
   socNiños?: number;
-  soc_niños?: number;
+  soc_niños: number;
   hogarIdeal?: string;
   hogar_ideal?: string;
   experienciaPrevia?: string;
@@ -64,7 +66,7 @@ export interface Animal {
   vecesCompartido?: number;
   veces_compartido?: number;
   vecesVisto?: number;
-  veces_visto?: number;
+  veces_visto: number;
   contactosRecibidos?: number;
   contactos_recibidos?: number;
   fotoPrincipal?: string;
@@ -75,6 +77,7 @@ export interface Animal {
   edad_meses?: number;
   fotos?: AnimalFoto[];
   notas?: AnimalNota[];
+  actividad?: Actividad[];
   updatedAt?: string;
   updated_at?: string;
   createdAt?: string;
@@ -90,12 +93,18 @@ export interface AnimalFoto {
 
 export interface AnimalNota {
   id: number;
-  animalId: number;
-  autorId: number;
+  animalId?: number;
+  animal_id?: number;
+  autorId?: number;
+  autor_id?: number;
   autorNombre?: string;
+  autor_nombre?: string;
+  autorAvatar?: string;
+  autor_avatar?: string;
   texto: string;
   pinned: boolean;
-  createdAt: string;
+  createdAt?: string;
+  created_at?: string;
 }
 
 export interface Aviso {
@@ -120,8 +129,8 @@ export interface Evento {
   refugioId: number;
   titulo: string;
   descripcion?: string;
-  fechaInicio: string;
-  fecha_inicio?: string;
+  fechaInicio?: string;
+  fecha_inicio: string;
   fechaFin?: string;
   fecha_fin?: string;
   lugar?: string;

@@ -108,14 +108,15 @@ export function CardHeader({ title, action }: { title: string; action?: React.Re
 }
 
 // ── DOTS BAR ───────────────────────────────────────────
-export function DotsBar({ value, max = 5 }: { value: number; max?: number }) {
-  if (value === 0) return <span style={{ fontSize: 12, color: '#9ca3af' }}>No testado</span>;
+export function DotsBar({ value, val, max = 5 }: { value?: number; val?: number; max?: number }) {
+  const v = value ?? val ?? 0;
+  if (v === 0) return <span style={{ fontSize: 12, color: '#9ca3af' }}>No testado</span>;
   return (
     <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
       {Array.from({ length: max }, (_, i) => (
         <div key={i} style={{
           width: 10, height: 10, borderRadius: 2,
-          background: i < value ? '#16a34a' : '#e5e7eb',
+          background: i < v ? '#16a34a' : '#e5e7eb',
         }} />
       ))}
     </div>

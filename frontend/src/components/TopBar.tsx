@@ -4,9 +4,10 @@ interface Props {
   onNew?: () => void;
   showNew?: boolean;
   avisosCount?: number;
+  newLabel?: string;
 }
 
-export default function TopBar({ titulo, subtitulo, onNew, showNew = true, avisosCount }: Props) {
+export default function TopBar({ titulo, subtitulo, onNew, showNew = true, avisosCount, newLabel = '+ Nuevo' }: Props) {
   return (
     <div style={{
       height: 60, padding: '0 24px', display: 'flex', alignItems: 'center',
@@ -38,7 +39,7 @@ export default function TopBar({ titulo, subtitulo, onNew, showNew = true, aviso
             borderRadius: 8, padding: '8px 14px', fontSize: 13, fontWeight: 600,
             cursor: 'pointer', fontFamily: "'Inter', sans-serif",
           }}>
-            + Nuevo
+            {newLabel}
           </button>
         )}
       </div>

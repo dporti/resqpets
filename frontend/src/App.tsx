@@ -3,6 +3,7 @@ import { useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import DetalleAnimalPage from './pages/DetalleAnimalPage';
+import AnimalesPage from './pages/AnimalesPage';
 import UsuariosPage from './pages/UsuariosPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -46,6 +47,8 @@ function AppShell() {
     setVista('animales');
   };
 
+  const irAAnimales = () => setVista('animales');
+
   const renderContent = () => {
     if (vista === 'detalle' && animalActivo) {
       return <DetalleAnimalPage animalId={animalActivo.id} onVolver={volverLista} />;
@@ -53,10 +56,10 @@ function AppShell() {
 
     switch (vista) {
       case 'inicio':
-        return <DashboardPage onVerAnimal={irADetalle} onNew={() => {}} />;
+        return <DashboardPage onVerAnimal={irADetalle} onNew={irAAnimales} />;
 
       case 'animales':
-        return <PlaceholderPage titulo="Animales" icon="🐾" />;
+        return <AnimalesPage onVerAnimal={irADetalle} />;
 
       case 'adopciones':
         return can('adopciones:read')
