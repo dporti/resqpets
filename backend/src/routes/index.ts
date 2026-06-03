@@ -6,6 +6,11 @@ import { getUsuarios, createUsuario, updateUsuario, deleteUsuario } from '../con
 import { getHealthEvents, createHealthEvent, deleteHealthEvent } from '../controllers/health.controller';
 import { getBehaviorEvaluations, createBehaviorEvaluation } from '../controllers/behavior.controller';
 import { getDocuments, createDocument, deleteDocument } from '../controllers/documents.controller';
+import {
+  getSolicitudes, getSolicitud, createSolicitud, updateSolicitud, cambiarEstado,
+  programarEntrevista, aprobarSolicitud, getExpedientes, getExpediente,
+  toggleChecklist, cerrarExpediente,
+} from '../controllers/adopciones.controller';
 import { upload, uploadFoto, deleteFoto, setPrincipal } from '../controllers/fotos.controller';
 import { generateInstagram } from '../controllers/instagram.controller';
 import { authenticate, requirePermiso } from '../middleware/auth';
@@ -49,6 +54,20 @@ router.delete('/animales/:id/documents/:docId', authenticate, requirePermiso('an
 
 // ── INSTAGRAM COPY ────────────────────────────────────
 router.post('/animales/:id/instagram', authenticate, requirePermiso('animales:update'), generateInstagram);
+
+// ── ADOPCIONES ────────────────────────────────────────
+router.get('/adopciones/solicitudes', authenticate, requirePermiso('adopciones:read'), getSolicitudes);
+router.post('/adopciones/solicitudes', authenticate, requirePermiso('adopciones:manage'), createSolicitud);
+router.get('/adopciones/solicitudes/:id', authenticate, requirePermiso('adopciones:read'), getSolicitud);
+router.put('/adopciones/solicitudes/:id', authenticate, requirePermiso('adopciones:manage'), updateSolicitud);
+router.post('/adopciones/solicitudes/:id/estado', authenticate, requirePermiso('adopciones:manage'), cambiarEstado);
+router.post('/adopciones/solicitudes/:id/entrevista', authenticate, requirePermiso('adopciones:manage'), programarEntrevista);
+router.post('/adopciones/solicitudes/:id/aprobar', authenticate, requirePermiso('adopciones:manage'), aprobarSolicitud);
+
+router.get('/adopciones/expedientes', authenticate, requirePermiso('adopciones:read'), getExpedientes);
+router.get('/adopciones/expedientes/:id', authenticate, requirePermiso('adopciones:read'), getExpediente);
+router.put('/adopciones/expedientes/:id/checklist/:itemKey', authenticate, requirePermiso('adopciones:manage'), toggleChecklist);
+router.post('/adopciones/expedientes/:id/cerrar', authenticate, requirePermiso('adopciones:manage'), cerrarExpediente);
 
 // ── AVISOS ────────────────────────────────────────────
 router.get('/avisos', authenticate, requirePermiso('avisos:read'), async (req, res) => {

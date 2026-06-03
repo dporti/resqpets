@@ -64,6 +64,29 @@ export const api = {
     request('PUT', `/usuarios/${id}`, data),
   deleteUsuario: (id: number) => request('DELETE', `/usuarios/${id}`),
 
+  // Adopciones — Solicitudes
+  getSolicitudes: (params?: Record<string, string>) => {
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return request<import('../types').AdoptionRequest[]>('GET', `/adopciones/solicitudes${qs}`);
+  },
+  getSolicitud: (id: number) => request<import('../types').AdoptionRequest>('GET', `/adopciones/solicitudes/${id}`),
+  createSolicitud: (data: object) => request<import('../types').AdoptionRequest>('POST', '/adopciones/solicitudes', data),
+  updateSolicitud: (id: number, data: object) => request<import('../types').AdoptionRequest>('PUT', `/adopciones/solicitudes/${id}`, data),
+  cambiarEstado: (id: number, estado: string, motivo?: string) =>
+    request('POST', `/adopciones/solicitudes/${id}/estado`, { estado, motivo_rechazo: motivo }),
+  programarEntrevista: (id: number, data: object) =>
+    request('POST', `/adopciones/solicitudes/${id}/entrevista`, data),
+  aprobarSolicitud: (id: number) =>
+    request<{ ok: boolean; expedient_id: number }>('POST', `/adopciones/solicitudes/${id}/aprobar`, {}),
+
+  // Adopciones — Expedientes
+  getExpedientes: () => request<import('../types').AdoptionExpedient[]>('GET', '/adopciones/expedientes'),
+  getExpediente: (id: number) => request<import('../types').AdoptionExpedient>('GET', `/adopciones/expedientes/${id}`),
+  toggleChecklist: (expId: number, itemKey: string, completado: boolean, extra?: object) =>
+    request<import('../types').ChecklistItem>('PUT', `/adopciones/expedientes/${expId}/checklist/${itemKey}`, { completado, ...extra }),
+  cerrarExpediente: (id: number) =>
+    request<{ ok: boolean }>('POST', `/adopciones/expedientes/${id}/cerrar`, {}),
+
   // Fotos
   uploadFoto: (animalId: number, file: File) => {
     const token = localStorage.getItem('resqpet_token');

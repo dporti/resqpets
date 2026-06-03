@@ -138,6 +138,99 @@ export interface Evento {
   createdAt: string;
 }
 
+export type AdoptionEstado = 'pendiente' | 'en_evaluacion' | 'entrevista_programada' | 'aprobada' | 'rechazada' | 'desistida';
+
+export interface AdoptionRequest {
+  id: number;
+  refugio_id: number;
+  animal_id?: number;
+  nombre: string;
+  email?: string;
+  telefono?: string;
+  tipo_vivienda?: string;
+  tiene_terraza?: boolean;
+  horas_solo?: number;
+  experiencia_previa?: string;
+  otros_animales?: string;
+  ninos?: boolean;
+  edades_ninos?: string;
+  motivacion?: string;
+  estado: AdoptionEstado;
+  canal?: string;
+  puntuacion?: number;
+  notas_internas?: string;
+  motivo_rechazo?: string;
+  animal_nombre?: string;
+  animal_especie?: string;
+  animal_foto?: string;
+  animal_nivel_actividad?: number;
+  animal_soc_perros?: number;
+  animal_soc_gatos?: number;
+  animal_soc_niños?: number;
+  animal_hogar_ideal?: string;
+  nivel_actividad?: number;
+  soc_perros?: number;
+  soc_gatos?: number;
+  soc_niños?: number;
+  hogar_ideal?: string;
+  timeline?: AdoptionTimeline[];
+  entrevistas?: AdoptionInterview[];
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface AdoptionInterview {
+  id: number;
+  request_id: number;
+  fecha: string;
+  tipo: string;
+  notas?: string;
+  created_at: string;
+}
+
+export interface AdoptionTimeline {
+  id: number;
+  tipo: string;
+  descripcion?: string;
+  usuario_nombre?: string;
+  created_at: string;
+}
+
+export interface ChecklistItem {
+  id: number;
+  expedient_id: number;
+  fase: number;
+  item_key: string;
+  completado: boolean;
+  completado_por?: number;
+  completado_por_nombre?: string;
+  completado_at?: string;
+  notas?: string;
+  file_url?: string;
+}
+
+export interface AdoptionExpedient {
+  id: number;
+  refugio_id: number;
+  request_id?: number;
+  animal_id?: number;
+  adoptante_nombre?: string;
+  adoptante_email?: string;
+  adoptante_telefono?: string;
+  fase_actual: number;
+  animal_nombre?: string;
+  animal_especie?: string;
+  animal_raza?: string;
+  animal_foto?: string;
+  items_completados?: number;
+  items_total?: number;
+  checklist?: ChecklistItem[];
+  timeline?: AdoptionTimeline[];
+  created_at: string;
+  updated_at?: string;
+  completed_at?: string;
+}
+
 export interface HealthEvent {
   id: number;
   animal_id: number;

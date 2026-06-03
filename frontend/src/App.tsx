@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import DetalleAnimalPage from './pages/DetalleAnimalPage';
 import AnimalesPage from './pages/AnimalesPage';
+import AdopcionesPage from './pages/AdopcionesPage';
 import UsuariosPage from './pages/UsuariosPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -68,7 +69,7 @@ function AppShell() {
 
       case 'adopciones':
         return can('adopciones:read')
-          ? <PlaceholderPage titulo="Adopciones" icon="❤️" />
+          ? <AdopcionesPage />
           : <PlaceholderPage titulo="Sin acceso" icon="🔒" />;
 
       case 'acogidas':
