@@ -102,7 +102,7 @@ export function DatosSection() {
                     </p>
                     <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>
                       {new Date(e.created_at).toLocaleString('es-ES')}
-                      {e.details?.fields && ` · Campos: ${(e.details.fields as string[]).join(', ')}`}
+                      {e.details?.fields ? ` · Campos: ${(e.details.fields as string[]).join(', ')}` : null}
                     </p>
                   </div>
                 </div>

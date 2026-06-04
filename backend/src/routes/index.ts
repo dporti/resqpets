@@ -25,6 +25,7 @@ import {
 } from '../controllers/adopciones.controller';
 import { upload, uploadFoto, deleteFoto, setPrincipal } from '../controllers/fotos.controller';
 import { generateInstagram } from '../controllers/instagram.controller';
+import { chat as assistantChat, createTaskAction } from '../controllers/assistant.controller';
 import {
   getSummary as getDonacionesSummary, getDonations, createDonation, updateDonation,
   getCampaigns, getCampaign, createCampaign, updateCampaign,
@@ -54,6 +55,10 @@ import {
 import { authenticate, requirePermiso } from '../middleware/auth';
 
 const router = Router();
+
+// ── ASISTENTE IA ──────────────────────────────────────
+router.post('/assistant/chat',        authenticate, assistantChat);
+router.post('/assistant/create-task', authenticate, createTaskAction);
 
 // ── DONACIONES (nuevo módulo completo) ────────────────
 router.get('/donations/summary',       authenticate, requirePermiso('donaciones:read'), getDonacionesSummary);

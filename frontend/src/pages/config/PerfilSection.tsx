@@ -148,7 +148,7 @@ export function PerfilSection({ refugio, onSave, loading }: Props) {
             { k: 'facebook' as const,  label: 'Facebook',        ph: 'facebook.com/...' },
           ].map(s => (
             <Field key={s.k} label={s.label}>
-              <input style={inp} value={(form as Record<string, string>)[s.k] || ''} onChange={e => set(s.k, e.target.value)} placeholder={s.ph} />
+              <input style={inp} value={(form as unknown as Record<string, string>)[s.k] || ''} onChange={e => set(s.k, e.target.value)} placeholder={s.ph} />
             </Field>
           ))}
         </div>

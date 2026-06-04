@@ -98,7 +98,7 @@ export default function ConfiguracionPage() {
       case 'integraciones': return <IntegracionesSection config={config} onSave={handleSave} />;
       case 'apariencia':    return <AparienciaSection config={config} onSave={handleSave} />;
       case 'datos':         return <DatosSection />;
-      case 'plan':          return <PlanSection stats={stats} />;
+      case 'plan':          return <PlanSection stats={stats as { animales: string; usuarios: string }} />;
       default:              return null;
     }
   };

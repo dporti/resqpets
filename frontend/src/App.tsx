@@ -14,6 +14,22 @@ import ReportesPage from './pages/ReportesPage';
 import MensajesPage from './pages/MensajesPage';
 import ConfiguracionPage from './pages/ConfiguracionPage';
 import DonacionesPage from './pages/DonacionesPage';
+import { FloatingAssistant, AssistantButton } from './components/assistant/FloatingAssistant';
+
+function AssistantFull({ onNavigate }: { onNavigate: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setOpen(p => !p); } };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, []);
+  return (
+    <>
+      <AssistantButton onClick={() => setOpen(true)} />
+      {open && <FloatingAssistant onNavigate={(v) => { onNavigate(v); setOpen(false); }} onClose={() => setOpen(false)} />}
+    </>
+  );
+}
 import CalendarioPage from './pages/CalendarioPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -133,6 +149,7 @@ function AppShell() {
       <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', background: '#f9fafb' }}>
         {renderContent()}
       </div>
+      <AssistantFull onNavigate={(v) => setVista(v)} />
     </div>
   );
 }

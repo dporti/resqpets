@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -122,7 +121,7 @@ export function ResumenTab() {
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
             <XAxis dataKey="label" fontSize={11} tick={{ fill: '#9ca3af' }} />
             <YAxis fontSize={11} tick={{ fill: '#9ca3af' }} width={50} tickFormatter={v => `${v}€`} />
-            <Tooltip formatter={(v: number, n: string) => [fmt(v), n === 'amount' ? 'Recaudado' : n]} />
+            <Tooltip formatter={(v: unknown) => [fmt(v as number), 'Recaudado']} />
             <Bar dataKey="amount" name="amount" fill="#3b82f6" radius={[4,4,0,0]} />
             {data.goal > 0 && (
               <Line data={data.evolution.map(() => ({ amount: data.goal }))} type="monotone" dataKey="amount" stroke="#f97316" strokeDasharray="5 5" dot={false} name="Objetivo" />
@@ -141,8 +140,8 @@ export function ResumenTab() {
                 <Pie data={data.by_channel} dataKey="total" nameKey="channel" cx="50%" cy="50%" innerRadius={45} outerRadius={72} paddingAngle={3}>
                   {data.by_channel.map((_: unknown, i: number) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                 </Pie>
-                <Tooltip formatter={(v: number, n: string) => [fmt(v), CHANNEL_LABEL[n] || n]} />
-                <Legend formatter={(n: string) => CHANNEL_LABEL[n] || n} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+                <Tooltip formatter={(v: unknown, n: unknown) => [fmt(v as number), CHANNEL_LABEL[n as string] || (n as string)]} />
+                <Legend formatter={(n: unknown) => CHANNEL_LABEL[n as string] || (n as string)} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -155,8 +154,8 @@ export function ResumenTab() {
                 <Pie data={data.by_type} dataKey="total" nameKey="type" cx="50%" cy="50%" innerRadius={45} outerRadius={72} paddingAngle={3}>
                   {data.by_type.map((_: unknown, i: number) => <Cell key={i} fill={['#16a34a','#3b82f6'][i] || '#6b7280'} />)}
                 </Pie>
-                <Tooltip formatter={(v: number, n: string) => [fmt(v), TYPE_LABEL[n] || n]} />
-                <Legend formatter={(n: string) => TYPE_LABEL[n] || n} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+                <Tooltip formatter={(v: unknown, n: unknown) => [fmt(v as number), TYPE_LABEL[n as string] || (n as string)]} />
+                <Legend formatter={(n: unknown) => TYPE_LABEL[n as string] || (n as string)} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
               </PieChart>
             </ResponsiveContainer>
           )}

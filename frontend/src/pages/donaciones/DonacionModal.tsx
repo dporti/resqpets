@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../api/client';
 
-interface Campaign { id: number; name: string }
+interface Campaign { id: number; name: string; status?: string }
 interface Props {
   onClose: () => void;
   onCreated: (d: Record<string, unknown>) => void;
