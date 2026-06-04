@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 import { AnimalListProvider } from './context/AnimalListContext';
 import LoginPage from './pages/LoginPage';
@@ -11,6 +11,8 @@ import VoluntariosPage from './pages/VoluntariosPage';
 import AvisosPage from './pages/AvisosPage';
 import UsuariosPage from './pages/UsuariosPage';
 import ReportesPage from './pages/ReportesPage';
+import MensajesPage from './pages/MensajesPage';
+import CalendarioPage from './pages/CalendarioPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import { Spinner, EmptyState } from './components/ui';
@@ -29,6 +31,19 @@ function AppShell() {
   const { user, loading, can } = useAuth();
   const [vista, setVista] = useState('inicio');
   const [animalActivo, setAnimalActivo] = useState<Animal | null>(null);
+  const [unreadMsgs, setUnreadMsgs] = useState(0);
+
+  // Poll unread count every 30s
+  useEffect(() => {
+    if (!user) return;
+    const fetchUnread = () =>
+      import('./api/client').then(({ api }) =>
+        api.get<{ unread: number }>('/mensajes/unread').then(r => setUnreadMsgs(r.unread)).catch(() => {})
+      );
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   if (loading) {
     return (
@@ -96,9 +111,12 @@ function AppShell() {
           : <PlaceholderPage titulo="Sin acceso" icon="🔒" />;
 
       case 'calendario':
-        return <PlaceholderPage titulo="Calendario" icon="📅" />;
+        return <CalendarioPage />;
 
       case 'mensajes':
+        return <MensajesPage />;
+
+      case 'mensajes_placeholder_removed': // keep linter happy
         return <PlaceholderPage titulo="Mensajes" icon="✉️" />;
 
       case 'configuracion':
@@ -113,7 +131,7 @@ function AppShell() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
-      <Sidebar vista={vista} setVista={setVista} />
+      <Sidebar vista={vista} setVista={setVista} unreadMsgs={unreadMsgs} />
       <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', background: '#f9fafb' }}>
         {renderContent()}
       </div>

@@ -26,6 +26,13 @@ import {
 import { upload, uploadFoto, deleteFoto, setPrincipal } from '../controllers/fotos.controller';
 import { generateInstagram } from '../controllers/instagram.controller';
 import {
+  getConversations, getMessages, sendMessage, createConversation,
+  markRead, getUnreadCount, getChatUsers,
+} from '../controllers/mensajes.controller';
+import {
+  getEvents, getUpcomingEvents, createEvent, updateEvent, deleteEvent,
+} from '../controllers/calendario.controller';
+import {
   getResumen, getAnimalesReport, getAdopcionesReport,
   getAcogidasReport, getSosReport, getExportData, getAiSummary,
 } from '../controllers/reportes.controller';
@@ -37,6 +44,22 @@ import {
 import { authenticate, requirePermiso } from '../middleware/auth';
 
 const router = Router();
+
+// ── MENSAJES ──────────────────────────────────────────
+router.get('/mensajes/conversations',              authenticate, getConversations);
+router.post('/mensajes/conversations',             authenticate, createConversation);
+router.get('/mensajes/conversations/:id/messages', authenticate, getMessages);
+router.post('/mensajes/conversations/:id/messages',authenticate, sendMessage);
+router.put('/mensajes/conversations/:id/read',     authenticate, markRead);
+router.get('/mensajes/unread',                     authenticate, getUnreadCount);
+router.get('/mensajes/users',                      authenticate, getChatUsers);
+
+// ── CALENDARIO ────────────────────────────────────────
+router.get('/calendario/events',          authenticate, getEvents);
+router.get('/calendario/events/upcoming', authenticate, getUpcomingEvents);
+router.post('/calendario/events',         authenticate, createEvent);
+router.put('/calendario/events/:id',      authenticate, updateEvent);
+router.delete('/calendario/events/:id',   authenticate, deleteEvent);
 
 // ── REPORTES ──────────────────────────────────────────
 router.get('/reportes/resumen',     authenticate, requirePermiso('reportes:read'), getResumen);

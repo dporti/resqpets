@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 interface Props {
   vista: string;
   setVista: (v: string) => void;
+  unreadMsgs?: number;
 }
 
 const NAV_ITEMS = [
@@ -19,7 +20,7 @@ const NAV_ITEMS = [
   { id: 'configuracion', icon: '⚙️',  label: 'Config',      permiso: 'config:manage' },
 ];
 
-export default function Sidebar({ vista, setVista }: Props) {
+export default function Sidebar({ vista, setVista, unreadMsgs = 0 }: Props) {
   const { can, user, logout } = useAuth();
 
   return (
@@ -59,7 +60,17 @@ export default function Sidebar({ vista, setVista }: Props) {
               transition: 'background 0.15s',
             }}>
               <span style={{ fontSize: 16 }}>{item.icon}</span>
-              {item.label}
+              <span style={{ flex: 1 }}>{item.label}</span>
+              {item.id === 'mensajes' && unreadMsgs > 0 && (
+                <span style={{
+                  background: '#16a34a', color: '#fff', fontSize: 10,
+                  minWidth: 16, height: 16, borderRadius: 8, padding: '0 4px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontWeight: 700,
+                }}>
+                  {unreadMsgs > 99 ? '99+' : unreadMsgs}
+                </span>
+              )}
             </button>
           );
         })}
