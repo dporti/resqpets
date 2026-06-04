@@ -12,6 +12,7 @@ import AvisosPage from './pages/AvisosPage';
 import UsuariosPage from './pages/UsuariosPage';
 import ReportesPage from './pages/ReportesPage';
 import MensajesPage from './pages/MensajesPage';
+import ConfiguracionPage from './pages/ConfiguracionPage';
 import CalendarioPage from './pages/CalendarioPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -120,9 +121,7 @@ function AppShell() {
         return <PlaceholderPage titulo="Mensajes" icon="✉️" />;
 
       case 'configuracion':
-        return can('config:manage')
-          ? <PlaceholderPage titulo="Configuración" icon="⚙️" />
-          : <PlaceholderPage titulo="Sin acceso" icon="🔒" />;
+        return <ConfiguracionPage />;
 
       default:
         return <DashboardPage onVerAnimal={irADetalle} onNew={() => {}} />;

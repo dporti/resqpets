@@ -26,6 +26,11 @@ import {
 import { upload, uploadFoto, deleteFoto, setPrincipal } from '../controllers/fotos.controller';
 import { generateInstagram } from '../controllers/instagram.controller';
 import {
+  getConfig, updateConfig, getTeam, updateMemberRole, toggleMemberStatus,
+  removeMember, getInvitations, createInvitation, cancelInvitation,
+  getAuditLog, uploadAsset, uploadAssetMiddleware, geocodeAddress,
+} from '../controllers/config.controller';
+import {
   getConversations, getMessages, sendMessage, createConversation,
   markRead, getUnreadCount, getChatUsers,
 } from '../controllers/mensajes.controller';
@@ -44,6 +49,20 @@ import {
 import { authenticate, requirePermiso } from '../middleware/auth';
 
 const router = Router();
+
+// ── CONFIGURACIÓN ─────────────────────────────────────
+router.get('/config',                           authenticate, requirePermiso('config:manage'), getConfig);
+router.put('/config',                           authenticate, requirePermiso('config:manage'), updateConfig);
+router.get('/config/team',                      authenticate, requirePermiso('config:manage'), getTeam);
+router.put('/config/team/:memberId/role',       authenticate, requirePermiso('config:manage'), updateMemberRole);
+router.put('/config/team/:memberId/status',     authenticate, requirePermiso('config:manage'), toggleMemberStatus);
+router.delete('/config/team/:memberId',         authenticate, requirePermiso('config:manage'), removeMember);
+router.get('/config/invitations',               authenticate, requirePermiso('config:manage'), getInvitations);
+router.post('/config/invitations',              authenticate, requirePermiso('config:manage'), createInvitation);
+router.delete('/config/invitations/:id',        authenticate, requirePermiso('config:manage'), cancelInvitation);
+router.get('/config/audit-log',                 authenticate, requirePermiso('config:manage'), getAuditLog);
+router.post('/config/upload-asset',             authenticate, requirePermiso('config:manage'), uploadAssetMiddleware, uploadAsset);
+router.get('/config/geocode',                   authenticate, geocodeAddress);
 
 // ── MENSAJES ──────────────────────────────────────────
 router.get('/mensajes/conversations',              authenticate, getConversations);

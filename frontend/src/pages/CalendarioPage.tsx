@@ -3,8 +3,9 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import interactionPlugin, { EventDropArg, EventResizeDoneArg } from '@fullcalendar/interaction';
-import type { DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/core';
+import interactionPlugin from '@fullcalendar/interaction';
+import type { EventResizeDoneArg } from '@fullcalendar/interaction';
+import type { DateSelectArg, EventClickArg, EventInput, EventDropArg } from '@fullcalendar/core';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
