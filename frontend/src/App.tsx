@@ -10,6 +10,7 @@ import AcogidasPage from './pages/AcogidasPage';
 import VoluntariosPage from './pages/VoluntariosPage';
 import AvisosPage from './pages/AvisosPage';
 import UsuariosPage from './pages/UsuariosPage';
+import ReportesPage from './pages/ReportesPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import { Spinner, EmptyState } from './components/ui';
@@ -91,7 +92,7 @@ function AppShell() {
 
       case 'reportes':
         return can('reportes:read')
-          ? <PlaceholderPage titulo="Reportes" icon="📊" />
+          ? <ReportesPage />
           : <PlaceholderPage titulo="Sin acceso" icon="🔒" />;
 
       case 'calendario':

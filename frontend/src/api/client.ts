@@ -33,6 +33,10 @@ async function request<T>(
 }
 
 export const api = {
+  // Generic
+  get: <T>(path: string) => request<T>('GET', path),
+  post: <T>(path: string, body: unknown) => request<T>('POST', path, body),
+
   // Auth
   login: (email: string, password: string) =>
     request<{ token: string; user: import('../types').User }>('POST', '/auth/login', { email, password }),

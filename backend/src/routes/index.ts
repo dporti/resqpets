@@ -25,9 +25,36 @@ import {
 } from '../controllers/adopciones.controller';
 import { upload, uploadFoto, deleteFoto, setPrincipal } from '../controllers/fotos.controller';
 import { generateInstagram } from '../controllers/instagram.controller';
+import {
+  getResumen, getAnimalesReport, getAdopcionesReport,
+  getAcogidasReport, getSosReport, getExportData, getAiSummary,
+} from '../controllers/reportes.controller';
+import {
+  getPublicAnimals, getPublicAnimalById,
+  getPublicShelters, getPublicShelterBySlug,
+  getPublicStats, createPublicAdoptionRequest, trackAnimalShare,
+} from '../controllers/public.controller';
 import { authenticate, requirePermiso } from '../middleware/auth';
 
 const router = Router();
+
+// ── REPORTES ──────────────────────────────────────────
+router.get('/reportes/resumen',     authenticate, requirePermiso('reportes:read'), getResumen);
+router.get('/reportes/animales',    authenticate, requirePermiso('reportes:read'), getAnimalesReport);
+router.get('/reportes/adopciones',  authenticate, requirePermiso('reportes:read'), getAdopcionesReport);
+router.get('/reportes/acogidas',    authenticate, requirePermiso('reportes:read'), getAcogidasReport);
+router.get('/reportes/sos',         authenticate, requirePermiso('reportes:read'), getSosReport);
+router.get('/reportes/export',      authenticate, requirePermiso('reportes:read'), getExportData);
+router.post('/reportes/ai-summary', authenticate, requirePermiso('reportes:read'), getAiSummary);
+
+// ── PORTAL PÚBLICO (sin auth) ─────────────────────────
+router.get('/public/animals',            getPublicAnimals);
+router.get('/public/animals/:id',        getPublicAnimalById);
+router.get('/public/shelters',           getPublicShelters);
+router.get('/public/shelters/:slug',     getPublicShelterBySlug);
+router.get('/public/stats',              getPublicStats);
+router.post('/public/adoption-request',  createPublicAdoptionRequest);
+router.post('/public/animals/:id/share', trackAnimalShare);
 
 // ── AUTH ──────────────────────────────────────────────
 router.post('/auth/login', login);
