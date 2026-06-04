@@ -13,6 +13,7 @@ import UsuariosPage from './pages/UsuariosPage';
 import ReportesPage from './pages/ReportesPage';
 import MensajesPage from './pages/MensajesPage';
 import ConfiguracionPage from './pages/ConfiguracionPage';
+import DonacionesPage from './pages/DonacionesPage';
 import CalendarioPage from './pages/CalendarioPage';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -102,9 +103,7 @@ function AppShell() {
         return <AvisosPage />;
 
       case 'donaciones':
-        return can('donaciones:read')
-          ? <PlaceholderPage titulo="Donaciones" icon="💝" />
-          : <PlaceholderPage titulo="Sin acceso" icon="🔒" />;
+        return <DonacionesPage />;
 
       case 'reportes':
         return can('reportes:read')

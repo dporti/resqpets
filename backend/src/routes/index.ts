@@ -26,6 +26,11 @@ import {
 import { upload, uploadFoto, deleteFoto, setPrincipal } from '../controllers/fotos.controller';
 import { generateInstagram } from '../controllers/instagram.controller';
 import {
+  getSummary as getDonacionesSummary, getDonations, createDonation, updateDonation,
+  getCampaigns, getCampaign, createCampaign, updateCampaign,
+  getDonors, getDonorHistory,
+} from '../controllers/donaciones.controller';
+import {
   getConfig, updateConfig, getTeam, updateMemberRole, toggleMemberStatus,
   removeMember, getInvitations, createInvitation, cancelInvitation,
   getAuditLog, uploadAsset, uploadAssetMiddleware, geocodeAddress,
@@ -49,6 +54,18 @@ import {
 import { authenticate, requirePermiso } from '../middleware/auth';
 
 const router = Router();
+
+// ── DONACIONES (nuevo módulo completo) ────────────────
+router.get('/donations/summary',       authenticate, requirePermiso('donaciones:read'), getDonacionesSummary);
+router.get('/donations',               authenticate, requirePermiso('donaciones:read'), getDonations);
+router.post('/donations',              authenticate, requirePermiso('donaciones:read'), createDonation);
+router.put('/donations/:id',           authenticate, requirePermiso('donaciones:read'), updateDonation);
+router.get('/donations/campaigns',     authenticate, requirePermiso('donaciones:read'), getCampaigns);
+router.post('/donations/campaigns',    authenticate, requirePermiso('donaciones:read'), createCampaign);
+router.get('/donations/campaigns/:id', authenticate, requirePermiso('donaciones:read'), getCampaign);
+router.put('/donations/campaigns/:id', authenticate, requirePermiso('donaciones:read'), updateCampaign);
+router.get('/donations/donors',        authenticate, requirePermiso('donaciones:read'), getDonors);
+router.get('/donations/donors/:id',    authenticate, requirePermiso('donaciones:read'), getDonorHistory);
 
 // ── CONFIGURACIÓN ─────────────────────────────────────
 router.get('/config',                           authenticate, requirePermiso('config:manage'), getConfig);
