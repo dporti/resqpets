@@ -1,6 +1,6 @@
 # ResQPet — Estado del Proyecto
 
-**CRM para protectoras de animales + Portal Público**  
+**CRM para protectoras de animales + Portal Público + Landing Page**  
 Última actualización: junio 2026  
 Repositorio: https://github.com/dporti/resqpets
 
@@ -12,6 +12,7 @@ Repositorio: https://github.com/dporti/resqpets
 |----------|-----|--------|
 | **CRM** (gestión interna) | http://localhost:5173 | 5173 |
 | **Portal público** | http://localhost:5174 | 5174 |
+| **Landing page** | http://localhost:3000 | 3000 |
 | **API Backend** | http://localhost:4000 | 4000 |
 
 ---
@@ -24,6 +25,7 @@ Repositorio: https://github.com/dporti/resqpets
 | Base de datos | PostgreSQL vía Supabase (pool Supavisor) |
 | CRM Frontend | React 18 + Vite 5 + TypeScript 5 (state-machine routing) |
 | Portal Público | React 18 + Vite 5 + TypeScript 5 + React Router v6 |
+| Landing Page | Next.js 14 + Tailwind CSS + TypeScript 5 (App Router) |
 | Autenticación | JWT propio (bcryptjs + jsonwebtoken) |
 | Almacenamiento | Supabase Storage |
 | IA | Anthropic Claude API (`claude-sonnet-4-6`) |
@@ -36,6 +38,7 @@ Repositorio: https://github.com/dporti/resqpets
 | SEO | react-helmet-async (portal) |
 | Exportación | JSZip + html2canvas |
 | Donaciones | Stripe.js (opcional, si hay claves configuradas) |
+| Design System | ui-ux-pro-max skill (67 estilos, 96 paletas, 57 font pairings) |
 
 ---
 
@@ -64,6 +67,9 @@ cd frontend && npm run dev
 
 # Portal público (puerto 5174)
 cd portal && npm run dev
+
+# Landing page (puerto 3000)
+cd landing && npm run dev
 ```
 
 ### Ejecutar todas las migraciones (BD nueva)
@@ -79,6 +85,7 @@ npx ts-node --transpile-only src/db/migrate-v7.ts
 npx ts-node --transpile-only src/db/migrate-v8.ts
 npx ts-node --transpile-only src/db/migrate-v9.ts
 npx ts-node --transpile-only src/db/migrate-v10.ts
+npx ts-node --transpile-only src/db/migrate-v11.ts
 npm run seed
 ```
 
@@ -93,15 +100,11 @@ node scripts/seed-calendario.js
 node scripts/seed-donaciones.js
 ```
 
-### Decisión técnica: conexión Supabase
-La BD se conecta via **Supabase Supavisor Transaction Pooler** en lugar de conexión directa porque:
-- Supabase free tier solo ofrece IPv6 para conexión directa
-- La máquina de desarrollo no tiene conectividad IPv6 a internet
-- El pooler usa `aws-1-eu-north-1` (prefijo `aws-1`, NO `aws-0`)
-- Puerto 6543 (transaction mode)
-
-### Decisión técnica: caché Vite fuera de Dropbox
-`vite.config.ts` del CRM tiene `cacheDir` apuntando a `%TEMP%/vite-resqpet-frontend` para evitar errores `EBUSY` causados por Dropbox bloqueando la carpeta `node_modules/.vite` durante la sincronización en Windows.
+### Decisiones técnicas
+- **Conexión Supabase**: pooler `aws-1-eu-north-1` puerto 6543 (IPv6 no disponible en dev)
+- **Caché Vite**: `cacheDir` en `%TEMP%` fuera de Dropbox para evitar `EBUSY` en Windows
+- **Plan demo**: todos los refugios están en plan `enterprise` para development
+  (`UPDATE refugios SET plan_id='enterprise'`)
 
 ---
 
@@ -109,315 +112,215 @@ La BD se conecta via **Supabase Supavisor Transaction Pooler** en lugar de conex
 
 ### ✅ 1. Dashboard (`/inicio`)
 - Stats: total animales, en acogida, en adopción, avisos activos
-- Tabla animales recientes (click → detalle)
-- Gráfico donut distribución por estado
+- Tabla animales recientes, gráfico donut distribución por estado
 - Adopciones y donaciones del mes con sparkline y progreso hacia objetivo
 - Actividad reciente, próximos eventos del calendario
-- Panel lateral: avisos activos, agenda
 
 ### ✅ 2. Animales (`/animales`)
-- Listado con filtros por estado (tabs pill), especie, buscador debounced
-- Paginación (20 por página), chips sanitarios (Vac/Est/Chip)
-- **Detalle animal**: galería + upload Supabase Storage, 6 tabs (Info/Salud/Comportamiento/Documentos/Historia/Redes)
+- Listado con filtros, paginación (20/página), chips sanitarios
+- Detalle animal: galería + upload Supabase Storage, 6 tabs
 - Tab Redes: generador copy Instagram vía Claude API
 - Formulario crear/editar: slide-over con 5 tabs
 
 ### ✅ 3. Adopciones (`/adopciones`)
-- Vista Solicitudes: tabla + kanban drag & drop (@dnd-kit)
+- Vista Solicitudes: tabla + kanban drag & drop
 - Vista Expedientes: checklist 4 fases, confetti al cerrar
-- Score compatibilidad 0-100% calculado en frontend
-- Entrevistas, aprobación/rechazo con motivos
+- Score compatibilidad 0-100%, entrevistas, aprobación/rechazo
 
 ### ✅ 4. Acogidas (`/acogidas`)
-- Grid familias con slots visuales, karma badge, filtros
-- Acogidas activas con colores por días (verde/amarillo/rojo)
-- Score compatibilidad animal↔familia en asignación
-- Sistema karma automático (días, adopción, especiales)
-- Contactos de seguimiento, finalización con valoración estrellas
+- Grid familias con karma badge, score compatibilidad animal↔familia
+- Sistema karma automático, contactos de seguimiento, valoración estrellas
 
 ### ✅ 5. Voluntarios (`/voluntarios`)
-- Grid voluntarios con indicador online, karma nivel/pts, especialidades
-- Tareas: lista + kanban con drag & drop, karma automático por prioridad
-- Rankings por período con podio CSS, toggle voluntarios/familias
-- Panel voluntario: bio, progreso karma, historial eventos
+- Grid con karma nivel/pts, tareas lista+kanban, rankings con podio CSS
 
 ### ✅ 6. SOS Pet (`/avisos`)
-- Vista Mapa: Leaflet, marcadores coloreados por urgencia, pulsante si urgente
-- Vista Lista: tabla filtrable, panel detalle con coincidencias IA
-- Convertir aviso en rescate → crea ficha animal
+- Mapa Leaflet con marcadores, panel coincidencias IA, convertir en rescate
 
 ### ✅ 7. Usuarios (`/usuarios`)
 - Tabla usuarios, crear/editar rol, activar/desactivar
 
 ### ✅ 8. Reportes (`/reportes`)
-- **5 tabs**: Resumen / Animales / Adopciones / Acogidas / SOS Pet
-- Selector de período global: 5 opciones + rango personalizado
-- KPI cards con tendencia % vs período anterior
-- Gráficos Recharts: líneas múltiples, barras, donuts, embudo de conversión
-- Heatmap de actividad estilo GitHub (52 semanas)
-- Exportar PDF: portada + datos + resumen ejecutivo IA (Claude)
-- Exportar CSV: ZIP con un fichero por sección
+- 5 tabs: Resumen / Animales / Adopciones / Acogidas / SOS Pet
+- Selector período global (6 opciones + rango personalizado)
+- KPI cards con tendencia %, gráficos Recharts (líneas, barras, donuts, embudo)
+- Heatmap actividad estilo GitHub (52 semanas)
+- Exportar PDF (jsPDF + resumen ejecutivo IA Claude) y CSV ZIP (jszip)
 
 ### ✅ 9. Mensajes (`/mensajes`)
 - Layout dos columnas estilo app de mensajería
-- Conversaciones internas (1:1 y grupos), con adoptantes y familias
-- Polling cada 3s para mensajes en tiempo real
-- Badge no leídos en sidebar (actualización cada 30s)
-- Filtros: todos / internos / adoptantes / acogidas / no leídos
-- Modal nueva conversación multi-paso
-- Emoji picker, Enter envía, Shift+Enter nueva línea
-- Agrupación mensajes por fecha, estado ✓✓
+- Conversaciones: internas (1:1 y grupos), con adoptantes, con familias
+- Polling 3s para mensajes en tiempo real
+- Badge no leídos en sidebar (actualización 30s)
+- Filtros, modal nueva conversación, emoji picker
 
 ### ✅ 10. Calendario (`/calendario`)
-- FullCalendar con 4 vistas: Mes / Semana / Día / Agenda
-- 6 tipos de evento con colores: adopción, veterinario, acogida, voluntarios, urgente, campaña
-- Drag & drop y resize de eventos (coordinadores/admin)
+- FullCalendar: 4 vistas (Mes/Semana/Día/Agenda)
+- 6 tipos evento con colores, drag & drop, resize
 - Modal crear/editar: animal, asignados, recordatorio, recurrencia
-- Sidebar: próximos 7 días + filtros toggle por tipo
-- Flag `auto_generated` para eventos creados por el sistema
+- Sidebar próximos 7 días + filtros toggle
 
 ### ✅ 11. Configuración (`/configuracion`) — Solo admin
 Sub-sidebar con 10 secciones:
-1. **Perfil**: nombre, slug, logo/portada (upload), RRSS, geocodificación Nominatim, preview portal
-2. **Equipo**: tabla miembros, cambio rol inline, activar/desactivar, invitaciones con link, matriz permisos
-3. **Notificaciones**: toggles app/email por tipo, umbrales de alerta
-4. **Adopciones**: cuota, visita hogar, entrevista, textos email con variables `{{nombre_animal}}`
-5. **Acogidas**: visita previa, duración máx, frecuencia seguimiento, karma, email bienvenida
-6. **Objetivos**: 4 KPIs mensuales + capacidad máxima refugio
-7. **Integraciones**: Stripe (keys + widget donación), Resend (email propio), Google Calendar, WhatsApp
-8. **Apariencia**: color picker (12 presets + hex), preview tiempo real, densidad interfaz — aplica CSS var `--color-primary`
-9. **Datos**: export ZIP, política retención, audit log + CSV, zona de peligro con doble confirmación
-10. **Plan**: barras de uso, tabla comparativa planes, historial facturas
+1. **Perfil**: nombre, slug, logo/portada (upload), geocodificación Nominatim
+2. **Equipo**: tabla miembros, roles, invitaciones con link, matriz permisos
+3. **Notificaciones**: toggles app/email, umbrales de alerta
+4. **Adopciones**: cuota, visita hogar, textos email con variables
+5. **Acogidas**: visita previa, duración, frecuencia, karma, email bienvenida
+6. **Objetivos**: 4 KPIs mensuales + capacidad máxima
+7. **Integraciones**: Stripe, Resend, Google Calendar, WhatsApp (próximo)
+8. **Apariencia**: color picker, densidad interfaz → aplica CSS `--color-primary`
+9. **Datos**: export ZIP, audit log, zona de peligro
+10. **Plan y Facturación**: → ver módulo Billing
 
 ### ✅ 12. Donaciones (`/donaciones`)
-- **Tab Resumen**: 4 KPIs con trend %, barra objetivo (semáforo), gráfico 12 meses, 2 donuts, confetti al 100%
-- **Tab Donaciones**: tabla filtrable (canal/tipo/campaña/estado), paginación, export CSV, directorio donantes, detalle por click
-- **Tab Campañas**: grid con portada, progreso, estado badge, acciones inline
-- Registro manual (transferencia, efectivo, Bizum) con NIF para recibos
+- Tab Resumen: 4 KPIs, barra objetivo semáforo, gráfico 12 meses, confetti al 100%
+- Tab Donaciones: tabla filtrable, export CSV, directorio donantes
+- Tab Campañas: grid con portada, progreso, estado badge, acciones inline
+- Registro manual (transferencia, efectivo, Bizum) con NIF
 - Generador recibos PDF: importe en palabras español, texto legal IRPF
-- Directorio donantes con historial completo
+
+### ✅ 13. Asistente IA (`Ctrl+K` o botón flotante ✨)
+- Panel flotante centrado 640px, activado con `Ctrl+K` / `Cmd+K`
+- Streaming token a token via SSE (backend proxea a Claude API)
+- Contexto adaptativo: 7 categorías de intención (animals, adoptions, foster, tasks, volunteers, sos, stats)
+- SQL queries relevantes según palabras clave de la pregunta
+- Sistema de acciones en la respuesta:
+  - `ACTION:NAVIGATE` → navega a sección del CRM
+  - `ACTION:CREATE_TASK` → crea tarea en Supabase con confirmación
+  - `ACTION:COPY_EMAIL` → copia email al portapapeles
+- 6 sugerencias iniciales clickables
+- Historial multi-turn (últimos 6 mensajes)
+- Markdown renderizado inline (tablas, negrita, listas, código)
+- Muestra error amigable si Anthropic no tiene créditos
+
+### ✅ 14. Sistema de Planes y Feature Gates (`/configuracion` → Plan y Facturación)
+- 4 planes: `free` (0€) · `starter` (29,95€) · `pro` (59,95€) · `enterprise` (99,95€)
+- `src/lib/billing/plans.ts`: única fuente de verdad con 26 features y 5 límites
+- `PlanContext.tsx`: React Context + `usePlan()` hook: `can()`, `withinLimit()`, `requiredPlanFor()`
+- `FeatureGate.tsx`: 3 modos: `hide`, `blur` (CSS), `upgrade-prompt` (card con CTA)
+- Sidebar: items bloqueados muestran 🔒 y navegan a Config si el plan no los incluye
+- Pantalla billing: barras de uso, toggle anual/mensual, grid 4 planes, tabla comparativa
+- Modales upgrade/downgrade con diff de features desbloqueadas/perdidas
+- `migrate-v11.ts`: `plan_id`, `plan_started_at`, `plan_expires_at`, Stripe fields en `refugios`
 
 ---
 
-## Portal Público implementado (`portal/`)
+## Portal Público implementado (`portal/`, puerto 5174)
 
-Aplicación Vite separada en puerto 5174 con React Router v6.
+Vite + React + React Router v6. Rutas:
 
 | Ruta | Descripción |
 |------|-------------|
-| `/` | Home: hero animado, contadores impacto, grid animales, cómo funciona, SOS, protectoras, CTA |
-| `/adoptar` | Buscador con filtros (especie, tamaño, sexo, chips), paginación, favoritos localStorage |
-| `/adoptar/:id` | Ficha: galería, personalidad, compatibilidad, formulario adopción 5 pasos multi-step |
-| `/sos` | Listado avisos activos con modal detalle y compartir WhatsApp |
+| `/` | Home: hero, contadores animados, grid animales, cómo funciona, SOS, protectoras |
+| `/adoptar` | Buscador con filtros, paginación, favoritos localStorage |
+| `/adoptar/:id` | Ficha: galería, personalidad, formulario adopción 5 pasos |
+| `/sos` | Listado avisos activos con modal detalle |
 | `/protectoras` | Directorio con buscador |
 | `/protectoras/:slug` | Perfil público con grid de animales |
-| `/como-funciona` | Proceso paso a paso + FAQ con acordeón |
-| `/sobre-nosotros` | Historia, valores, CTA |
+| `/como-funciona` | Proceso paso a paso + FAQ |
+| `/sobre-nosotros` | Historia y valores |
 
-**API pública** (sin autenticación, bajo `/api/public/*`):
-- `GET /public/animals` — animales filtrados (especie, tamaño, búsqueda…)
-- `GET /public/animals/:id` — ficha pública + animales similares + tracking vistas
-- `GET /public/shelters` — directorio protectoras
-- `GET /public/shelters/:slug` — perfil protectora
-- `GET /public/stats` — estadísticas globales
-- `POST /public/adoption-request` — solicitud adopción desde portal
-- `POST /public/animals/:id/share` — tracking compartidos
-
-**Características SEO**:
-- `react-helmet-async`: meta title/description únicos por página
-- Open Graph + Twitter Card para preview al compartir en WhatsApp/redes
-- Skeleton loaders, lazy loading imágenes
-- Favoritos en localStorage (sin login)
+API pública bajo `/api/public/*` (sin autenticación): animals, shelters, stats, adoption-request, share.
 
 ---
 
-## Tablas de Supabase (PostgreSQL)
+## Landing Page (`landing/`, puerto 3000)
 
-### Core (`migrate.ts`)
-| Tabla | Descripción |
-|-------|-------------|
-| `refugios` | Protectoras (ampliada en v7 con slug, ciudad, redes sociales) |
-| `usuarios` | Usuarios del sistema (ampliada en v5 con karma, especialidades) |
-| `animales` | Fichas de animales |
-| `animal_fotos` | Fotos de animales |
-| `acogidas` | Acogidas legacy |
-| `adopciones` | Adopciones legacy |
-| `animal_notas` | Notas internas |
-| `actividad` | Log de actividad |
-| `avisos` | Avisos legacy |
-| `donaciones` | Donaciones legacy |
-| `eventos` | Eventos legacy |
+Next.js 14 + Tailwind CSS. Design system generado con skill **ui-ux-pro-max**:
+- Estilo: Dark Mode OLED + Exaggerated Minimalism (inspiración Linear/Vercel/Raycast)
+- Tipografía: Instrument Serif (headings editoriales) + DM Sans (body/UI)
+- Paleta: `#0a0a0a` fondo, `#1D9E75` brand, `#a1a1a1` muted
 
-### v2 — Detalle animal
-| Tabla | Descripción |
-|-------|-------------|
-| `health_events` | Eventos médicos por animal |
-| `behavior_evaluations` | Evaluaciones de comportamiento |
-| `animal_documents` | Documentos adjuntos |
+**11 secciones:**
 
-### v3 — Adopciones
-| Tabla | Descripción |
-|-------|-------------|
-| `adoption_requests` | Solicitudes de adopción |
-| `adoption_interviews` | Entrevistas programadas |
-| `adoption_expedients` | Expedientes en proceso |
-| `expedient_checklist` | Checklist por expediente |
-| `adoption_timeline` | Timeline de eventos |
+| Sección | Highlights |
+|---------|-----------|
+| Navbar | Floating + backdrop-blur scroll, dropdown Producto con 6 sub-links |
+| Hero | H1 72px Instrument Serif + mini-dashboard CRM en HTML/CSS + notificación iOS flotante delay 1.6s + dot grid + glow verde |
+| LogoBar | Marquee CSS infinito 28s, pausa hover, 8 protectoras |
+| Problem | Hard cut blanco (contraste = efecto), Lucide SVG icons, pull quote editorial |
+| ProductTour | 6 tabs sidebar → 6 mockups CSS únicos (Dashboard, Ficha animal, Kanban adopciones, Chat IA, Mapa SOS, Padrinos) con fade 200ms |
+| AISection | Dark gradient, pulsating badge, 4 cards con visuals inline |
+| AdoptionFlow | Timeline 5 pasos + 4 impact numbers serif 40px |
+| Pricing | Pro plan dark #0a0a0a borde verde, toggle anual/mensual |
+| Testimonials | Bento: 1 grande dark + 2 pequeñas blancas |
+| FAQ | Accordion con Plus/Minus Lucide |
+| CTA | H1 72px + dot grid + glow + trust indicators SVG |
 
-### v4 — Acogidas
-| Tabla | Descripción |
-|-------|-------------|
-| `foster_families` | Familias de acogida |
-| `foster_assignments` | Asignaciones animal↔familia |
-| `foster_contacts` | Contactos de seguimiento |
-| `karma_events` | Puntos karma (familias + voluntarios) |
+---
 
-### v5 — Voluntarios y Tareas
-| Tabla | Descripción |
-|-------|-------------|
-| `tasks` | Tareas del equipo |
-| `usuarios` (ext.) | +karma_puntos, +especialidades[], +bio, +es_disponible, +racha_dias |
+## Tablas de Supabase (PostgreSQL) — v1 a v11
 
-### v6 — SOS Pet
-| Tabla | Descripción |
-|-------|-------------|
-| `sos_alerts` | Avisos de animales perdidos/encontrados |
-| `sos_updates` | Actualizaciones de avisos |
-| `pending_notifications` | Notificaciones pendientes |
+### Core (v1-v6) — ya documentadas anteriormente
+`refugios` · `usuarios` · `animales` · `animal_fotos` · `health_events` · `behavior_evaluations` · `animal_documents` · `adoption_requests` · `adoption_expedients` · `foster_families` · `foster_assignments` · `foster_contacts` · `karma_events` · `tasks` · `sos_alerts` · `sos_updates`
 
 ### v7 — Portal Público
-| Tabla / Cambio | Descripción |
-|----------------|-------------|
-| `refugios` (ext.) | +slug, +ciudad, +description_public, +cover_url, +website, +instagram, +facebook, +is_public |
-| `animal_analytics` | Seguimiento de vistas y compartidos por animal |
+`animal_analytics` · columnas nuevas en `refugios`: slug, ciudad, description_public, cover_url, website, instagram, facebook, is_public
 
 ### v8 — Mensajes y Calendario
-| Tabla | Descripción |
-|-------|-------------|
-| `conversations` | Conversaciones (internas, con adoptantes, con familias) |
-| `conversation_participants` | Participantes por conversación |
-| `messages` | Mensajes de cada conversación |
-| `events` | Eventos del calendario |
+`conversations` · `conversation_participants` · `messages` · `events`
 
 ### v9 — Configuración
-| Tabla | Descripción |
-|-------|-------------|
-| `shelter_config` | Configuración completa de la protectora (adopciones, acogidas, objetivos, integraciones, apariencia) |
-| `audit_log` | Registro de cambios importantes en el sistema |
-| `invitations` | Invitaciones pendientes de nuevos miembros |
+`shelter_config` · `audit_log` · `invitations`
 
 ### v10 — Donaciones
-| Tabla | Descripción |
-|-------|-------------|
-| `donations` | Donaciones con canal, tipo, donante, recibo, campaña |
-| `donation_campaigns` | Campañas de captación de fondos |
-| `donors` | Directorio de donantes con totales históricos |
+`donations` · `donation_campaigns` · `donors`
+
+### v11 — Billing
+Columnas nuevas en `refugios`: plan_id · plan_started_at · plan_expires_at · stripe_customer_id · stripe_subscription_id
 
 ### Buckets Supabase Storage
-| Bucket | Uso | Visibilidad |
-|--------|-----|-------------|
-| `animal-photos` | Fotos de fichas de animales | Público |
-| `sos-photos` | Fotos de avisos SOS | Público |
-| `shelter-assets` | Logos y portadas de protectoras | Público |
+| Bucket | Uso |
+|--------|-----|
+| `animal-photos` | Fotos de fichas |
+| `sos-photos` | Fotos de avisos SOS |
+| `shelter-assets` | Logos y portadas de protectoras |
 
 ---
 
 ## API REST — Endpoints completos (bajo `/api`)
 
-### Autenticación
 ```
-POST /auth/login          → JWT token
-GET  /auth/me             → Usuario actual
-PUT  /auth/password       → Cambiar contraseña
-GET  /permisos            → Permisos del rol
-```
+POST /auth/login · GET /auth/me · PUT /auth/password · GET /permisos
 
-### Animales
-```
-GET/POST/PUT/DELETE /animales, /animales/:id
-POST /animales/:id/notas
-POST/DELETE/PUT     /animales/:id/fotos, /fotos/:fotoId
-GET/POST/DELETE     /animales/:id/health, /health/:eventId
-GET/POST            /animales/:id/behavior
-GET/POST/DELETE     /animales/:id/documents, /documents/:docId
-POST                /animales/:id/instagram  ← Claude API
-```
+GET/POST/PUT/DELETE /animales, /animales/:id + health/behavior/documents/fotos/instagram
 
-### SOS Pet
-```
-GET/POST            /sos/public, /sos/public/:id   ← SIN AUTH
-GET/PUT/POST        /sos, /sos/:id, /sos/:id/update, /sos/:id/rescatar
-```
+GET/POST/PUT/POST   /sos/public*, /sos, /sos/:id + update/rescatar
 
-### Voluntarios y Tareas
-```
 GET/PUT             /voluntarios, /voluntarios/:id
-GET/POST/PUT/DELETE /tareas, /tareas/:id
-POST                /tareas/:id/completar
+GET/POST/PUT/DELETE /tareas, /tareas/:id + completar
 GET                 /rankings
-```
 
-### Acogidas
-```
-GET/POST/PUT        /acogidas/familias, /acogidas/familias/:id
-POST                /acogidas/familias/:id/asignar
-GET                 /acogidas/activas, /acogidas/historial
-GET/POST            /acogidas/assignments/:id/contactos, /contacto
-POST                /acogidas/assignments/:id/finalizar
-```
+GET/POST/PUT + actions  /acogidas/familias, activas, historial, assignments
 
-### Adopciones
-```
-GET/POST/PUT/POST   /adopciones/solicitudes, /:id, /:id/estado, /:id/entrevista, /:id/aprobar
-GET/PUT/POST        /adopciones/expedientes, /:id, /:id/checklist/:itemKey, /:id/cerrar
-```
+GET/POST/PUT + actions  /adopciones/solicitudes, expedientes + checklist/cerrar
 
-### Reportes
-```
-GET /reportes/resumen, /animales, /adopciones, /acogidas, /sos
-GET /reportes/export
-POST /reportes/ai-summary   ← Claude API
-```
+GET                 /reportes/resumen, /animales, /adopciones, /acogidas, /sos, /export
+POST                /reportes/ai-summary
 
-### Mensajes
-```
 GET/POST            /mensajes/conversations, /conversations/:id/messages
-POST                /mensajes/conversations/:id/messages
 PUT                 /mensajes/conversations/:id/read
 GET                 /mensajes/unread, /mensajes/users
-```
 
-### Calendario
-```
 GET/POST/PUT/DELETE /calendario/events, /events/:id
 GET                 /calendario/events/upcoming
-```
 
-### Configuración
-```
 GET/PUT             /config
-GET/PUT/DELETE      /config/team, /team/:memberId/role, /team/:memberId/status, /team/:memberId
-GET/POST/DELETE     /config/invitations, /invitations/:id
+GET/PUT/DELETE      /config/team, /config/invitations
 GET                 /config/audit-log
-POST                /config/upload-asset
-GET                 /config/geocode
-```
+POST                /config/upload-asset · GET /config/geocode
 
-### Donaciones
-```
-GET                 /donations/summary
-GET/POST/PUT        /donations, /donations/:id
+GET/POST/PUT        /donations/summary, /donations, /donations/:id
 GET/POST/PUT        /donations/campaigns, /campaigns/:id
 GET                 /donations/donors, /donors/:id
-```
 
-### Portal Público (sin auth)
-```
-GET                 /public/animals, /animals/:id
-GET                 /public/shelters, /shelters/:slug
-GET                 /public/stats
-POST                /public/adoption-request
-POST                /public/animals/:id/share
+GET/POST            /billing/plan
+
+POST                /assistant/chat · POST /assistant/create-task
+
+GET                 /public/animals*, /public/shelters*, /public/stats
+POST                /public/adoption-request · POST /public/animals/:id/share
 ```
 
 ---
@@ -429,201 +332,123 @@ resqpets/
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/
-│   │   │   ├── acogidas.controller.ts
-│   │   │   ├── adopciones.controller.ts
-│   │   │   ├── animales.controller.ts
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── behavior.controller.ts
-│   │   │   ├── calendario.controller.ts      ← nuevo
-│   │   │   ├── config.controller.ts          ← nuevo
-│   │   │   ├── dashboard.controller.ts
-│   │   │   ├── documents.controller.ts
-│   │   │   ├── donaciones.controller.ts      ← nuevo
-│   │   │   ├── fotos.controller.ts
-│   │   │   ├── health.controller.ts
-│   │   │   ├── instagram.controller.ts
-│   │   │   ├── mensajes.controller.ts        ← nuevo
-│   │   │   ├── public.controller.ts          ← nuevo
-│   │   │   ├── reportes.controller.ts        ← nuevo
-│   │   │   ├── sos.controller.ts
-│   │   │   ├── usuarios.controller.ts
-│   │   │   └── voluntarios.controller.ts
+│   │   │   ├── [original: acogidas, adopciones, animales, auth, behavior,
+│   │   │   │    dashboard, documents, fotos, health, instagram, sos, usuarios, voluntarios]
+│   │   │   ├── assistant.controller.ts    ← Asistente IA (streaming SSE)
+│   │   │   ├── billing.controller.ts      ← Planes y uso
+│   │   │   ├── calendario.controller.ts   ← Eventos
+│   │   │   ├── config.controller.ts       ← Configuración protectora
+│   │   │   ├── donaciones.controller.ts   ← Donaciones y campañas
+│   │   │   ├── mensajes.controller.ts     ← Chat interno
+│   │   │   ├── public.controller.ts       ← API pública portal
+│   │   │   └── reportes.controller.ts     ← Estadísticas
 │   │   ├── db/
-│   │   │   ├── migrate.ts       ← v1: tablas core
-│   │   │   ├── migrate-v2.ts    ← health_events, behavior, documents
-│   │   │   ├── migrate-v3.ts    ← adoption_*
-│   │   │   ├── migrate-v4.ts    ← foster_*, karma_events
-│   │   │   ├── migrate-v5.ts    ← tasks, extiende usuarios
-│   │   │   ├── migrate-v6.ts    ← sos_alerts, sos_updates
-│   │   │   ├── migrate-v7.ts    ← portal público (slug, animal_analytics)
-│   │   │   ├── migrate-v8.ts    ← conversations, messages, events
-│   │   │   ├── migrate-v9.ts    ← shelter_config, audit_log, invitations
-│   │   │   ├── migrate-v10.ts   ← donations, donation_campaigns, donors
-│   │   │   ├── pool.ts          ← Conexión Supabase
-│   │   │   └── seed.ts          ← Datos demo base
+│   │   │   ├── migrate.ts → migrate-v11.ts
+│   │   │   ├── pool.ts
+│   │   │   └── seed.ts
 │   │   ├── middleware/auth.ts
-│   │   ├── routes/index.ts      ← ~300 líneas, todos los endpoints
+│   │   ├── routes/index.ts              ← ~300 líneas
 │   │   ├── types/index.ts
 │   │   └── index.ts
-│   ├── .env                     ← NO en git
+│   ├── .env                             ← NO en git
 │   ├── package.json
 │   └── tsconfig.json
 │
-├── frontend/                    ← CRM (puerto 5173)
+├── frontend/                            ← CRM (puerto 5173)
 │   ├── src/
-│   │   ├── api/client.ts        ← get/post/put/delete + métodos específicos
+│   │   ├── api/client.ts                ← get/post/put/delete
 │   │   ├── components/
-│   │   │   ├── Sidebar.tsx      ← con badge no leídos mensajes
+│   │   │   ├── Sidebar.tsx              ← con feature gates + badge mensajes
 │   │   │   ├── TopBar.tsx
-│   │   │   └── ui.tsx
+│   │   │   ├── ui.tsx
+│   │   │   └── assistant/
+│   │   │       └── FloatingAssistant.tsx ← Ctrl+K chat IA streaming
 │   │   ├── context/
 │   │   │   ├── AnimalListContext.tsx
 │   │   │   └── AuthContext.tsx
+│   │   ├── lib/
+│   │   │   ├── assistant/actions.ts     ← Markdown renderer + action parser
+│   │   │   └── billing/
+│   │   │       ├── plans.ts             ← Única fuente de verdad de planes
+│   │   │       ├── PlanContext.tsx      ← React Context + usePlan() hook
+│   │   │       └── FeatureGate.tsx      ← hide/blur/upgrade-prompt
 │   │   ├── pages/
-│   │   │   ├── [páginas originales: Acogidas, Adopciones, Animales, Avisos, Dashboard, Detalle, Login, SOS, Usuarios, Voluntarios...]
-│   │   │   ├── CalendarioPage.tsx           ← nuevo
-│   │   │   ├── ConfiguracionPage.tsx        ← nuevo
-│   │   │   ├── DonacionesPage.tsx           ← nuevo
-│   │   │   ├── MensajesPage.tsx             ← nuevo
-│   │   │   ├── ReportesPage.tsx             ← nuevo
-│   │   │   ├── config/                      ← nuevo (10 secciones)
-│   │   │   │   ├── shared.tsx
-│   │   │   │   ├── PerfilSection.tsx
-│   │   │   │   ├── EquipoSection.tsx
-│   │   │   │   ├── NotificacionesSection.tsx
-│   │   │   │   ├── AdopcionesConfigSection.tsx
-│   │   │   │   ├── AcogidasConfigSection.tsx
-│   │   │   │   ├── ObjetivosSection.tsx
-│   │   │   │   ├── IntegracionesSection.tsx
-│   │   │   │   ├── AparienciaSection.tsx
-│   │   │   │   ├── DatosSection.tsx
-│   │   │   │   └── PlanSection.tsx
-│   │   │   ├── donaciones/                  ← nuevo
-│   │   │   │   ├── ResumenTab.tsx
-│   │   │   │   ├── HistorialTab.tsx
-│   │   │   │   ├── CampanasTab.tsx
-│   │   │   │   ├── DonacionModal.tsx
-│   │   │   │   ├── CampanaModal.tsx
-│   │   │   │   └── ReceiptGenerator.ts
-│   │   │   └── reportes/                    ← nuevo
-│   │   │       ├── shared.tsx
-│   │   │       ├── SummaryTab.tsx
-│   │   │       ├── AnimalesTab.tsx
-│   │   │       ├── AdopcionesTab.tsx
-│   │   │       ├── AcogidasTab.tsx
-│   │   │       └── SosPetTab.tsx
+│   │   │   ├── [originales: Acogidas, Adopciones, Animales, Avisos, Dashboard,
+│   │   │   │    Detalle, Login, SOS, Usuarios, Voluntarios]
+│   │   │   ├── CalendarioPage.tsx
+│   │   │   ├── ConfiguracionPage.tsx
+│   │   │   ├── DonacionesPage.tsx
+│   │   │   ├── MensajesPage.tsx
+│   │   │   ├── ReportesPage.tsx
+│   │   │   ├── config/                  ← 10 secciones + shared
+│   │   │   ├── donaciones/              ← 3 tabs + modales + ReceiptGenerator
+│   │   │   └── reportes/                ← 5 tabs + shared charts
 │   │   ├── types/index.ts
-│   │   ├── utils/PosterGenerator.ts
-│   │   ├── App.tsx
+│   │   ├── App.tsx                      ← PlanProvider + AssistantFull
 │   │   └── main.tsx
 │   ├── package.json
-│   └── vite.config.ts           ← cacheDir fuera de Dropbox
+│   └── vite.config.ts                   ← cacheDir fuera de Dropbox
 │
-├── portal/                      ← Portal público (puerto 5174)
+├── portal/                              ← Portal público (puerto 5174)
 │   ├── src/
 │   │   ├── api/client.ts
-│   │   ├── components/
-│   │   │   ├── PublicHeader.tsx
-│   │   │   ├── PublicFooter.tsx
-│   │   │   ├── PublicLayout.tsx
-│   │   │   ├── AnimalCard.tsx   ← con favoritos localStorage
-│   │   │   ├── AnimatedCounter.tsx
-│   │   │   └── SEOHead.tsx
-│   │   ├── forms/AdoptionForm.tsx ← 5 pasos, guarda draft localStorage
-│   │   ├── pages/
-│   │   │   ├── HomePage.tsx
-│   │   │   ├── AdoptarPage.tsx
-│   │   │   ├── AnimalDetailPage.tsx
-│   │   │   ├── SosPage.tsx
-│   │   │   ├── ProtectorasPage.tsx
-│   │   │   ├── ProtectoraDetailPage.tsx
-│   │   │   ├── ComoFuncionaPage.tsx
-│   │   │   └── SobreNosotrosPage.tsx
+│   │   ├── components/landing/          ← Header, Footer, AnimalCard, SEOHead
+│   │   ├── forms/AdoptionForm.tsx        ← 5 pasos, draft localStorage
+│   │   ├── pages/                       ← 8 rutas públicas
 │   │   ├── types/index.ts
-│   │   ├── App.tsx              ← React Router v6
+│   │   ├── App.tsx                      ← React Router v6
 │   │   └── main.tsx
 │   ├── package.json
-│   └── vite.config.ts           ← puerto 5174, proxy /api
+│   └── vite.config.ts                   ← puerto 5174, proxy /api
+│
+├── landing/                             ← Landing page (puerto 3000)
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── globals.css              ← Tailwind + animations (prefers-reduced-motion)
+│   │   │   ├── layout.tsx               ← Instrument Serif + DM Sans + SEO meta
+│   │   │   └── page.tsx                 ← Importa las 11 secciones
+│   │   └── components/landing/
+│   │       ├── Navbar.tsx               ← Floating + blur + dropdown
+│   │       ├── Hero.tsx                 ← 2-col + CRM mockup CSS + notif iOS
+│   │       ├── LogoBar.tsx              ← Marquee CSS infinito
+│   │       ├── ProblemSection.tsx       ← White hard cut
+│   │       ├── ProductTour.tsx          ← 6 tabs + 6 mockups CSS interactivos
+│   │       ├── AISection.tsx            ← 4 feature cards IA
+│   │       ├── AdoptionFlow.tsx         ← Timeline 5 pasos
+│   │       ├── PricingSection.tsx       ← 4 planes toggle anual
+│   │       ├── TestimonialsSection.tsx  ← Bento layout
+│   │       ├── FAQSection.tsx           ← Accordion
+│   │       ├── CtaSection.tsx           ← Dark con glow
+│   │       ├── Footer.tsx
+│   │       └── useReveal.ts             ← Intersection Observer hook
+│   ├── next.config.mjs
+│   ├── tailwind.config.ts
+│   └── package.json
 │
 ├── scripts/
-│   ├── seed-acogidas.js         ← 15 familias, acogidas, karma events
-│   ├── seed-voluntarios.js      ← 8 voluntarios, 25 tareas, karma events
-│   ├── seed-sos.js              ← 20 avisos Madrid área metropolitana
-│   ├── seed-reportes.js         ← 63 animales + 38 adopciones + 30 acogidas + 86 SOS históricos
-│   ├── seed-mensajes.js         ← 9 conversaciones + 75 mensajes (7 días)
-│   ├── seed-calendario.js       ← 31 eventos (-30d a +60d, incluye hoy)
-│   └── seed-donaciones.js       ← 3 campañas + 50 donaciones + 14 donantes
+│   ├── seed-acogidas.js, seed-voluntarios.js, seed-sos.js
+│   ├── seed-reportes.js    ← 63 animales + 38 adopciones + 30 acogidas + 86 SOS (12 meses)
+│   ├── seed-mensajes.js    ← 9 conversaciones + 75 mensajes (7 días)
+│   ├── seed-calendario.js  ← 31 eventos (-30d a +60d, incluye hoy)
+│   └── seed-donaciones.js  ← 3 campañas + 50 donaciones + 14 donantes
 │
 └── ESTADO_PROYECTO.md
 ```
 
 ---
 
-## Dependencias instaladas
+## Datos de demo cargados
 
-### Backend
-| Paquete | Versión | Uso |
-|---------|---------|-----|
-| express | ^4.19.2 | Framework web |
-| pg | ^8.11.5 | Driver PostgreSQL |
-| jsonwebtoken | ^9.0.2 | JWT auth |
-| bcryptjs | ^2.4.3 | Hash contraseñas |
-| dotenv | ^16.4.5 | Variables de entorno |
-| helmet | ^7.1.0 | Cabeceras seguridad HTTP |
-| cors | ^2.8.5 | CORS |
-| multer | ^2.1.1 | Upload archivos |
-| @anthropic-ai/sdk | ^0.100.1 | Claude API (Instagram + resumen IA) |
-| ts-node-dev | ^2.0.0 | Dev server con hot-reload |
-| typescript | ^5.4.5 | Compilador TS |
-
-### CRM Frontend
-| Paquete | Versión | Uso |
-|---------|---------|-----|
-| react + react-dom | ^18.3.1 | UI framework |
-| vite | ^5.2.12 | Bundler + dev server |
-| leaflet + react-leaflet | ^1.9.4 / ^5.0 | Mapas OpenStreetMap |
-| @dnd-kit/core + sortable | ^6.3 / ^10 | Drag & drop |
-| canvas-confetti | ^1.9.4 | Animaciones celebración |
-| jspdf | ^4.2.1 | Generación PDFs (recibos, carteles SOS) |
-| qrcode | ^1.5.4 | QR codes en carteles |
-| recharts | latest | Gráficos (Reportes, Donaciones) |
-| react-is | latest | Dependencia de recharts |
-| html2canvas | latest | Capturas para PDF |
-| jszip | latest | Exportación ZIP |
-| @fullcalendar/react + plugins | latest | Módulo Calendario |
-
-### Portal Público
-| Paquete | Versión | Uso |
-|---------|---------|-----|
-| react + react-dom | ^18.3.1 | UI framework |
-| react-router-dom | ^6.26.1 | Routing (URL-based) |
-| react-helmet-async | ^2.0.5 | SEO meta tags |
-| leaflet + react-leaflet | ^4.2.1 | Mapa SOS |
-
----
-
-## Sistema de roles y permisos
-
-```
-admin       → acceso total a todo el CRM incluyendo Configuración
-coordinador → todo excepto: eliminar animales, gestionar usuarios, acceder a Config
-voluntario  → solo lectura + completar sus propias tareas + añadir notas
-```
-
----
-
-## Sistema de karma
-
-**Voluntarios**: tareas +2/+5/+10 según prioridad baja/media/alta
-
-**Familias de acogida**:
-- +1pt cada 7 días de acogida activa
-- +10 animal adoptado desde el hogar
-- +20 necesidades especiales / +10 cachorro / +15 senior
-- +50 primera acogida completada
-- +10 valoración 5 estrellas
-
-**Niveles**: Bronce (0-99) → Plata (100-299) → Oro (300-599) → Platino (600-999) → Diamante (1000+)
+| Seed | Registros |
+|------|-----------|
+| `npm run seed` | 1 refugio, 4 usuarios base, 5 animales, 3 avisos, 3 donaciones legacy |
+| `seed-acogidas.js` | 15 familias, 5 acogidas activas, 20 historial, 184 karma events |
+| `seed-voluntarios.js` | 8 voluntarios, 25 tareas, 363 karma events |
+| `seed-sos.js` | 20 avisos Madrid área metropolitana |
+| `seed-reportes.js` | 63 animales históricos, 38 adopciones, 30 acogidas, 86 SOS (12 meses) |
+| `seed-mensajes.js` | 9 conversaciones (internas + adoptantes + familias), 75 mensajes |
+| `seed-calendario.js` | 31 eventos distribuidos -30d a +60d |
+| `seed-donaciones.js` | 3 campañas, 50 donaciones (6 meses), 14 donantes |
 
 ---
 
@@ -637,33 +462,43 @@ voluntario  → solo lectura + completar sus propias tareas + añadir notas
 | david@huellaviva.org | David1234! | Voluntario |
 | isabel.gomez@huellaviva.org | Voluntario1! | Coordinador |
 | lucia.herrero@huellaviva.org | Voluntario1! | Voluntario |
-| (+ 6 voluntarios más del seed-voluntarios) | Voluntario1! | Voluntario |
+| (+ 6 voluntarios más del seed) | Voluntario1! | Voluntario |
 
 ---
 
-## Datos de demo cargados
+## Sistema de roles y permisos
 
-| Seed | Registros |
-|------|-----------|
-| `npm run seed` | 1 refugio, 4 usuarios base, 5 animales, 3 avisos, 3 donaciones legacy, 3 eventos |
-| `seed-acogidas.js` | 15 familias, 5 acogidas activas, 20 historial, 20 contactos, 184 karma events |
-| `seed-voluntarios.js` | 8 voluntarios, 25 tareas (6 vencidas, 1 hoy), 363 karma events |
-| `seed-sos.js` | 20 avisos Madrid área metropolitana (10 perdidos + 10 avistados) |
-| `seed-reportes.js` | 63 animales históricos, 38 adopciones completadas, 30 acogidas, 86 avisos SOS |
-| `seed-mensajes.js` | 9 conversaciones (internas + adoptantes + familias), 75 mensajes |
-| `seed-calendario.js` | 31 eventos distribuidos -30d a +60d (incluye evento para hoy) |
-| `seed-donaciones.js` | 3 campañas, 50 donaciones (6 meses), 14 donantes en directorio |
+```
+admin       → acceso total + Configuración + cambio de planes
+coordinador → todo excepto: eliminar animales, gestionar usuarios, Config
+voluntario  → solo lectura + completar propias tareas + añadir notas
+```
+
+Feature gates por plan (`src/lib/billing/plans.ts`):
+- `free`: animales, adopciones, portal, SOS, donaciones básicas
+- `starter`: + acogidas, voluntarios, calendario, test compatibilidad, IA 50/mes
+- `pro`: + IA completa, reconocimiento facial, asistente Cmd+K, padrinos, WhatsApp
+- `enterprise`: + multi-sede, API veterinaria, mapa nacional, soporte dedicado
+
+---
+
+## Skills instaladas (Claude Code)
+
+| Skill | Uso |
+|-------|-----|
+| **caveman** | Comprime output de Claude ~65%. Activa con `caveman mode` o `/caveman` |
+| **ui-ux-pro-max** | Design intelligence: 67 estilos, 96 paletas, 57 font pairings. Uso: `py .claude\skills\ui-ux-pro-max\scripts\search.py "query" --design-system` |
 
 ---
 
 ## Notas de operación
 
-- **3 servidores** deben estar corriendo: backend (4000), CRM (5173), portal (5174)
-- El backend carga el `.env` al arrancar; cambios en `.env` requieren reinicio
-- `ts-node-dev` hace hot-reload de cambios en código TypeScript pero NO en `.env`
-- La cuenta de Anthropic necesita créditos para: generador Instagram, resumen IA en Reportes
-- El bucket `sos-photos` y `shelter-assets` deben crearse manualmente en Supabase Storage
-- El portal público (`/adoptar`) solo muestra animales con `web_publicado=true` y `estado='en_adopcion'`
-- Para que aparezcan animales en el portal: activar `web_publicado=true` desde la ficha del animal en el CRM
-- El color principal del CRM se puede personalizar en Config → Apariencia (aplica CSS var `--color-primary`)
-- La caché de Vite del CRM está en `%TEMP%/vite-resqpet-frontend` para evitar conflictos con Dropbox
+- **4 servidores** en desarrollo: backend (4000), CRM (5173), portal (5174), landing (3000)
+- El backend carga `.env` al arrancar; cambios en `.env` requieren reinicio
+- `ts-node-dev` hace hot-reload de código TypeScript pero NO de `.env`
+- **Anthropic API key**: necesaria para asistente IA, generador Instagram y resumen PDF en Reportes. Sin créditos devuelve error amigable en el asistente.
+- El portal solo muestra animales con `web_publicado=true` y `estado='en_adopcion'`
+- Para demo: todos los refugios en plan `enterprise` → `UPDATE refugios SET plan_id='enterprise'`
+- El color del CRM se personaliza en Config → Apariencia (CSS var `--color-primary`)
+- La caché de Vite del CRM está en `%TEMP%/vite-resqpet-frontend` (evita conflictos Dropbox)
+- Los buckets `sos-photos` y `shelter-assets` deben crearse manualmente en Supabase Storage
