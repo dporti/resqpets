@@ -1,4 +1,6 @@
 import { useAuth } from '../context/AuthContext';
+import { usePlan } from '../lib/billing/PlanContext';
+import { PlanFeatures } from '../lib/billing/plans';
 
 interface Props {
   vista: string;
@@ -6,22 +8,26 @@ interface Props {
   unreadMsgs?: number;
 }
 
-const NAV_ITEMS = [
+const NAV_ITEMS: {
+  id: string; icon: string; label: string;
+  permiso?: string; planFeature?: keyof PlanFeatures;
+}[] = [
   { id: 'inicio',        icon: '🏠', label: 'Inicio' },
   { id: 'animales',      icon: '🐾', label: 'Animales' },
   { id: 'adopciones',    icon: '❤️', label: 'Adopciones',  permiso: 'adopciones:read' },
-  { id: 'acogidas',      icon: '🏡', label: 'Acogidas' },
-  { id: 'voluntarios',   icon: '👥', label: 'Voluntarios', permiso: 'usuarios:read' },
+  { id: 'acogidas',      icon: '🏡', label: 'Acogidas',    planFeature: 'foster_families' },
+  { id: 'voluntarios',   icon: '👥', label: 'Voluntarios', permiso: 'usuarios:read', planFeature: 'volunteers' },
   { id: 'avisos',        icon: '🔔', label: 'Avisos' },
   { id: 'donaciones',    icon: '💝', label: 'Donaciones',  permiso: 'donaciones:read' },
   { id: 'reportes',      icon: '📊', label: 'Reportes',    permiso: 'reportes:read' },
-  { id: 'calendario',    icon: '📅', label: 'Calendario' },
+  { id: 'calendario',    icon: '📅', label: 'Calendario',  planFeature: 'calendar' },
   { id: 'mensajes',      icon: '✉️',  label: 'Mensajes' },
   { id: 'configuracion', icon: '⚙️',  label: 'Config',      permiso: 'config:manage' },
 ];
 
 export default function Sidebar({ vista, setVista, unreadMsgs = 0 }: Props) {
-  const { can, user, logout } = useAuth();
+  const { can: canPermiso, user, logout } = useAuth();
+  const { can: canFeature } = usePlan();
 
   return (
     <div style={{
@@ -47,21 +53,44 @@ export default function Sidebar({ vista, setVista, unreadMsgs = 0 }: Props) {
       {/* Nav */}
       <nav style={{ flex: 1, padding: '8px 8px', overflowY: 'auto' }}>
         {NAV_ITEMS.map(item => {
-          if (item.permiso && !can(item.permiso)) return null;
+          if (item.permiso && !canPermiso(item.permiso)) return null;
           const active = vista === item.id;
+          const locked = item.planFeature ? !canFeature(item.planFeature) : false;
+
+          const handleClick = () => {
+            if (locked) {
+              // Navigate to billing tab instead
+              setVista('configuracion');
+            } else {
+              setVista(item.id);
+            }
+          };
+
           return (
-            <button key={item.id} onClick={() => setVista(item.id)} style={{
-              display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-              padding: '8px 10px', borderRadius: 7, border: 'none', cursor: 'pointer',
-              background: active ? '#f0fdf4' : 'transparent',
-              color: active ? '#16a34a' : '#374151',
-              fontWeight: active ? 600 : 400, fontSize: 13.5,
-              fontFamily: "'Inter', sans-serif", marginBottom: 2,
-              transition: 'background 0.15s',
-            }}>
+            <button
+              key={item.id}
+              onClick={handleClick}
+              title={locked ? `Requiere plan superior` : item.label}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                padding: '8px 10px', borderRadius: 7, border: 'none', cursor: 'pointer',
+                background: active ? '#f0fdf4' : 'transparent',
+                color: active ? '#16a34a' : locked ? '#9ca3af' : '#374151',
+                fontWeight: active ? 600 : 400, fontSize: 13.5,
+                fontFamily: "'Inter', sans-serif", marginBottom: 2,
+                transition: 'background 0.15s',
+                opacity: locked ? 0.7 : 1,
+              }}
+            >
               <span style={{ fontSize: 16 }}>{item.icon}</span>
               <span style={{ flex: 1 }}>{item.label}</span>
-              {item.id === 'mensajes' && unreadMsgs > 0 && (
+              {locked && (
+                <span style={{
+                  fontSize: 11, background: '#fef3c7', color: '#92400e',
+                  padding: '1px 6px', borderRadius: 8, fontWeight: 600,
+                }}>🔒</span>
+              )}
+              {item.id === 'mensajes' && !locked && unreadMsgs > 0 && (
                 <span style={{
                   background: '#16a34a', color: '#fff', fontSize: 10,
                   minWidth: 16, height: 16, borderRadius: 8, padding: '0 4px',

@@ -12,6 +12,7 @@ import { IntegracionesSection } from './config/IntegracionesSection';
 import { AparienciaSection } from './config/AparienciaSection';
 import { DatosSection } from './config/DatosSection';
 import { PlanSection } from './config/PlanSection';
+import { BillingTab } from './config/BillingTab';
 
 const SECTIONS = [
   { id: 'perfil',        icon: '🏠', label: 'Perfil de la Protectora' },
@@ -23,7 +24,7 @@ const SECTIONS = [
   { id: 'integraciones', icon: '🔗', label: 'Integraciones' },
   { id: 'apariencia',    icon: '🎨', label: 'Apariencia' },
   { id: 'datos',         icon: '🗄️', label: 'Datos y Privacidad' },
-  { id: 'plan',          icon: '💳', label: 'Plan y Facturación' },
+  { id: 'facturacion',   icon: '💳', label: 'Plan y Facturación' },
 ];
 
 interface ConfigData { config: ShelterConfig; refugio: Refugio; stats: Record<string, string> }
@@ -98,6 +99,7 @@ export default function ConfiguracionPage() {
       case 'integraciones': return <IntegracionesSection config={config} onSave={handleSave} />;
       case 'apariencia':    return <AparienciaSection config={config} onSave={handleSave} />;
       case 'datos':         return <DatosSection />;
+      case 'facturacion':   return <BillingTab />;
       case 'plan':          return <PlanSection stats={stats as { animales: string; usuarios: string }} />;
       default:              return null;
     }

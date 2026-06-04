@@ -25,6 +25,7 @@ import {
 } from '../controllers/adopciones.controller';
 import { upload, uploadFoto, deleteFoto, setPrincipal } from '../controllers/fotos.controller';
 import { generateInstagram } from '../controllers/instagram.controller';
+import { getPlan, updatePlan } from '../controllers/billing.controller';
 import { chat as assistantChat, createTaskAction } from '../controllers/assistant.controller';
 import {
   getSummary as getDonacionesSummary, getDonations, createDonation, updateDonation,
@@ -55,6 +56,10 @@ import {
 import { authenticate, requirePermiso } from '../middleware/auth';
 
 const router = Router();
+
+// ── BILLING ───────────────────────────────────────────
+router.get('/billing/plan',  authenticate, getPlan);
+router.post('/billing/plan', authenticate, updatePlan);
 
 // ── ASISTENTE IA ──────────────────────────────────────
 router.post('/assistant/chat',        authenticate, assistantChat);

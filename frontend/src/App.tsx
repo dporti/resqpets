@@ -15,6 +15,7 @@ import MensajesPage from './pages/MensajesPage';
 import ConfiguracionPage from './pages/ConfiguracionPage';
 import DonacionesPage from './pages/DonacionesPage';
 import { FloatingAssistant, AssistantButton } from './components/assistant/FloatingAssistant';
+import { PlanProvider } from './lib/billing/PlanContext';
 
 function AssistantFull({ onNavigate }: { onNavigate: (v: string) => void }) {
   const [open, setOpen] = useState(false);
@@ -155,5 +156,9 @@ function AppShell() {
 }
 
 export default function App() {
-  return <AppShell />;
+  return (
+    <PlanProvider>
+      <AppShell />
+    </PlanProvider>
+  );
 }

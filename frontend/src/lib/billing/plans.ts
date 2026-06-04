@@ -1,0 +1,232 @@
+export const PLANS = {
+  free: {
+    id: 'free',
+    name: 'Gratuito',
+    price: 0,
+    description: 'Para protectoras pequeñas que empiezan',
+    color: '#6b7280',
+    limits: {
+      animals: 30,
+      users: 3,
+      storage_gb: 1,
+      shelters: 1,
+      ai_descriptions_per_month: 0,
+    },
+    features: {
+      animal_profiles: true,
+      adoptions: true,
+      foster_families: false,
+      volunteers: false,
+      calendar: false,
+      reports: 'basic' as const,
+      public_portal: true,
+      sos_pet: true,
+      compatibility_test: false,
+      success_wall: false,
+      viral_challenges: false,
+      virtual_tour_360: false,
+      ai_descriptions: false,
+      animal_recognition: false,
+      ai_assistant: false,
+      impact_report_pdf: false,
+      basic_donations: true,
+      virtual_sponsors: false,
+      post_adoption_app: false,
+      email_notifications: true,
+      whatsapp: false,
+      verified_badge: false,
+      vet_marketplace: false,
+      national_map: false,
+      vet_api: false,
+      support: 'email' as const,
+      foster_insurance: false,
+    },
+  },
+  starter: {
+    id: 'starter',
+    name: 'Starter',
+    price: 29.95,
+    description: 'Para protectoras en crecimiento',
+    color: '#3b82f6',
+    limits: {
+      animals: 150,
+      users: 15,
+      storage_gb: 20,
+      shelters: 1,
+      ai_descriptions_per_month: 50,
+    },
+    features: {
+      animal_profiles: true,
+      adoptions: true,
+      foster_families: true,
+      volunteers: true,
+      calendar: true,
+      reports: 'advanced' as const,
+      public_portal: true,
+      sos_pet: true,
+      compatibility_test: true,
+      success_wall: true,
+      viral_challenges: false,
+      virtual_tour_360: false,
+      ai_descriptions: true,
+      animal_recognition: false,
+      ai_assistant: false,
+      impact_report_pdf: false,
+      basic_donations: true,
+      virtual_sponsors: false,
+      post_adoption_app: false,
+      email_notifications: true,
+      whatsapp: false,
+      verified_badge: true,
+      vet_marketplace: false,
+      national_map: false,
+      vet_api: false,
+      support: 'chat' as const,
+      foster_insurance: false,
+    },
+  },
+  pro: {
+    id: 'pro',
+    name: 'Pro',
+    price: 59.95,
+    description: 'Para protectoras con alto impacto',
+    color: '#16a34a',
+    limits: {
+      animals: 500,
+      users: 50,
+      storage_gb: 100,
+      shelters: 1,
+      ai_descriptions_per_month: -1,
+    },
+    features: {
+      animal_profiles: true,
+      adoptions: true,
+      foster_families: true,
+      volunteers: true,
+      calendar: true,
+      reports: 'full' as const,
+      public_portal: true,
+      sos_pet: true,
+      compatibility_test: true,
+      success_wall: true,
+      viral_challenges: true,
+      virtual_tour_360: true,
+      ai_descriptions: true,
+      animal_recognition: true,
+      ai_assistant: true,
+      impact_report_pdf: true,
+      basic_donations: true,
+      virtual_sponsors: true,
+      post_adoption_app: true,
+      email_notifications: true,
+      whatsapp: true,
+      verified_badge: true,
+      vet_marketplace: true,
+      national_map: false,
+      vet_api: false,
+      support: 'priority' as const,
+      foster_insurance: false,
+    },
+  },
+  enterprise: {
+    id: 'enterprise',
+    name: 'Enterprise',
+    price: 99.95,
+    description: 'Para redes de protectoras y grandes organizaciones',
+    color: '#8b5cf6',
+    limits: {
+      animals: -1,
+      users: -1,
+      storage_gb: 500,
+      shelters: -1,
+      ai_descriptions_per_month: -1,
+    },
+    features: {
+      animal_profiles: true,
+      adoptions: true,
+      foster_families: true,
+      volunteers: true,
+      calendar: true,
+      reports: 'full' as const,
+      public_portal: true,
+      sos_pet: true,
+      compatibility_test: true,
+      success_wall: true,
+      viral_challenges: true,
+      virtual_tour_360: true,
+      ai_descriptions: true,
+      animal_recognition: true,
+      ai_assistant: true,
+      impact_report_pdf: true,
+      basic_donations: true,
+      virtual_sponsors: true,
+      post_adoption_app: true,
+      email_notifications: true,
+      whatsapp: true,
+      verified_badge: true,
+      vet_marketplace: true,
+      national_map: true,
+      vet_api: true,
+      support: 'dedicated' as const,
+      foster_insurance: true,
+    },
+  },
+} as const;
+
+export type PlanId = keyof typeof PLANS;
+export type Plan = typeof PLANS[PlanId];
+export type PlanFeatures = typeof PLANS.free.features;
+export type PlanLimits = typeof PLANS.free.limits;
+
+export const PLAN_ORDER: PlanId[] = ['free', 'starter', 'pro', 'enterprise'];
+
+export function isPlanHigher(a: PlanId, b: PlanId): boolean {
+  return PLAN_ORDER.indexOf(a) > PLAN_ORDER.indexOf(b);
+}
+
+export function getUnlockedFeatures(from: PlanId, to: PlanId): string[] {
+  const fromPlan = PLANS[from].features;
+  const toPlan = PLANS[to].features;
+  return (Object.keys(toPlan) as (keyof PlanFeatures)[]).filter(k => {
+    const fromVal = fromPlan[k];
+    const toVal = toPlan[k];
+    if (fromVal === toVal) return false;
+    if (typeof toVal === 'boolean') return toVal === true && fromVal === false;
+    if (typeof toVal === 'string') return toVal !== fromVal && fromVal === 'basic';
+    return false;
+  });
+}
+
+export function getLostFeatures(from: PlanId, to: PlanId): string[] {
+  return getUnlockedFeatures(to, from);
+}
+
+export const FEATURE_LABELS: Record<keyof PlanFeatures, string> = {
+  animal_profiles: 'Fichas de animales',
+  adoptions: 'Módulo adopciones',
+  foster_families: 'Familias de acogida',
+  volunteers: 'Gestión de voluntarios',
+  calendar: 'Calendario de eventos',
+  reports: 'Módulo reportes',
+  public_portal: 'Portal público',
+  sos_pet: 'SOS Pet',
+  compatibility_test: 'Test de compatibilidad',
+  success_wall: 'Mural de éxitos',
+  viral_challenges: 'Retos virales',
+  virtual_tour_360: 'Tour virtual 360°',
+  ai_descriptions: 'Descripciones con IA',
+  animal_recognition: 'Reconocimiento facial animal',
+  ai_assistant: 'Asistente IA (Ctrl+K)',
+  impact_report_pdf: 'Informe de impacto PDF',
+  basic_donations: 'Donaciones básicas',
+  virtual_sponsors: 'Padrinos virtuales',
+  post_adoption_app: 'App post-adopción',
+  email_notifications: 'Notificaciones por email',
+  whatsapp: 'WhatsApp Business',
+  verified_badge: 'Insignia verificada',
+  vet_marketplace: 'Marketplace veterinario',
+  national_map: 'Mapa nacional',
+  vet_api: 'API veterinaria',
+  support: 'Tipo de soporte',
+  foster_insurance: 'Seguro para acogidas',
+};
