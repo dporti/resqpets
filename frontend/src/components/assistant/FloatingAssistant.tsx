@@ -141,6 +141,16 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
           if (data === '[DONE]') break;
           try {
             const parsed = JSON.parse(data);
+            if (parsed.error) {
+              // Friendly error messages
+              let msg = parsed.error as string;
+              if (msg.includes('credit balance') || msg.includes('too low')) {
+                msg = '⚠️ La cuenta de Anthropic no tiene créditos. Recárgala en console.anthropic.com/settings/billing';
+              } else if (msg.includes('invalid') || msg.includes('401')) {
+                msg = '⚠️ API key de Anthropic inválida. Revisa la variable ANTHROPIC_API_KEY en backend/.env';
+              }
+              throw new Error(msg);
+            }
             if (parsed.text) {
               fullText += parsed.text;
               setMessages(prev => prev.map(m =>
@@ -149,8 +159,12 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
                   : m,
               ));
             }
-            if (parsed.error) throw new Error(parsed.error);
-          } catch { /* ignore parse errors */ }
+          } catch (parseErr: unknown) {
+            if ((parseErr as Error).message && !(parseErr as Error).message.includes('JSON')) {
+              throw parseErr; // re-throw non-JSON errors (real errors)
+            }
+            // ignore pure JSON parse errors
+          }
         }
       }
 
