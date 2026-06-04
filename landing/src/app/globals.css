@@ -2,12 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth scroll — skill rule: smooth-scroll */
-html {
-  scroll-behavior: smooth;
-}
+/* ── Skill rule: smooth scroll */
+html { scroll-behavior: smooth; }
 
-/* Respect prefers-reduced-motion — skill rule: motion-sensitivity */
+/* ── Skill rule: prefers-reduced-motion (CRITICAL) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -17,23 +15,75 @@ html {
   }
 }
 
-/* Scroll-driven reveal utility */
+/* ── Font utilities */
+.font-serif  { font-family: var(--font-serif), serif; }
+.font-sans   { font-family: var(--font-sans), system-ui, sans-serif; }
+
+/* ── Scroll reveal — transform/opacity only (skill rule) */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
 }
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-d1 { transition-delay: 0.08s; }
+.reveal-d2 { transition-delay: 0.16s; }
+.reveal-d3 { transition-delay: 0.24s; }
+.reveal-d4 { transition-delay: 0.32s; }
 
-/* Line length control — skill rule */
-.prose-landing p {
-  max-width: 65ch;
-  line-height: 1.75;
+/* ── Dot grid background */
+.dot-grid {
+  background-image: radial-gradient(circle, #1f1f1f 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ── Infinite scroll marquee (CSS only, no JS) */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── Notification slide-in (hero floating card) */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.notification-enter {
+  animation: slideInRight 0.45s ease-out 1.6s both;
+}
+
+/* ── Typewriter clip-path (AI section — compositor only) */
+@keyframes typewriter {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+.typewriter {
+  animation: typewriter 2.5s ease-out 0.5s both;
+}
+
+/* ── Tab fade transition */
+@keyframes tabFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.tab-fade {
+  animation: tabFadeIn 0.2s ease-out;
+}
+
+/* ── Pulse glow for badges */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
 }

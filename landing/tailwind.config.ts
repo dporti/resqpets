@@ -4,36 +4,29 @@ const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
+      fontFamily: {
+        serif: ['var(--font-serif)', 'serif'],
+        sans:  ['var(--font-sans)', 'system-ui', 'sans-serif'],
+      },
       colors: {
-        primary: {
+        brand: {
           DEFAULT: '#1D9E75',
           dark:    '#0F6E56',
-          light:   '#E6F7F1',
-          50:      '#F0FBF7',
-          100:     '#D8F3EA',
-          600:     '#1D9E75',
-          700:     '#17845F',
-          800:     '#0F6E56',
-          900:     '#0A4E3E',
+          light:   '#1D9E7520',
+          muted:   '#1D9E7540',
+        },
+        surface: {
+          1: '#111111',
+          2: '#1a1a1a',
+          3: '#222222',
+          border: '#1f1f1f',
+          'border-2': '#2a2a2a',
         },
       },
-      fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
-      },
-      animation: {
-        'fade-up':   'fadeUp 0.6s ease-out forwards',
-        'fade-in':   'fadeIn 0.5s ease-out forwards',
-        'count-up':  'fadeIn 1s ease-out forwards',
-      },
-      keyframes: {
-        fadeUp: {
-          from: { opacity: '0', transform: 'translateY(24px)' },
-          to:   { opacity: '1', transform: 'translateY(0)' },
-        },
-        fadeIn: {
-          from: { opacity: '0' },
-          to:   { opacity: '1' },
-        },
+      fontSize: {
+        'hero-sm': ['clamp(2.5rem, 6vw, 4.5rem)', { lineHeight: '1.08', letterSpacing: '-0.02em' }],
+        'hero':    ['clamp(3rem, 7vw, 5.5rem)',   { lineHeight: '1.06', letterSpacing: '-0.025em' }],
+        'section': ['clamp(2rem, 4.5vw, 3.5rem)', { lineHeight: '1.1',  letterSpacing: '-0.02em' }],
       },
     },
   },

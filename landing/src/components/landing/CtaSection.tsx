@@ -1,57 +1,53 @@
 'use client';
-import { ArrowRight, Shield } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Clock, CreditCard } from 'lucide-react';
 import { useReveal } from './useReveal';
 
 export function CtaSection() {
-  const { ref, visible } = useReveal(0.2);
-
+  const { ref, visible } = useReveal(0.15);
   return (
-    <section
-      ref={ref}
-      className="py-28 bg-gradient-to-br from-primary-dark via-primary to-emerald-500 relative overflow-hidden"
-      aria-labelledby="cta-heading"
-    >
-      {/* Background decorations */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" aria-hidden="true" />
+    <section ref={ref} className="relative py-36 bg-[#0a0a0a] overflow-hidden" aria-labelledby="cta-heading">
+      <div className="absolute inset-0 dot-grid" aria-hidden="true" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-brand rounded-full opacity-[0.07] blur-[100px] pointer-events-none" aria-hidden="true" />
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
+      <div className="relative max-w-3xl mx-auto px-5 sm:px-8 text-center">
         <h2
           id="cta-heading"
-          className={`text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-5 transition-all duration-600 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+          className={`font-serif text-hero text-white mb-6 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
         >
-          Tu protectora lo merece.{' '}
-          <span className="text-white/80">Empieza hoy.</span>
+          Tu protectora
+          <br /><span className="text-[#a1a1a1]">lo merece.</span>
         </h2>
         <p
-          className={`text-xl text-white/80 mb-10 transition-all duration-600 delay-100 ${visible ? 'opacity-100' : 'opacity-0'}`}
+          className={`text-xl text-[#666] mb-12 leading-relaxed transition-all duration-600 ${visible ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transitionDelay: '100ms' }}
         >
-          Configuración en 5 minutos. Sin tarjeta de crédito.
+          Configuración en 5 minutos.
+          <br />Sin tarjeta de crédito. Sin compromisos.
         </p>
 
-        <div
-          className={`flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 transition-all duration-600 delay-150 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+        <a
+          href="/registro"
+          className={`inline-flex items-center gap-2.5 px-12 py-5 text-[17px] font-semibold text-white bg-brand hover:bg-brand-dark rounded-full transition-all duration-200 cursor-pointer shadow-xl shadow-brand/20 hover:scale-[1.02] min-h-[56px] ${visible ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transitionDelay: '180ms' }}
         >
-          <a
-            href="/registro"
-            className="flex items-center gap-2 px-8 py-4 bg-white text-primary font-bold rounded-xl text-base hover:bg-gray-50 transition-colors duration-150 shadow-xl shadow-black/20 cursor-pointer min-h-[44px]"
-          >
-            Crear cuenta gratis
-            <ArrowRight className="w-4 h-4" aria-hidden="true" />
-          </a>
-          <a
-            href="#demo"
-            className="flex items-center gap-2 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl text-base hover:border-white/50 hover:bg-white/10 transition-all duration-150 cursor-pointer min-h-[44px]"
-          >
-            Ver demo en vivo
-          </a>
-        </div>
+          Crear cuenta gratis
+          <ArrowRight className="w-5 h-5" aria-hidden="true" />
+        </a>
 
         <div
-          className={`flex items-center justify-center gap-2 text-white/70 text-sm transition-all duration-500 delay-200 ${visible ? 'opacity-100' : 'opacity-0'}`}
+          className={`flex flex-col sm:flex-row items-center justify-center gap-6 mt-10 transition-all duration-600 ${visible ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transitionDelay: '260ms' }}
         >
-          <Shield className="w-4 h-4" aria-hidden="true" />
-          Plan gratuito siempre disponible. Actualiza cuando quieras. Sin permanencia.
+          {[
+            { Icon: ShieldCheck, text: 'Gratis para siempre en el plan base' },
+            { Icon: CreditCard,  text: 'Sin tarjeta de crédito' },
+            { Icon: Clock,       text: 'Configura en 5 minutos' },
+          ].map(({ Icon, text }) => (
+            <div key={text} className="flex items-center gap-2 text-sm text-[#555]">
+              <Icon className="w-4 h-4 text-brand" aria-hidden="true" />
+              {text}
+            </div>
+          ))}
         </div>
       </div>
     </section>
