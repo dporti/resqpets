@@ -52,7 +52,7 @@ export function Navbar() {
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${dropOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
               {dropOpen && (
-                <div className="absolute top-full left-0 mt-2 w-68 bg-[#111] border border-[#2a2a2a] rounded-xl p-2 shadow-2xl shadow-black/60">
+                <div className="absolute top-full left-0 mt-2 w-72 bg-[#111] border border-[#2a2a2a] rounded-xl p-2 shadow-2xl shadow-black/60">
                   {PRODUCT_LINKS.map(pl => (
                     <a key={pl.label} href="#"
                       className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-white/5 transition-colors duration-150 cursor-pointer group">

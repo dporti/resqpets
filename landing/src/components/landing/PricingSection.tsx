@@ -91,6 +91,11 @@ export function PricingSection() {
                   </span>
                   {price > 0 && <span className={`text-sm mb-1 ${plan.recommended ? 'text-[#888]' : 'text-[#aaa]'}`}>/mes</span>}
                 </div>
+                {price > 0 && annual && (
+                  <p className={`text-xs mb-2 ${plan.recommended ? 'text-[#888]' : 'text-[#999]'}`}>
+                    Facturado anualmente ({(price * 12).toFixed(2).replace('.', ',')}€/año)
+                  </p>
+                )}
                 <p className={`text-xs mb-6 ${plan.recommended ? 'text-[#777]' : 'text-[#999]'}`}>{plan.desc}</p>
 
                 <ul className="space-y-2.5 flex-1 mb-6" role="list">
@@ -117,7 +122,7 @@ export function PricingSection() {
           })}
         </div>
 
-        <p className="text-center text-sm text-[#999] mt-8">
+        <p className="text-center text-sm text-[#666] mt-8">
           ¿Tienes más de 5 protectoras?{' '}
           <a href="mailto:hola@resqpet.com" className="text-brand hover:underline cursor-pointer">
             Escríbenos para un precio personalizado.

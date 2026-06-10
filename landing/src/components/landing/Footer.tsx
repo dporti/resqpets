@@ -53,7 +53,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-[#1f1f1f] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
-          <p>© 2025 ResQPet · Hecho con ❤️ para los animales</p>
+          <p>© {new Date().getFullYear()} ResQPet · Hecho con ❤️ para los animales</p>
           <p className="text-[#333]">Todos los derechos reservados</p>
         </div>
       </div>
