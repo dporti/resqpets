@@ -18,8 +18,8 @@ const MOTIVOS = [
   { val: 'deceased', label: '🕊️ Animal fallecido durante la acogida' },
 ];
 
-const inp: React.CSSProperties = { width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', boxSizing: 'border-box' };
-const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 3, display: 'block' };
+const inp: React.CSSProperties = { width: '100%', padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', boxSizing: 'border-box' };
+const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 3, display: 'block' };
 
 function Stars({ val, onChange }: { val: number; onChange: (v: number) => void }) {
   const [hover, setHover] = useState(0);
@@ -59,13 +59,13 @@ export default function FinalizarAcogidaModal({ assignmentId, animalNombre, fami
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 60 }} />
-      <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: '#fff', borderRadius: 14, width: 500, maxHeight: '90vh', overflowY: 'auto', zIndex: 70, fontFamily: "'Inter', sans-serif" }}>
-        <div style={{ padding: '18px 22px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--bg-surface)', borderRadius: 14, width: 500, maxHeight: '90vh', overflowY: 'auto', zIndex: 70, fontFamily: "'Inter', sans-serif" }}>
+        <div style={{ padding: '18px 22px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontWeight: 700, fontSize: 15 }}>Finalizar acogida</div>
-            <div style={{ fontSize: 12.5, color: '#9ca3af', marginTop: 2 }}>{animalNombre} · {familiaNombre}</div>
+            <div style={{ fontSize: 12.5, color: 'var(--text-faint)', marginTop: 2 }}>{animalNombre} · {familiaNombre}</div>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#9ca3af' }}>×</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-faint)' }}>×</button>
         </div>
         <form onSubmit={handleSubmit} style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
@@ -74,9 +74,9 @@ export default function FinalizarAcogidaModal({ assignmentId, animalNombre, fami
               {MOTIVOS.map(m => (
                 <label key={m.val} style={{
                   display: 'flex', gap: 10, alignItems: 'center', padding: '10px 14px',
-                  borderRadius: 9, border: `2px solid ${form.motivo_fin === m.val ? '#16a34a' : '#e5e7eb'}`,
-                  background: form.motivo_fin === m.val ? '#f0fdf4' : '#fff', cursor: 'pointer',
-                  fontSize: 13.5, color: '#374151',
+                  borderRadius: 9, border: `2px solid ${form.motivo_fin === m.val ? '#16a34a' : 'var(--border)'}`,
+                  background: form.motivo_fin === m.val ? '#f0fdf4' : 'var(--bg-surface)', cursor: 'pointer',
+                  fontSize: 13.5, color: 'var(--text-secondary)',
                 }}>
                   <input type="radio" name="motivo" value={m.val} checked={form.motivo_fin === m.val} onChange={() => set('motivo_fin', m.val)} style={{ accentColor: '#16a34a' }} />
                   {m.label}
@@ -99,7 +99,7 @@ export default function FinalizarAcogidaModal({ assignmentId, animalNombre, fami
           <div>
             <label style={{ ...lbl, marginBottom: 8 }}>Valoración de la acogida</label>
             <Stars val={form.valoracion} onChange={v => set('valoracion', v)} />
-            <div style={{ fontSize: 11.5, color: '#9ca3af', marginTop: 4 }}>La familia recibirá {form.valoracion === 5 ? '+10' : '0'} puntos de karma extra por esta valoración</div>
+            <div style={{ fontSize: 11.5, color: 'var(--text-faint)', marginTop: 4 }}>La familia recibirá {form.valoracion === 5 ? '+10' : '0'} puntos de karma extra por esta valoración</div>
           </div>
 
           <div>
@@ -108,15 +108,15 @@ export default function FinalizarAcogidaModal({ assignmentId, animalNombre, fami
           </div>
 
           {form.motivo_fin && (
-            <div style={{ background: '#f9fafb', borderRadius: 9, padding: '12px 14px', fontSize: 12.5, color: '#6b7280' }}>
-              <strong style={{ color: '#374151' }}>Resultado: </strong>{motivoCfg?.label}
+            <div style={{ background: 'var(--bg-subtle)', borderRadius: 9, padding: '12px 14px', fontSize: 12.5, color: 'var(--text-muted)' }}>
+              <strong style={{ color: 'var(--text-secondary)' }}>Resultado: </strong>{motivoCfg?.label}
               {form.valoracion > 0 && ` · ${form.valoracion}⭐`}
             </div>
           )}
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-            <button type="button" onClick={onClose} style={{ padding: '8px 16px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
-            <button type="submit" disabled={saving || !form.motivo_fin} style={{ padding: '8px 20px', background: form.motivo_fin ? '#16a34a' : '#e5e7eb', color: form.motivo_fin ? '#fff' : '#9ca3af', border: 'none', borderRadius: 7, fontWeight: 600, cursor: form.motivo_fin ? 'pointer' : 'not-allowed', fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button type="button" onClick={onClose} style={{ padding: '8px 16px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+            <button type="submit" disabled={saving || !form.motivo_fin} style={{ padding: '8px 20px', background: form.motivo_fin ? '#16a34a' : 'var(--border)', color: form.motivo_fin ? '#fff' : '#9ca3af', border: 'none', borderRadius: 7, fontWeight: 600, cursor: form.motivo_fin ? 'pointer' : 'not-allowed', fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 8 }}>
               {saving ? <><Spinner size={14} /> Procesando...</> : '✓ Finalizar acogida'}
             </button>
           </div>

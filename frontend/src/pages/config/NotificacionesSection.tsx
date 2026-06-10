@@ -40,8 +40,8 @@ export function NotificacionesSection({ config, onSave }: Props) {
           { k: 'app_message' as const,     label: 'Nuevo mensaje recibido' },
           { k: 'app_no_update' as const,   label: `Animal sin actualización en más de ${alertDays} días` },
         ].map(row => (
-          <div key={row.k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 13, color: '#374151' }}>{row.label}</span>
+          <div key={row.k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-subtle)' }}>
+            <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{row.label}</span>
             <Toggle checked={prefs[row.k] as boolean} onChange={v => set(row.k, v)} />
           </div>
         ))}
@@ -53,14 +53,14 @@ export function NotificacionesSection({ config, onSave }: Props) {
           { k: 'email_adoption' as const, label: 'Nueva solicitud de adopción' },
           { k: 'email_task' as const,     label: 'Tarea asignada a mí' },
         ].map(row => (
-          <div key={row.k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 13, color: '#374151' }}>{row.label}</span>
+          <div key={row.k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-subtle)' }}>
+            <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{row.label}</span>
             <Toggle checked={prefs[row.k] as boolean} onChange={v => set(row.k, v)} />
           </div>
         ))}
         <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
           <Field label="Frecuencia de resumen">
-            <select value={prefs.email_frequency} onChange={e => set('email_frequency', e.target.value)} style={{ ...inp, background: '#fff' }}>
+            <select value={prefs.email_frequency} onChange={e => set('email_frequency', e.target.value)} style={{ ...inp, background: 'var(--bg-surface)' }}>
               <option value="immediate">Inmediata</option>
               <option value="daily">Diaria (resumen)</option>
               <option value="weekly">Semanal</option>

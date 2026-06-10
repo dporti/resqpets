@@ -14,7 +14,7 @@ const STATUS = {
   active:    { label: '🟢 Activa',    bg: '#f0fdf4', color: '#16a34a' },
   draft:     { label: '📝 Borrador',  bg: '#eff6ff', color: '#3b82f6' },
   paused:    { label: '⏸ Pausada',    bg: '#fffbeb', color: '#d97706' },
-  completed: { label: '✅ Finalizada', bg: '#f9fafb', color: '#6b7280' },
+  completed: { label: '✅ Finalizada', bg: '#f9fafb', color: 'var(--text-muted)' },
 };
 
 function fmt(n: number) { return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n); }
@@ -62,7 +62,7 @@ export function CampanasTab() {
       </div>
 
       {campaigns.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: '#9ca3af' }}>
+        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-faint)' }}>
           <p style={{ fontSize: 48 }}>🎯</p>
           <p style={{ fontSize: 16 }}>No hay campañas aún</p>
           <p style={{ fontSize: 13 }}>Crea tu primera campaña para organizar tus donaciones</p>
@@ -75,7 +75,7 @@ export function CampanasTab() {
           const st = STATUS[c.status as keyof typeof STATUS] || STATUS.draft;
           const daysLeft = c.ends_at ? Math.ceil((new Date(c.ends_at).getTime() - Date.now()) / 86400000) : null;
           return (
-            <div key={c.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <div key={c.id} style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
               {/* Cover */}
               <div style={{
                 height: 100, flexShrink: 0,
@@ -88,23 +88,23 @@ export function CampanasTab() {
               </div>
 
               <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#111827' }}>{c.name}</h3>
-                {c.description_short && <p style={{ margin: 0, fontSize: 12, color: '#6b7280', lineHeight: 1.5 }}>{c.description_short}</p>}
+                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{c.name}</h3>
+                {c.description_short && <p style={{ margin: 0, fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>{c.description_short}</p>}
 
                 {/* Progress */}
                 {c.goal_amount > 0 && (
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 6 }}>
-                      <span style={{ fontWeight: 700, color: '#111827' }}>{fmt(c.raised_amount)}</span>
-                      <span style={{ color: '#6b7280' }}>de {fmt(c.goal_amount)} ({p}%)</span>
+                      <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{fmt(c.raised_amount)}</span>
+                      <span style={{ color: 'var(--text-muted)' }}>de {fmt(c.goal_amount)} ({p}%)</span>
                     </div>
-                    <div style={{ height: 8, background: '#f3f4f6', borderRadius: 4, overflow: 'hidden' }}>
+                    <div style={{ height: 8, background: 'var(--bg-subtle-2)', borderRadius: 4, overflow: 'hidden' }}>
                       <div style={{ width: `${p}%`, height: '100%', background: c.primary_color, borderRadius: 4, transition: 'width .5s' }} />
                     </div>
                   </div>
                 )}
 
-                <div style={{ display: 'flex', gap: 16, fontSize: 12, color: '#6b7280' }}>
+                <div style={{ display: 'flex', gap: 16, fontSize: 12, color: 'var(--text-muted)' }}>
                   <span>💚 {c.donations_count} donaciones</span>
                   {daysLeft !== null && daysLeft > 0 && <span>⏱ {daysLeft} días restantes</span>}
                   {daysLeft !== null && daysLeft <= 0 && c.status === 'active' && <span style={{ color: '#ef4444' }}>⏰ Finalizada</span>}
@@ -113,10 +113,10 @@ export function CampanasTab() {
 
                 {/* Actions */}
                 <div style={{ display: 'flex', gap: 8, marginTop: 'auto', flexWrap: 'wrap' }}>
-                  <button onClick={() => openDetail(c.id)} style={{ flex: 1, padding: '7px', border: '1.5px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 12 }}>
+                  <button onClick={() => openDetail(c.id)} style={{ flex: 1, padding: '7px', border: '1.5px solid var(--border)', borderRadius: 8, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 12 }}>
                     📊 Ver detalle
                   </button>
-                  <button onClick={() => setModal({ open: true, campaign: c })} style={{ flex: 1, padding: '7px', border: '1.5px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 12 }}>
+                  <button onClick={() => setModal({ open: true, campaign: c })} style={{ flex: 1, padding: '7px', border: '1.5px solid var(--border)', borderRadius: 8, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 12 }}>
                     ✏️ Editar
                   </button>
                   {c.status === 'active' && (
@@ -130,7 +130,7 @@ export function CampanasTab() {
                     </button>
                   )}
                   {(c.status === 'active' || c.status === 'paused') && (
-                    <button onClick={() => updateStatus(c.id, 'completed')} style={{ padding: '7px 12px', background: '#f9fafb', color: '#6b7280', border: '1px solid #e5e7eb', borderRadius: 8, cursor: 'pointer', fontSize: 11 }}>
+                    <button onClick={() => updateStatus(c.id, 'completed')} style={{ padding: '7px 12px', background: 'var(--bg-subtle)', color: 'var(--text-muted)', border: '1px solid var(--border)', borderRadius: 8, cursor: 'pointer', fontSize: 11 }}>
                       ✅ Finalizar
                     </button>
                   )}
@@ -149,12 +149,12 @@ export function CampanasTab() {
       {detail && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setDetail(null); }}>
-          <div style={{ background: '#fff', borderRadius: 16, width: '100%', maxWidth: 560, maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,.2)' }}>
+          <div style={{ background: 'var(--bg-surface)', borderRadius: 16, width: '100%', maxWidth: 560, maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,.2)' }}>
             <div style={{ height: 80, background: `linear-gradient(135deg, ${detail.primary_color}, ${detail.primary_color}88)` }} />
             <div style={{ padding: 24 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                 <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>{detail.name}</h2>
-                <button onClick={() => setDetail(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: '#9ca3af' }}>✕</button>
+                <button onClick={() => setDetail(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--text-faint)' }}>✕</button>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
                 {[
@@ -163,19 +163,19 @@ export function CampanasTab() {
                   { l: 'Donaciones', v: String(detail.donations_count) },
                   { l: 'Progreso', v: `${pct(detail.raised_amount, detail.goal_amount)}%` },
                 ].map(s => (
-                  <div key={s.l} style={{ background: '#f9fafb', borderRadius: 10, padding: '12px 14px' }}>
-                    <p style={{ margin: 0, fontSize: 11, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.3px' }}>{s.l}</p>
-                    <p style={{ margin: 0, fontSize: 20, fontWeight: 800, color: s.color || '#111827' }}>{s.v}</p>
+                  <div key={s.l} style={{ background: 'var(--bg-subtle)', borderRadius: 10, padding: '12px 14px' }}>
+                    <p style={{ margin: 0, fontSize: 11, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.3px' }}>{s.l}</p>
+                    <p style={{ margin: 0, fontSize: 20, fontWeight: 800, color: s.color || 'var(--text-primary)' }}>{s.v}</p>
                   </div>
                 ))}
               </div>
               {detail.slug && (
-                <div style={{ background: '#f9fafb', borderRadius: 10, padding: '12px 14px', marginBottom: 16 }}>
-                  <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 600, color: '#6b7280' }}>URL pública</p>
-                  <code style={{ fontSize: 13, color: '#374151' }}>resqpet.com/donar/{detail.slug}</code>
+                <div style={{ background: 'var(--bg-subtle)', borderRadius: 10, padding: '12px 14px', marginBottom: 16 }}>
+                  <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>URL pública</p>
+                  <code style={{ fontSize: 13, color: 'var(--text-secondary)' }}>resqpet.com/donar/{detail.slug}</code>
                 </div>
               )}
-              {detail.description_short && <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.6 }}>{detail.description_short}</p>}
+              {detail.description_short && <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{detail.description_short}</p>}
             </div>
           </div>
         </div>
@@ -184,4 +184,4 @@ export function CampanasTab() {
   );
 }
 
-const sk = { background: 'linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.4s infinite' };
+const sk = { background: 'linear-gradient(90deg,var(--bg-subtle-2) 25%,var(--bg-subtle-2) 50%,var(--bg-subtle-2) 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.4s infinite' };

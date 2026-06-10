@@ -10,8 +10,8 @@ interface Campaign {
 }
 interface Props { campaign?: Campaign; onClose: () => void; onSaved: () => void }
 
-const inp: React.CSSProperties = { width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' };
-const lbl: React.CSSProperties = { display: 'block', fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 5 };
+const inp: React.CSSProperties = { width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' };
+const lbl: React.CSSProperties = { display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 5 };
 
 export function CampanaModal({ campaign, onClose, onSaved }: Props) {
   const [form, setForm] = useState<Campaign>({
@@ -40,10 +40,10 @@ export function CampanaModal({ campaign, onClose, onSaved }: Props) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div style={{ background: '#fff', borderRadius: 16, width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,.25)' }}>
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: 'var(--bg-surface)', borderRadius: 16, width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,.25)' }}>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>{campaign ? 'Editar campaña' : 'Nueva campaña'}</h3>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: '#9ca3af' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-faint)' }}>✕</button>
         </div>
         <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div>
@@ -70,8 +70,8 @@ export function CampanaModal({ campaign, onClose, onSaved }: Props) {
               {[{ v:'draft',l:'📝 Borrador'},{v:'active',l:'🟢 Activa'},{v:'paused',l:'⏸ Pausada'},{v:'completed',l:'✅ Finalizada'}].map(s => (
                 <button key={s.v} onClick={() => set('status', s.v)} style={{
                   padding: '6px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 12,
-                  border: '1.5px solid', borderColor: form.status === s.v ? '#16a34a' : '#e5e7eb',
-                  background: form.status === s.v ? '#f0fdf4' : '#fff', color: form.status === s.v ? '#16a34a' : '#374151',
+                  border: '1.5px solid', borderColor: form.status === s.v ? '#16a34a' : 'var(--border)',
+                  background: form.status === s.v ? '#f0fdf4' : 'var(--bg-surface)', color: form.status === s.v ? '#16a34a' : '#374151',
                   fontWeight: form.status === s.v ? 700 : 400,
                 }}>{s.l}</button>
               ))}
@@ -87,7 +87,7 @@ export function CampanaModal({ campaign, onClose, onSaved }: Props) {
               {PRESET_COLORS.slice(0, 8).map(c => (
                 <button key={c} onClick={() => set('primary_color', c)} style={{ width: 28, height: 28, borderRadius: 6, background: c, border: 'none', cursor: 'pointer', outline: form.primary_color === c ? `3px solid ${c}` : 'none', outlineOffset: 2 }} />
               ))}
-              <input type="color" value={form.primary_color || '#16a34a'} onChange={e => set('primary_color', e.target.value)} style={{ width: 36, height: 28, borderRadius: 6, border: '1.5px solid #e5e7eb', cursor: 'pointer', padding: 2 }} />
+              <input type="color" value={form.primary_color || '#16a34a'} onChange={e => set('primary_color', e.target.value)} style={{ width: 36, height: 28, borderRadius: 6, border: '1.5px solid var(--border)', cursor: 'pointer', padding: 2 }} />
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -103,8 +103,8 @@ export function CampanaModal({ campaign, onClose, onSaved }: Props) {
           </div>
           {error && <p style={{ color: '#ef4444', fontSize: 13, background: '#fef2f2', padding: '8px 12px', borderRadius: 8, margin: 0 }}>{error}</p>}
         </div>
-        <div style={{ padding: '14px 24px', borderTop: '1px solid #f3f4f6', display: 'flex', gap: 10 }}>
-          <button onClick={onClose} style={{ flex: 1, padding: '11px', background: '#f3f4f6', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13 }}>Cancelar</button>
+        <div style={{ padding: '14px 24px', borderTop: '1px solid var(--border-subtle)', display: 'flex', gap: 10 }}>
+          <button onClick={onClose} style={{ flex: 1, padding: '11px', background: 'var(--bg-subtle-2)', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13 }}>Cancelar</button>
           <button onClick={save} disabled={loading} style={{ flex: 2, padding: '11px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
             {loading ? 'Guardando...' : campaign ? 'Guardar cambios' : 'Crear campaña'}
           </button>

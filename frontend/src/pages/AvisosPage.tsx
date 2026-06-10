@@ -85,11 +85,11 @@ function MapView({ alertas, onSelectAlert }: { alertas: SosAlert[]; onSelectAler
       marker.bindPopup(`
         <div style="font-family:Inter,sans-serif;min-width:200px">
           <div style="font-weight:700;font-size:14px;margin-bottom:4px">${a.nombre_animal || (a.especie || 'Animal')} ${cfg.emoji}</div>
-          <div style="font-size:12px;color:#6b7280;margin-bottom:6px">${a.ubicacion_descripcion || ''}</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">${a.ubicacion_descripcion || ''}</div>
           <div style="font-size:11px;margin-bottom:8px">
             <span style="background:${urgCfg.bg};color:${urgCfg.color};padding:2px 6px;border-radius:10px;font-weight:600">Urgencia ${urgCfg.label}</span>
           </div>
-          <div style="font-size:11px;color:#9ca3af">${formatDateTime(a.created_at)}</div>
+          <div style="font-size:11px;color:var(--text-faint)">${formatDateTime(a.created_at)}</div>
           <button onclick="window.__sosSelectAlert(${a.id})" style="margin-top:8px;width:100%;padding:6px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:600">Ver detalle →</button>
         </div>
       `);
@@ -148,7 +148,7 @@ export default function AvisosPage() {
   const altaUrgencia = alertas.filter(a => a.urgencia === 'high' && a.estado === 'active').length;
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-subtle)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <TopBar
         titulo="Avisos SOS Pet"
         subtitulo={`${activos} activos`}
@@ -159,26 +159,26 @@ export default function AvisosPage() {
       />
 
       {/* Sub-nav */}
-      <div style={{ padding: '0 24px', borderBottom: '1px solid #e5e7eb', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ padding: '0 24px', borderBottom: '1px solid var(--border)', background: 'var(--bg-surface)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', gap: 6, padding: '10px 0' }}>
           {(['mapa', 'lista'] as const).map(v => (
             <button key={v} onClick={() => setVista(v)} style={{
-              padding: '6px 14px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13,
-              background: vista === v ? '#111827' : '#fff', color: vista === v ? '#fff' : '#6b7280',
+              padding: '6px 14px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13,
+              background: vista === v ? '#111827' : 'var(--bg-surface)', color: vista === v ? '#fff' : 'var(--text-muted)',
               cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>{v === 'mapa' ? '🗺️ Mapa' : '≡ Lista'}</button>
           ))}
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <select value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)} style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13, outline: 'none', fontFamily: "'Inter', sans-serif" }}>
+          <select value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)} style={{ padding: '6px 10px', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13, outline: 'none', fontFamily: "'Inter', sans-serif" }}>
             <option value="">Todos los tipos</option>
             <option value="lost">🔴 Perdidos</option>
             <option value="found">🔵 Avistados</option>
           </select>
-          <select value={filtroEstado} onChange={e => setFiltroEstado(e.target.value)} style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13, outline: 'none', fontFamily: "'Inter', sans-serif" }}>
+          <select value={filtroEstado} onChange={e => setFiltroEstado(e.target.value)} style={{ padding: '6px 10px', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13, outline: 'none', fontFamily: "'Inter', sans-serif" }}>
             {ESTADO_OPTS.map(o => <option key={o.val} value={o.val}>{o.label}</option>)}
           </select>
-          <a href="/sos" target="_blank" rel="noreferrer" style={{ padding: '6px 14px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, background: '#fff', color: '#374151', textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>
+          <a href="/sos" target="_blank" rel="noreferrer" style={{ padding: '6px 14px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, background: 'var(--bg-surface)', color: 'var(--text-secondary)', textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>
             Ver portal público →
           </a>
         </div>
@@ -194,21 +194,21 @@ export default function AvisosPage() {
           <MapView alertas={alertas} onSelectAlert={setSelectedId} />
 
           {/* Panel lateral */}
-          <div style={{ width: 300, borderLeft: '1px solid #e5e7eb', background: '#fff', overflowY: 'auto', flexShrink: 0 }}>
-            <div style={{ padding: '12px 14px', borderBottom: '1px solid #f3f4f6', fontSize: 13, fontWeight: 600, color: '#374151' }}>
+          <div style={{ width: 300, borderLeft: '1px solid var(--border)', background: 'var(--bg-surface)', overflowY: 'auto', flexShrink: 0 }}>
+            <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--border-subtle)', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>
               {alertas.length} avisos{filtroEstado === 'active' ? ' activos' : ''}
             </div>
             {alertas.length === 0 ? (
-              <div style={{ padding: 24, textAlign: 'center', color: '#9ca3af', fontSize: 13 }}>Sin avisos con estos filtros</div>
+              <div style={{ padding: 24, textAlign: 'center', color: 'var(--text-faint)', fontSize: 13 }}>Sin avisos con estos filtros</div>
             ) : alertas.map(a => {
               const cfg = TIPO_CFG[a.tipo];
               const urgCfg = URG_CFG[a.urgencia];
               return (
                 <div key={a.id} onClick={() => setSelectedId(a.id)}
                   style={{ padding: '12px 14px', borderBottom: '1px solid #f9fafb', cursor: 'pointer', display: 'flex', gap: 10, alignItems: 'flex-start' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#f0fdf4')}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
-                  <div style={{ width: 42, height: 42, borderRadius: 8, overflow: 'hidden', background: '#f3f4f6', flexShrink: 0 }}>
+                  <div style={{ width: 42, height: 42, borderRadius: 8, overflow: 'hidden', background: 'var(--bg-subtle-2)', flexShrink: 0 }}>
                     {a.fotos?.[0] ? <img src={a.fotos[0]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', fontSize: 20 }}>{cfg.emoji}</div>}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -216,11 +216,11 @@ export default function AvisosPage() {
                       <span style={{ fontSize: 11, padding: '1px 6px', borderRadius: 20, background: cfg.bg, color: cfg.color, fontWeight: 600 }}>{cfg.label}</span>
                       <span style={{ fontSize: 11, padding: '1px 6px', borderRadius: 20, background: urgCfg.bg, color: urgCfg.color, fontWeight: 600 }}>{urgCfg.label}</span>
                     </div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {a.nombre_animal || `${a.especie || 'Animal'} ${a.raza || ''}`}
                     </div>
-                    <div style={{ fontSize: 11.5, color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.ubicacion_descripcion}</div>
-                    <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>{formatDateTime(a.created_at)}</div>
+                    <div style={{ fontSize: 11.5, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.ubicacion_descripcion}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 2 }}>{formatDateTime(a.created_at)}</div>
                   </div>
                 </div>
               );
@@ -232,12 +232,12 @@ export default function AvisosPage() {
         alertas.length === 0 ? (
           <div style={{ padding: 24 }}><EmptyState icon="🔔" title="Sin avisos" subtitle="Los avisos SOS aparecerán aquí" /></div>
         ) : (
-          <div style={{ margin: '16px 24px', background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+          <div style={{ margin: '16px 24px', background: 'var(--bg-surface)', borderRadius: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ background: '#f9fafb' }}>
+                <tr style={{ background: 'var(--bg-subtle)' }}>
                   {['Animal', 'Tipo', 'Ubicación', 'Reportado', 'Urgencia', 'Estado', 'Acciones'].map((h, i) => (
-                    <th key={i} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 12, color: '#6b7280', fontWeight: 600, borderBottom: '1px solid #f3f4f6' }}>{h}</th>
+                    <th key={i} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, borderBottom: '1px solid var(--border-subtle)' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -248,26 +248,26 @@ export default function AvisosPage() {
                   const estadoCfg = { active: '#fee2e2', rescued: '#dcfce7', resolved: '#f3f4f6', false_alarm: '#f3f4f6' }[a.estado] || '#f3f4f6';
                   return (
                     <tr key={a.id} onClick={() => setSelectedId(a.id)} style={{ borderBottom: '1px solid #f9fafb', cursor: 'pointer' }}
-                      onMouseEnter={e => (e.currentTarget.style.background = '#f0fdf4')}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
                       onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                       <td style={{ padding: '11px 14px' }}>
                         <div style={{ display: 'flex', gap: 9, alignItems: 'center' }}>
-                          <div style={{ width: 36, height: 36, borderRadius: 7, overflow: 'hidden', background: '#f3f4f6', flexShrink: 0 }}>
+                          <div style={{ width: 36, height: 36, borderRadius: 7, overflow: 'hidden', background: 'var(--bg-subtle-2)', flexShrink: 0 }}>
                             {a.fotos?.[0] ? <img src={a.fotos[0]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', fontSize: 18 }}>{cfg.emoji}</div>}
                           </div>
                           <div>
-                            <div style={{ fontSize: 13.5, fontWeight: 600, color: '#111' }}>{a.nombre_animal || (a.especie ? `${a.especie} ${a.raza || ''}` : 'Animal')}</div>
-                            <div style={{ fontSize: 11.5, color: '#9ca3af', textTransform: 'capitalize' }}>{a.especie} · {a.color}</div>
+                            <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)' }}>{a.nombre_animal || (a.especie ? `${a.especie} ${a.raza || ''}` : 'Animal')}</div>
+                            <div style={{ fontSize: 11.5, color: 'var(--text-faint)', textTransform: 'capitalize' }}>{a.especie} · {a.color}</div>
                           </div>
                         </div>
                       </td>
                       <td style={{ padding: '11px 14px' }}><span style={{ padding: '3px 9px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: cfg.bg, color: cfg.color }}>{cfg.emoji} {cfg.label}</span></td>
-                      <td style={{ padding: '11px 14px', fontSize: 12.5, color: '#374151', maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.ubicacion_descripcion || '—'}</td>
-                      <td style={{ padding: '11px 14px', fontSize: 12, color: '#9ca3af', whiteSpace: 'nowrap' }}>{formatDateTime(a.created_at)}</td>
+                      <td style={{ padding: '11px 14px', fontSize: 12.5, color: 'var(--text-secondary)', maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.ubicacion_descripcion || '—'}</td>
+                      <td style={{ padding: '11px 14px', fontSize: 12, color: 'var(--text-faint)', whiteSpace: 'nowrap' }}>{formatDateTime(a.created_at)}</td>
                       <td style={{ padding: '11px 14px' }}><span style={{ padding: '3px 9px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: urgCfg.bg, color: urgCfg.color }}>{urgCfg.label}</span></td>
-                      <td style={{ padding: '11px 14px' }}><span style={{ padding: '3px 9px', borderRadius: 20, fontSize: 12, background: estadoCfg, color: '#374151' }}>{a.estado}</span></td>
+                      <td style={{ padding: '11px 14px' }}><span style={{ padding: '3px 9px', borderRadius: 20, fontSize: 12, background: estadoCfg, color: 'var(--text-secondary)' }}>{a.estado}</span></td>
                       <td style={{ padding: '11px 14px' }}>
-                        <button onClick={e => { e.stopPropagation(); setSelectedId(a.id); }} style={{ padding: '4px 10px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', fontSize: 12, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Ver</button>
+                        <button onClick={e => { e.stopPropagation(); setSelectedId(a.id); }} style={{ padding: '4px 10px', border: '1px solid var(--border)', borderRadius: 6, background: 'var(--bg-surface)', fontSize: 12, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Ver</button>
                       </td>
                     </tr>
                   );
@@ -275,20 +275,20 @@ export default function AvisosPage() {
               </tbody>
             </table>
             {totalPages > 1 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', borderTop: '1px solid #f3f4f6' }}>
-                <span style={{ fontSize: 12.5, color: '#9ca3af' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', borderTop: '1px solid var(--border-subtle)' }}>
+                <span style={{ fontSize: 12.5, color: 'var(--text-faint)' }}>
                   Mostrando {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, total)} de {total}
                 </span>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <button onClick={() => setPage(p => p - 1)} disabled={page === 1} style={{
-                    padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 7,
-                    background: '#fff', cursor: page === 1 ? 'not-allowed' : 'pointer',
+                    padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 7,
+                    background: 'var(--bg-surface)', cursor: page === 1 ? 'not-allowed' : 'pointer',
                     opacity: page === 1 ? 0.4 : 1, fontFamily: "'Inter', sans-serif", fontSize: 13,
                   }}>← Anterior</button>
-                  <span style={{ fontSize: 13, color: '#374151' }}>{page} / {totalPages}</span>
+                  <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{page} / {totalPages}</span>
                   <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} style={{
-                    padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 7,
-                    background: '#fff', cursor: page === totalPages ? 'not-allowed' : 'pointer',
+                    padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 7,
+                    background: 'var(--bg-surface)', cursor: page === totalPages ? 'not-allowed' : 'pointer',
                     opacity: page === totalPages ? 0.4 : 1, fontFamily: "'Inter', sans-serif", fontSize: 13,
                   }}>Siguiente →</button>
                 </div>

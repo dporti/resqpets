@@ -40,10 +40,10 @@ const DOC_TIPOS = [
 ];
 
 const inp: React.CSSProperties = {
-  width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 7,
+  width: '100%', padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 7,
   fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', boxSizing: 'border-box',
 };
-const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 3, display: 'block' };
+const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 3, display: 'block' };
 const row2: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 };
 
 function calcEdad(fechaNac?: string): string {
@@ -70,12 +70,12 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 60 }} />
       <div style={{
         position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-        background: '#fff', borderRadius: 14, width: 500, maxHeight: '90vh', overflowY: 'auto',
+        background: 'var(--bg-surface)', borderRadius: 14, width: 500, maxHeight: '90vh', overflowY: 'auto',
         zIndex: 70, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', fontFamily: "'Inter', sans-serif",
       }}>
-        <div style={{ padding: '18px 22px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontWeight: 700, fontSize: 15, color: '#111' }}>{title}</span>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#9ca3af' }}>×</button>
+        <div style={{ padding: '18px 22px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>{title}</span>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-faint)' }}>×</button>
         </div>
         <div style={{ padding: 22 }}>{children}</div>
       </div>
@@ -330,7 +330,7 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
   if (!animal) return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh', gap: 16, fontFamily: "'Inter', sans-serif" }}>
       <div style={{ fontSize: 48 }}>🐾</div>
-      <div style={{ fontSize: 16, fontWeight: 600, color: '#374151' }}>Animal no encontrado</div>
+      <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-secondary)' }}>Animal no encontrado</div>
       <button onClick={onVolver} style={{ background: '#16a34a', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 20px', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600 }}>← Volver al listado</button>
     </div>
   );
@@ -352,42 +352,42 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
   const nivelLabel = (v: number) => ['No testado','Baja','Media','Buena','Alta','Excelente'][v] ?? '—';
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }} onClick={() => setShowActionsMenu(false)}>
+    <div style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-subtle)', minHeight: '100vh' }} onClick={() => setShowActionsMenu(false)}>
 
       {/* ── HEADER ─────────────────────────────────────────── */}
       <div style={{
         height: 54, padding: '0 20px', display: 'flex', alignItems: 'center',
-        justifyContent: 'space-between', background: '#fff',
-        borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, zIndex: 30,
+        justifyContent: 'space-between', background: 'var(--bg-surface)',
+        borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, zIndex: 30,
         gap: 12,
       }}>
-        <button onClick={onVolver} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', fontSize: 13, color: '#6b7280', cursor: 'pointer', fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap', flexShrink: 0 }}>
+        <button onClick={onVolver} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', fontSize: 13, color: 'var(--text-muted)', cursor: 'pointer', fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap', flexShrink: 0 }}>
           ← Volver
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
-          <span style={{ fontSize: 16, fontWeight: 700, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{animal.nombre}</span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{animal.nombre}</span>
           <Badge estado={animal.estado} />
         </div>
 
         <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
-          <button onClick={() => pId && onNavigate(pId)} disabled={!pId} style={{ padding: '5px 10px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', cursor: pId ? 'pointer' : 'not-allowed', opacity: pId ? 1 : 0.4, fontSize: 12, fontFamily: "'Inter', sans-serif" }}>← Anterior</button>
-          <button onClick={() => nId && onNavigate(nId)} disabled={!nId} style={{ padding: '5px 10px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', cursor: nId ? 'pointer' : 'not-allowed', opacity: nId ? 1 : 0.4, fontSize: 12, fontFamily: "'Inter', sans-serif" }}>Siguiente →</button>
+          <button onClick={() => pId && onNavigate(pId)} disabled={!pId} style={{ padding: '5px 10px', border: '1px solid var(--border)', borderRadius: 6, background: 'var(--bg-surface)', cursor: pId ? 'pointer' : 'not-allowed', opacity: pId ? 1 : 0.4, fontSize: 12, fontFamily: "'Inter', sans-serif" }}>← Anterior</button>
+          <button onClick={() => nId && onNavigate(nId)} disabled={!nId} style={{ padding: '5px 10px', border: '1px solid var(--border)', borderRadius: 6, background: 'var(--bg-surface)', cursor: nId ? 'pointer' : 'not-allowed', opacity: nId ? 1 : 0.4, fontSize: 12, fontFamily: "'Inter', sans-serif" }}>Siguiente →</button>
           {can('animales:update') && (
-            <button onClick={() => setShowEdit(true)} style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 7, padding: '6px 12px', fontSize: 12.5, fontWeight: 500, cursor: 'pointer', color: '#374151', fontFamily: "'Inter', sans-serif" }}>✏️ Editar</button>
+            <button onClick={() => setShowEdit(true)} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 7, padding: '6px 12px', fontSize: 12.5, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: "'Inter', sans-serif" }}>✏️ Editar</button>
           )}
           {can('animales:update') && (
             <div style={{ position: 'relative' }}>
-              <button onClick={e => { e.stopPropagation(); setShowActionsMenu(v => !v); }} style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 7, padding: '6px 12px', fontSize: 12.5, cursor: 'pointer', color: '#374151', fontFamily: "'Inter', sans-serif" }}>Más ▾</button>
+              <button onClick={e => { e.stopPropagation(); setShowActionsMenu(v => !v); }} style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)', borderRadius: 7, padding: '6px 12px', fontSize: 12.5, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: "'Inter', sans-serif" }}>Más ▾</button>
               {showActionsMenu && (
-                <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', right: 0, top: 36, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', minWidth: 180, zIndex: 50 }}>
+                <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', right: 0, top: 36, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', minWidth: 180, zIndex: 50 }}>
                   {[
                     { label: '📤 Registrar salida', action: () => {} },
                     { label: '🕊️ Marcar fallecido', action: () => {} },
                     { label: '🖨️ Imprimir ficha', action: () => window.print() },
                   ].map(item => (
-                    <button key={item.label} onClick={() => { item.action(); setShowActionsMenu(false); }} style={{ display: 'block', width: '100%', padding: '10px 16px', background: 'none', border: 'none', textAlign: 'left', fontSize: 13.5, cursor: 'pointer', color: '#374151', fontFamily: "'Inter', sans-serif' " }}
-                      onMouseEnter={e => (e.currentTarget.style.background = '#f9fafb')}
+                    <button key={item.label} onClick={() => { item.action(); setShowActionsMenu(false); }} style={{ display: 'block', width: '100%', padding: '10px 16px', background: 'none', border: 'none', textAlign: 'left', fontSize: 13.5, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: "'Inter', sans-serif' " }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-subtle)')}
                       onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                     >{item.label}</button>
                   ))}
@@ -402,14 +402,14 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', minHeight: 'calc(100vh - 54px)', alignItems: 'start' }}>
 
         {/* LEFT */}
-        <div style={{ padding: '20px 22px', borderRight: '1px solid #e5e7eb', background: '#fff' }}>
+        <div style={{ padding: '20px 22px', borderRight: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
 
           {/* ── BLOQUE IDENTITARIO ─────────────────────────── */}
           <div style={{ display: 'flex', gap: 20, marginBottom: 20 }}>
 
             {/* Gallery */}
             <div style={{ flexShrink: 0 }}>
-              <div style={{ width: 280, height: 220, borderRadius: 12, overflow: 'hidden', background: 'linear-gradient(135deg,#f0fdf4,#dcfce7)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #e5e7eb', position: 'relative' }}>
+              <div style={{ width: 280, height: 220, borderRadius: 12, overflow: 'hidden', background: 'linear-gradient(135deg,#f0fdf4,#dcfce7)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)', position: 'relative' }}>
                 {fotos.length > 0 && fotos[photoIdx] ? (
                   <img src={fotos[photoIdx].url} alt={animal.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
@@ -424,12 +424,12 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
               {/* Thumbnails */}
               <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
                 {fotos.slice(0, 4).map((f, i) => (
-                  <div key={f.id} onClick={() => setPhotoIdx(i)} style={{ width: 52, height: 44, borderRadius: 7, overflow: 'hidden', border: `2px solid ${i === photoIdx ? '#16a34a' : '#e5e7eb'}`, cursor: 'pointer', background: '#f3f4f6', flexShrink: 0 }}>
+                  <div key={f.id} onClick={() => setPhotoIdx(i)} style={{ width: 52, height: 44, borderRadius: 7, overflow: 'hidden', border: `2px solid ${i === photoIdx ? '#16a34a' : 'var(--border)'}`, cursor: 'pointer', background: 'var(--bg-subtle-2)', flexShrink: 0 }}>
                     <img src={f.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                 ))}
                 {fotos.length > 4 && (
-                  <div style={{ width: 52, height: 44, borderRadius: 7, background: '#f3f4f6', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11.5, fontWeight: 600, color: '#6b7280' }}>+{fotos.length - 4}</div>
+                  <div style={{ width: 52, height: 44, borderRadius: 7, background: 'var(--bg-subtle-2)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11.5, fontWeight: 600, color: 'var(--text-muted)' }}>+{fotos.length - 4}</div>
                 )}
                 {can('animales:update') && (
                   <label style={{ width: 52, height: 44, borderRadius: 7, background: '#f0fdf4', border: '2px dashed #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, cursor: 'pointer', color: '#16a34a', flexShrink: 0 }}>
@@ -443,14 +443,14 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
             {/* Info */}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                <h1 style={{ fontSize: 22, fontWeight: 800, color: '#111', margin: 0 }}>{animal.nombre}</h1>
+                <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{animal.nombre}</h1>
               </div>
-              <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 14, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 14, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {animal.sexo && <span style={{ textTransform: 'capitalize' }}>{animal.sexo}</span>}
-                {animal.sexo && animal.raza && <span style={{ color: '#d1d5db' }}>·</span>}
+                {animal.sexo && animal.raza && <span style={{ color: 'var(--text-faint)' }}>·</span>}
                 {animal.raza && <span>{animal.raza}</span>}
-                {edad && <><span style={{ color: '#d1d5db' }}>·</span><span>{edad}{fechaNacLabel && ` (${fechaNacLabel})`}</span></>}
-                {animal.peso_kg && <><span style={{ color: '#d1d5db' }}>·</span><span>{animal.peso_kg} kg</span></>}
+                {edad && <><span style={{ color: 'var(--text-faint)' }}>·</span><span>{edad}{fechaNacLabel && ` (${fechaNacLabel})`}</span></>}
+                {animal.peso_kg && <><span style={{ color: 'var(--text-faint)' }}>·</span><span>{animal.peso_kg} kg</span></>}
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px', marginBottom: 14 }}>
@@ -463,8 +463,8 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                   { icon: '✂️', label: 'Esterilizado', val: animal.esterilizado ? 'Sí' : 'No' },
                 ].map(f => (
                   <div key={f.label}>
-                    <div style={{ fontSize: 11, color: '#9ca3af', marginBottom: 1 }}>{f.icon} {f.label}</div>
-                    <div style={{ fontSize: 13, color: (f as { green?: boolean }).green ? '#16a34a' : '#111', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.val}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-faint)', marginBottom: 1 }}>{f.icon} {f.label}</div>
+                    <div style={{ fontSize: 13, color: (f as { green?: boolean }).green ? '#16a34a' : 'var(--text-primary)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.val}</div>
                   </div>
                 ))}
               </div>
@@ -479,9 +479,9 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                 ].map(p => (
                   <span key={p.label} title={p.label} style={{
                     padding: '4px 10px', borderRadius: 20, fontSize: 11.5, fontWeight: 500,
-                    background: p.ok ? '#dcfce7' : '#f3f4f6',
-                    color: p.ok ? '#15803d' : '#9ca3af',
-                    border: `1px solid ${p.ok ? '#bbf7d0' : '#e5e7eb'}`,
+                    background: p.ok ? '#dcfce7' : 'var(--bg-subtle-2)',
+                    color: p.ok ? '#15803d' : 'var(--text-faint)',
+                    border: `1px solid ${p.ok ? '#bbf7d0' : 'var(--border)'}`,
                   }}>{p.label}</span>
                 ))}
               </div>
@@ -489,13 +489,13 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
           </div>
 
           {/* ── TABS ───────────────────────────────────────── */}
-          <div style={{ display: 'flex', borderBottom: '2px solid #f3f4f6', marginBottom: 20, gap: 2, overflowX: 'auto' }}>
+          <div style={{ display: 'flex', borderBottom: '2px solid var(--border-subtle)', marginBottom: 20, gap: 2, overflowX: 'auto' }}>
             {TABS.map(t => (
               <button key={t} onClick={() => setTab(t)} style={{
                 padding: '8px 14px', background: 'none', border: 'none',
                 borderBottom: `2px solid ${tab === t ? '#16a34a' : 'transparent'}`,
                 marginBottom: -2, fontSize: 12.5, fontWeight: tab === t ? 600 : 400,
-                color: tab === t ? '#16a34a' : '#6b7280', cursor: 'pointer',
+                color: tab === t ? '#16a34a' : 'var(--text-muted)', cursor: 'pointer',
                 fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap',
               }}>{t}</button>
             ))}
@@ -505,12 +505,12 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
           {tab === 'Información' && (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 10 }}>Sobre {animal.nombre}</div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', marginBottom: 10 }}>Sobre {animal.nombre}</div>
                 <p style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.75, whiteSpace: 'pre-line', marginBottom: 20 }}>
-                  {animal.descripcion || <span style={{ color: '#9ca3af' }}>Sin descripción</span>}
+                  {animal.descripcion || <span style={{ color: 'var(--text-faint)' }}>Sin descripción</span>}
                 </p>
 
-                <div style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 10 }}>Nivel de rasgos</div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', marginBottom: 10 }}>Nivel de rasgos</div>
                 {[
                   { icon: '⚡', label: 'Nivel de actividad', val: animal.nivel_actividad },
                   { icon: '🐕', label: 'Sociabilidad con perros', val: animal.soc_perros },
@@ -520,24 +520,24 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                   <div key={r.label} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                     <span style={{ width: 18, flexShrink: 0 }}>{r.icon}</span>
                     <span style={{ fontSize: 12.5, color: '#4b5563', flex: 1 }}>{r.label}</span>
-                    <span style={{ fontSize: 12.5, fontWeight: 500, color: '#111', marginRight: 6 }}>{nivelLabel(r.val)}</span>
+                    <span style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--text-primary)', marginRight: 6 }}>{nivelLabel(r.val)}</span>
                     {r.val > 0 && <DotsBar val={r.val} />}
                   </div>
                 ))}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                   <span style={{ width: 18 }}>🏡</span>
                   <span style={{ fontSize: 12.5, color: '#4b5563', flex: 1 }}>Hogar ideal</span>
-                  <span style={{ fontSize: 12.5, fontWeight: 500, color: '#111' }}>{animal.hogar_ideal || '—'}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--text-primary)' }}>{animal.hogar_ideal || '—'}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ width: 18 }}>🎓</span>
                   <span style={{ fontSize: 12.5, color: '#4b5563', flex: 1 }}>Experiencia previa</span>
-                  <span style={{ fontSize: 12.5, fontWeight: 500, color: '#111' }}>{animal.experiencia_previa || '—'}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--text-primary)' }}>{animal.experiencia_previa || '—'}</span>
                 </div>
 
                 {compatibilidades.length > 0 && (
                   <div style={{ marginTop: 20 }}>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 10 }}>Compatibilidades</div>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', marginBottom: 10 }}>Compatibilidades</div>
                     {compatibilidades.map(c => (
                       <div key={c} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5, fontSize: 13, color: '#15803d' }}>
                         <span style={{ color: '#16a34a', fontSize: 14 }}>✓</span> {c}
@@ -548,8 +548,8 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
               </div>
 
               <div>
-                <div style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 10 }}>Características físicas</div>
-                <div style={{ background: '#f9fafb', borderRadius: 10, border: '1px solid #f3f4f6', overflow: 'hidden' }}>
+                <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', marginBottom: 10 }}>Características físicas</div>
+                <div style={{ background: 'var(--bg-subtle)', borderRadius: 10, border: '1px solid var(--border-subtle)', overflow: 'hidden' }}>
                   {[
                     { label: 'Color', val: animal.color },
                     { label: 'Tipo de pelo', val: animal.tipo_pelo },
@@ -557,9 +557,9 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                     { label: 'Tamaño', val: animal.tamaño as string },
                     { label: 'Señas particulares', val: animal.señas_particulares },
                   ].map((f, i, arr) => (
-                    <div key={f.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '9px 14px', borderBottom: i < arr.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
-                      <span style={{ fontSize: 13, color: '#6b7280' }}>{f.label}</span>
-                      <span style={{ fontSize: 13, color: '#111', fontWeight: 500, textAlign: 'right', maxWidth: '55%' }}>{f.val || '—'}</span>
+                    <div key={f.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '9px 14px', borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                      <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{f.label}</span>
+                      <span style={{ fontSize: 13, color: 'var(--text-primary)', fontWeight: 500, textAlign: 'right', maxWidth: '55%' }}>{f.val || '—'}</span>
                     </div>
                   ))}
                 </div>
@@ -576,10 +576,10 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                 </button>
               )}
               {!healthLoaded ? <div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}><Spinner /></div> : healthEvents.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af', fontSize: 13 }}>Sin eventos médicos registrados</div>
+                <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-faint)', fontSize: 13 }}>Sin eventos médicos registrados</div>
               ) : (
                 <div style={{ position: 'relative' }}>
-                  <div style={{ position: 'absolute', left: 19, top: 0, bottom: 0, width: 2, background: '#e5e7eb' }} />
+                  <div style={{ position: 'absolute', left: 19, top: 0, bottom: 0, width: 2, background: 'var(--bg-subtle-2)' }} />
                   {healthEvents.map(ev => {
                     const tipo = HEALTH_TIPOS.find(t => t.val === ev.tipo);
                     return (
@@ -587,12 +587,12 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                         <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f0fdf4', border: '2px solid #bbf7d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0, zIndex: 1 }}>
                           <HealthIcon tipo={ev.tipo} />
                         </div>
-                        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 14px', flex: 1 }}>
+                        <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px', flex: 1 }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                            <span style={{ fontSize: 13.5, fontWeight: 600, color: '#111' }}>{ev.titulo}</span>
-                            <span style={{ fontSize: 11.5, color: '#9ca3af', whiteSpace: 'nowrap' }}>{formatDate(ev.fecha)}</span>
+                            <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)' }}>{ev.titulo}</span>
+                            <span style={{ fontSize: 11.5, color: 'var(--text-faint)', whiteSpace: 'nowrap' }}>{formatDate(ev.fecha)}</span>
                           </div>
-                          <div style={{ fontSize: 11.5, color: '#6b7280', marginBottom: ev.descripcion ? 6 : 0 }}>
+                          <div style={{ fontSize: 11.5, color: 'var(--text-muted)', marginBottom: ev.descripcion ? 6 : 0 }}>
                             {tipo?.label} {ev.usuario_nombre && `· ${ev.usuario_nombre}`}
                           </div>
                           {ev.descripcion && <div style={{ fontSize: 13, color: '#4b5563' }}>{ev.descripcion}</div>}
@@ -614,16 +614,16 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                 </button>
               )}
               {!behaviorLoaded ? <div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}><Spinner /></div> : evaluaciones.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af', fontSize: 13 }}>
+                <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-faint)', fontSize: 13 }}>
                   <div style={{ fontSize: 40, marginBottom: 8 }}>🧠</div>
                   Sin evaluaciones de comportamiento. {can('animales:update') && 'Registra la primera evaluación.'}
                 </div>
               ) : evaluaciones.map((ev, idx) => (
-                <div key={ev.id} style={{ background: idx === 0 ? '#fff' : '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 12, padding: '16px 18px', marginBottom: 14 }}>
+                <div key={ev.id} style={{ background: idx === 0 ? 'var(--bg-surface)' : 'var(--bg-subtle)', border: '1px solid var(--border)', borderRadius: 12, padding: '16px 18px', marginBottom: 14 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: 14, color: '#111' }}>{idx === 0 ? 'Evaluación más reciente' : `Evaluación ${idx + 1}`}</div>
-                      <div style={{ fontSize: 12, color: '#9ca3af' }}>{formatDate(ev.fecha)}{ev.evaluador ? ` · ${ev.evaluador}` : ''}</div>
+                      <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>{idx === 0 ? 'Evaluación más reciente' : `Evaluación ${idx + 1}`}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>{formatDate(ev.fecha)}{ev.evaluador ? ` · ${ev.evaluador}` : ''}</div>
                     </div>
                     {idx === 0 && <span style={{ background: '#dcfce7', color: '#16a34a', fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 20 }}>Vigente</span>}
                   </div>
@@ -635,11 +635,11 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                   ].map(r => (
                     <div key={r.label} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
                       <span style={{ fontSize: 12.5, color: '#4b5563', flex: 1 }}>{r.label}</span>
-                      <span style={{ fontSize: 12, fontWeight: 500, color: '#111', marginRight: 6 }}>{nivelLabel(r.val)}</span>
+                      <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', marginRight: 6 }}>{nivelLabel(r.val)}</span>
                       <DotsBar val={r.val} />
                     </div>
                   ))}
-                  {ev.notas && <p style={{ fontSize: 13, color: '#4b5563', marginTop: 10, lineHeight: 1.6, borderTop: '1px solid #f3f4f6', paddingTop: 10 }}>{ev.notas}</p>}
+                  {ev.notas && <p style={{ fontSize: 13, color: '#4b5563', marginTop: 10, lineHeight: 1.6, borderTop: '1px solid var(--border-subtle)', paddingTop: 10 }}>{ev.notas}</p>}
                 </div>
               ))}
             </div>
@@ -654,15 +654,15 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                 </button>
               )}
               {!docsLoaded ? <div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}><Spinner /></div> : docs.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af', fontSize: 13 }}>Sin documentos adjuntos</div>
+                <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-faint)', fontSize: 13 }}>Sin documentos adjuntos</div>
               ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   {docs.map(doc => (
-                    <div key={doc.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                    <div key={doc.id} style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                       <div style={{ fontSize: 28, flexShrink: 0 }}>{doc.file_url.includes('.pdf') ? '📄' : '🖼️'}</div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: 600, fontSize: 13, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.nombre}</div>
-                        <div style={{ fontSize: 11.5, color: '#9ca3af', marginTop: 2 }}>{doc.tipo} · {formatDate(doc.created_at)}</div>
+                        <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.nombre}</div>
+                        <div style={{ fontSize: 11.5, color: 'var(--text-faint)', marginTop: 2 }}>{doc.tipo} · {formatDate(doc.created_at)}</div>
                         <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
                           <a href={doc.file_url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#2563eb', textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>↓ Descargar</a>
                           {can('animales:update') && (
@@ -689,30 +689,30 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                 <>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
                     <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '12px 14px' }}>
-                      <div style={{ fontSize: 11.5, color: '#9ca3af', marginBottom: 4 }}>Gastos totales</div>
+                      <div style={{ fontSize: 11.5, color: 'var(--text-faint)', marginBottom: 4 }}>Gastos totales</div>
                       <div style={{ fontSize: 18, fontWeight: 700, color: '#dc2626' }}>{financials.total_expenses.toFixed(2).replace('.', ',')}€</div>
                     </div>
                     <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 14px' }}>
-                      <div style={{ fontSize: 11.5, color: '#9ca3af', marginBottom: 4 }}>Donaciones recibidas</div>
+                      <div style={{ fontSize: 11.5, color: 'var(--text-faint)', marginBottom: 4 }}>Donaciones recibidas</div>
                       <div style={{ fontSize: 18, fontWeight: 700, color: '#16a34a' }}>{financials.total_income.toFixed(2).replace('.', ',')}€</div>
                     </div>
-                    <div style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 14px' }}>
-                      <div style={{ fontSize: 11.5, color: '#9ca3af', marginBottom: 4 }}>Balance</div>
+                    <div style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px' }}>
+                      <div style={{ fontSize: 11.5, color: 'var(--text-faint)', marginBottom: 4 }}>Balance</div>
                       <div style={{ fontSize: 18, fontWeight: 700, color: financials.balance >= 0 ? '#16a34a' : '#dc2626' }}>{financials.balance.toFixed(2).replace('.', ',')}€</div>
                     </div>
                   </div>
 
                   {financials.expenses.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af', fontSize: 13 }}>Sin gastos registrados</div>
+                    <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-faint)', fontSize: 13 }}>Sin gastos registrados</div>
                   ) : (
                     <div>
                       {financials.expenses.map(g => (
-                        <div key={g.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 14px', marginBottom: 8 }}>
+                        <div key={g.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px', marginBottom: 8 }}>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>
                               {EXPENSE_CATEGORIES.find(c => c.val === g.category)?.label || g.category}
                             </div>
-                            <div style={{ fontSize: 11.5, color: '#9ca3af', marginTop: 2 }}>
+                            <div style={{ fontSize: 11.5, color: 'var(--text-faint)', marginTop: 2 }}>
                               {formatDate(g.expense_date)}{g.description ? ` · ${g.description}` : ''}
                             </div>
                           </div>
@@ -734,21 +734,21 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
           {/* ── TAB: HISTORIA ──────────────────────────────── */}
           {tab === 'Historia' && (
             <div>
-              <div style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 14 }}>Línea de tiempo</div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', marginBottom: 14 }}>Línea de tiempo</div>
               {actividad.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af', fontSize: 13 }}>Sin historial registrado</div>
+                <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-faint)', fontSize: 13 }}>Sin historial registrado</div>
               ) : (
                 <div style={{ position: 'relative' }}>
-                  <div style={{ position: 'absolute', left: 19, top: 0, bottom: 0, width: 2, background: '#e5e7eb' }} />
+                  <div style={{ position: 'absolute', left: 19, top: 0, bottom: 0, width: 2, background: 'var(--bg-subtle-2)' }} />
                   {actividad.map(a => (
                     <div key={a.id} style={{ display: 'flex', gap: 14, marginBottom: 16, position: 'relative' }}>
                       <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f0fdf4', border: '2px solid #bbf7d0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0, zIndex: 1 }}>
                         {a.tipo === 'vacunacion' ? '💉' : a.tipo === 'adopcion' ? '❤️' : a.tipo === 'acogida' ? '🏠' : a.tipo === 'rescate' ? '🚨' : '📋'}
                       </div>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, fontSize: 13, color: '#111' }}>{a.titulo}</div>
-                        {a.descripcion && <div style={{ fontSize: 12, color: '#6b7280' }}>{a.descripcion}</div>}
-                        <div style={{ fontSize: 11.5, color: '#9ca3af', marginTop: 3 }}>
+                        <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)' }}>{a.titulo}</div>
+                        {a.descripcion && <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{a.descripcion}</div>}
+                        <div style={{ fontSize: 11.5, color: 'var(--text-faint)', marginTop: 3 }}>
                           {formatDateTime(a.created_at)}{a.usuario_nombre && ` · ${a.usuario_nombre}`}
                         </div>
                       </div>
@@ -764,22 +764,22 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
               {/* Web status */}
               <div>
-                <div style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 14 }}>Publicación en el portal</div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', marginBottom: 14 }}>Publicación en el portal</div>
                 {!animal.fotos || (fotos.length === 0) ? (
                   <div style={{ background: '#fef9c3', border: '1px solid #fde047', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#92400e', marginBottom: 14 }}>
                     ⚠️ Sin foto principal. Añade al menos una foto para poder publicar.
                   </div>
                 ) : null}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#f9fafb', borderRadius: 10, padding: '14px 16px', border: '1px solid #e5e7eb', marginBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-subtle)', borderRadius: 10, padding: '14px 16px', border: '1px solid var(--border)', marginBottom: 14 }}>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 13.5, color: '#111' }}>🌐 Estado en la web</div>
-                    <div style={{ fontSize: 12, color: animal.web_publicado ? '#16a34a' : '#9ca3af', marginTop: 2 }}>
+                    <div style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)' }}>🌐 Estado en la web</div>
+                    <div style={{ fontSize: 12, color: animal.web_publicado ? '#16a34a' : 'var(--text-faint)', marginTop: 2 }}>
                       {animal.web_publicado ? 'Publicado y visible al público' : 'No publicado'}
                     </div>
                   </div>
                   <button onClick={handleToggleWeb} disabled={togglingWeb || (fotos.length === 0 && !animal.web_publicado)} style={{ cursor: 'pointer', background: 'none', border: 'none', padding: 0 }}>
-                    <div style={{ width: 44, height: 24, borderRadius: 12, background: animal.web_publicado ? '#16a34a' : '#d1d5db', position: 'relative', opacity: togglingWeb ? 0.6 : 1, transition: 'background 0.2s' }}>
-                      <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3, left: animal.web_publicado ? 23 : 3, boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transition: 'left 0.2s' }} />
+                    <div style={{ width: 44, height: 24, borderRadius: 12, background: animal.web_publicado ? '#16a34a' : 'var(--border)', position: 'relative', opacity: togglingWeb ? 0.6 : 1, transition: 'background 0.2s' }}>
+                      <div style={{ width: 18, height: 18, borderRadius: '50%', background: 'var(--bg-surface)', position: 'absolute', top: 3, left: animal.web_publicado ? 23 : 3, boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transition: 'left 0.2s' }} />
                     </div>
                   </button>
                 </div>
@@ -790,10 +790,10 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                     { icon: '👁️', label: 'Visitas', val: animal.veces_visto },
                     { icon: '✉️', label: 'Contactos', val: raw.contactos_recibidos ?? 0 },
                   ].map(s => (
-                    <div key={s.label} style={{ background: '#f9fafb', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid #e5e7eb' }}>
+                    <div key={s.label} style={{ background: 'var(--bg-subtle)', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid var(--border)' }}>
                       <div style={{ fontSize: 20 }}>{s.icon}</div>
-                      <div style={{ fontSize: 22, fontWeight: 800, color: '#111', margin: '4px 0 2px' }}>{s.val.toLocaleString('es-ES')}</div>
-                      <div style={{ fontSize: 11, color: '#9ca3af' }}>{s.label}</div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', margin: '4px 0 2px' }}>{s.val.toLocaleString('es-ES')}</div>
+                      <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{s.label}</div>
                     </div>
                   ))}
                 </div>
@@ -801,9 +801,9 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
 
               {/* Instagram generator */}
               <div>
-                <div style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 14 }}>Generador para Instagram</div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', marginBottom: 14 }}>Generador para Instagram</div>
                 <button onClick={handleGenerateInsta} disabled={generatingInsta} style={{
-                  width: '100%', padding: '10px 0', background: generatingInsta ? '#e5e7eb' : 'linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)',
+                  width: '100%', padding: '10px 0', background: generatingInsta ? 'var(--bg-subtle-2)' : 'linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)',
                   color: generatingInsta ? '#9ca3af' : '#fff', border: 'none', borderRadius: 9, fontSize: 13.5,
                   fontWeight: 600, cursor: generatingInsta ? 'not-allowed' : 'pointer', fontFamily: "'Inter', sans-serif",
                   marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -812,7 +812,7 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                 </button>
                 {instaCopy && (
                   <>
-                    <textarea readOnly value={instaCopy} style={{ width: '100%', minHeight: 200, padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 9, fontSize: 13, fontFamily: "'Inter', sans-serif", resize: 'vertical', outline: 'none', boxSizing: 'border-box', color: '#374151', lineHeight: 1.65 }} />
+                    <textarea readOnly value={instaCopy} style={{ width: '100%', minHeight: 200, padding: '10px 12px', border: '1px solid var(--border)', borderRadius: 9, fontSize: 13, fontFamily: "'Inter', sans-serif", resize: 'vertical', outline: 'none', boxSizing: 'border-box', color: 'var(--text-secondary)', lineHeight: 1.65 }} />
                     <button onClick={() => { navigator.clipboard.writeText(instaCopy); setInstaCopied(true); setTimeout(() => setInstaCopied(false), 2000); }} style={{
                       width: '100%', padding: '8px 0', marginTop: 8, background: instaCopied ? '#16a34a' : '#111827',
                       color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600,
@@ -826,47 +826,47 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
         </div>
 
         {/* ── RIGHT PANEL ────────────────────────────────── */}
-        <div style={{ padding: '18px 16px', background: '#f9fafb', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 'calc(100vh - 54px)' }}>
+        <div style={{ padding: '18px 16px', background: 'var(--bg-subtle)', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 'calc(100vh - 54px)' }}>
 
           {/* Actividad */}
-          <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-            <div style={{ padding: '12px 14px', fontWeight: 600, fontSize: 13.5, color: '#111', borderBottom: '1px solid #f3f4f6' }}>Actividad reciente</div>
+          <div style={{ background: 'var(--bg-surface)', borderRadius: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
+            <div style={{ padding: '12px 14px', fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', borderBottom: '1px solid var(--border-subtle)' }}>Actividad reciente</div>
             {actividad.length === 0 ? (
-              <div style={{ padding: '16px', textAlign: 'center', color: '#9ca3af', fontSize: 12 }}>Sin actividad</div>
+              <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-faint)', fontSize: 12 }}>Sin actividad</div>
             ) : actividad.slice(0, 8).map((a, i, arr) => (
               <div key={a.id} style={{ display: 'flex', gap: 9, padding: '10px 14px', borderBottom: i < arr.length - 1 ? '1px solid #f9fafb' : 'none' }}>
                 <div style={{ width: 28, height: 28, borderRadius: 7, background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 13 }}>
                   {a.tipo === 'vacunacion' ? '💉' : a.tipo === 'adopcion' ? '❤️' : a.tipo === 'acogida' ? '🏠' : '📋'}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.titulo}</div>
-                  <div style={{ fontSize: 11, color: '#9ca3af' }}>{formatDateTime(a.created_at)}</div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.titulo}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{formatDateTime(a.created_at)}</div>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Notas internas */}
-          <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-            <div style={{ padding: '12px 14px', fontWeight: 600, fontSize: 13.5, color: '#111', borderBottom: '1px solid #f3f4f6' }}>Notas internas</div>
+          <div style={{ background: 'var(--bg-surface)', borderRadius: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
+            <div style={{ padding: '12px 14px', fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', borderBottom: '1px solid var(--border-subtle)' }}>Notas internas</div>
             {notas.map(n => (
               <div key={n.id} style={{ padding: '10px 14px', borderBottom: '1px solid #f9fafb', borderLeft: n.pinned ? '3px solid #16a34a' : '3px solid transparent' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <span style={{ fontSize: 11, color: '#9ca3af' }}>{n.autor_nombre} · {formatDate(n.created_at)}</span>
+                  <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>{n.autor_nombre} · {formatDate(n.created_at)}</span>
                   {n.pinned && <span style={{ fontSize: 12 }}>📌</span>}
                 </div>
-                <p style={{ fontSize: 12.5, color: '#374151', lineHeight: 1.6, margin: 0 }}>{n.texto}</p>
+                <p style={{ fontSize: 12.5, color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>{n.texto}</p>
               </div>
             ))}
             {can('animales:read') && (
               <div style={{ padding: 10 }}>
                 <textarea value={nuevaNota} onChange={e => setNuevaNota(e.target.value)} placeholder="Añadir nota interna..."
-                  style={{ width: '100%', minHeight: 56, padding: '7px 9px', borderRadius: 7, border: '1px solid #e5e7eb', fontSize: 12.5, resize: 'vertical', fontFamily: "'Inter', sans-serif", boxSizing: 'border-box', outline: 'none' }}
+                  style={{ width: '100%', minHeight: 56, padding: '7px 9px', borderRadius: 7, border: '1px solid var(--border)', fontSize: 12.5, resize: 'vertical', fontFamily: "'Inter', sans-serif", boxSizing: 'border-box', outline: 'none' }}
                 />
                 <button onClick={handleAddNota} disabled={guardandoNota || !nuevaNota.trim()} style={{
                   marginTop: 5, width: '100%', padding: '7px 0',
-                  background: guardandoNota || !nuevaNota.trim() ? '#e5e7eb' : '#16a34a',
-                  color: guardandoNota || !nuevaNota.trim() ? '#9ca3af' : '#fff',
+                  background: guardandoNota || !nuevaNota.trim() ? 'var(--bg-subtle-2)' : '#16a34a',
+                  color: guardandoNota || !nuevaNota.trim() ? 'var(--text-faint)' : '#fff',
                   border: 'none', borderRadius: 7, fontSize: 12.5, fontWeight: 600,
                   cursor: guardandoNota || !nuevaNota.trim() ? 'not-allowed' : 'pointer', fontFamily: "'Inter', sans-serif",
                 }}>{guardandoNota ? 'Guardando...' : 'Añadir nota'}</button>
@@ -875,12 +875,12 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
           </div>
 
           {/* Difusión */}
-          <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-            <div style={{ padding: '12px 14px', fontWeight: 600, fontSize: 13.5, color: '#111', borderBottom: '1px solid #f3f4f6' }}>Difusión</div>
+          <div style={{ background: 'var(--bg-surface)', borderRadius: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
+            <div style={{ padding: '12px 14px', fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', borderBottom: '1px solid var(--border-subtle)' }}>Difusión</div>
             <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 12.5, color: '#374151' }}>🌐 Estado en la web</span>
-                <span style={{ fontSize: 12.5, fontWeight: 600, color: animal.web_publicado ? '#16a34a' : '#9ca3af' }}>
+                <span style={{ fontSize: 12.5, color: 'var(--text-secondary)' }}>🌐 Estado en la web</span>
+                <span style={{ fontSize: 12.5, fontWeight: 600, color: animal.web_publicado ? '#16a34a' : 'var(--text-faint)' }}>
                   {animal.web_publicado ? 'Publicado' : 'No publicado'}
                 </span>
               </div>
@@ -890,8 +890,8 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                 { icon: '✉️', label: 'Contactos', val: raw.contactos_recibidos ?? 0 },
               ].map(s => (
                 <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 12.5, color: '#374151' }}>{s.icon} {s.label}</span>
-                  <span style={{ fontSize: 12.5, fontWeight: 600, color: '#111' }}>{s.val.toLocaleString('es-ES')}</span>
+                  <span style={{ fontSize: 12.5, color: 'var(--text-secondary)' }}>{s.icon} {s.label}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-primary)' }}>{s.val.toLocaleString('es-ES')}</span>
                 </div>
               ))}
               <button style={{ width: '100%', padding: '8px 0', background: '#111827', color: '#fff', border: 'none', borderRadius: 8, fontSize: 12.5, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>
@@ -931,7 +931,7 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
               <textarea rows={3} style={{ ...inp, resize: 'vertical' }} value={healthForm.descripcion} onChange={e => setHealthForm(f => ({ ...f, descripcion: e.target.value }))} placeholder="Observaciones adicionales..." />
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-              <button type="button" onClick={() => setShowHealthModal(false)} style={{ padding: '8px 16px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+              <button type="button" onClick={() => setShowHealthModal(false)} style={{ padding: '8px 16px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
               <button type="submit" disabled={savingHealth} style={{ padding: '8px 18px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
                 {savingHealth ? 'Guardando...' : 'Guardar evento'}
               </button>
@@ -953,7 +953,7 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
                 <input style={inp} value={behaviorForm.evaluador} onChange={e => setBehaviorForm(f => ({ ...f, evaluador: e.target.value }))} placeholder="Nombre del evaluador" />
               </div>
             </div>
-            <div style={{ background: '#f9fafb', borderRadius: 10, padding: '12px 14px' }}>
+            <div style={{ background: 'var(--bg-subtle)', borderRadius: 10, padding: '12px 14px' }}>
               <SliderInput label="⚡ Nivel de actividad" value={behaviorForm.nivel_actividad} onChange={v => setBehaviorForm(f => ({ ...f, nivel_actividad: v }))} />
               <SliderInput label="🐕 Sociabilidad con perros" value={behaviorForm.soc_perros} onChange={v => setBehaviorForm(f => ({ ...f, soc_perros: v }))} />
               <SliderInput label="🐈 Sociabilidad con gatos" value={behaviorForm.soc_gatos} onChange={v => setBehaviorForm(f => ({ ...f, soc_gatos: v }))} />
@@ -979,7 +979,7 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
               <textarea rows={4} style={{ ...inp, resize: 'vertical' }} value={behaviorForm.notas} onChange={e => setBehaviorForm(f => ({ ...f, notas: e.target.value }))} placeholder="Descripción detallada del comportamiento..." />
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-              <button type="button" onClick={() => setShowBehaviorModal(false)} style={{ padding: '8px 16px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+              <button type="button" onClick={() => setShowBehaviorModal(false)} style={{ padding: '8px 16px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
               <button type="submit" disabled={savingBehavior} style={{ padding: '8px 18px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
                 {savingBehavior ? 'Guardando...' : 'Guardar evaluación'}
               </button>
@@ -1004,10 +1004,10 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
             <div>
               <label style={lbl}>URL del documento *</label>
               <input type="url" style={inp} value={docForm.file_url} onChange={e => setDocForm(f => ({ ...f, file_url: e.target.value }))} placeholder="https://..." />
-              <div style={{ fontSize: 11.5, color: '#9ca3af', marginTop: 4 }}>Sube el fichero a tu almacenamiento (Supabase Storage, Google Drive, etc.) y pega la URL pública aquí.</div>
+              <div style={{ fontSize: 11.5, color: 'var(--text-faint)', marginTop: 4 }}>Sube el fichero a tu almacenamiento (Supabase Storage, Google Drive, etc.) y pega la URL pública aquí.</div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-              <button type="button" onClick={() => setShowDocModal(false)} style={{ padding: '8px 16px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+              <button type="button" onClick={() => setShowDocModal(false)} style={{ padding: '8px 16px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
               <button type="submit" disabled={savingDoc || !docForm.nombre || !docForm.file_url} style={{ padding: '8px 18px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
                 {savingDoc ? 'Guardando...' : 'Guardar documento'}
               </button>
@@ -1044,7 +1044,7 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
               <input type="url" style={inp} value={gastoForm.receipt_url} onChange={e => setGastoForm(f => ({ ...f, receipt_url: e.target.value }))} placeholder="https://..." />
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-              <button type="button" onClick={() => setShowGastoModal(false)} style={{ padding: '8px 16px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+              <button type="button" onClick={() => setShowGastoModal(false)} style={{ padding: '8px 16px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
               <button type="submit" disabled={savingGasto || !gastoForm.amount} style={{ padding: '8px 18px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
                 {savingGasto ? 'Guardando...' : 'Guardar gasto'}
               </button>

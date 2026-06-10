@@ -102,7 +102,7 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
     });
   };
 
-  const inp: React.CSSProperties = { padding: '7px 10px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 12, background: '#fff' };
+  const inp: React.CSSProperties = { padding: '7px 10px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 12, background: 'var(--bg-surface)' };
 
   return (
     <div>
@@ -129,24 +129,24 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
           {campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-          <button onClick={loadDonors} style={{ padding: '7px 14px', border: '1.5px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 12, fontWeight: 500 }}>👥 Ver donantes</button>
-          <button onClick={exportCSV} style={{ padding: '7px 14px', border: '1.5px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 12, fontWeight: 500 }}>⬇️ CSV</button>
+          <button onClick={loadDonors} style={{ padding: '7px 14px', border: '1.5px solid var(--border)', borderRadius: 8, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 12, fontWeight: 500 }}>👥 Ver donantes</button>
+          <button onClick={exportCSV} style={{ padding: '7px 14px', border: '1.5px solid var(--border)', borderRadius: 8, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 12, fontWeight: 500 }}>⬇️ CSV</button>
           <button onClick={() => setShowNew(true)} style={{ padding: '7px 14px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>+ Registrar donación</button>
         </div>
       </div>
 
       {/* Tabla */}
       {error ? (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12 }}>
+        <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 12 }}>
           <ErrorState onRetry={load} />
         </div>
       ) : (
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
               <tr>{['Fecha','Donante','Importe','Canal','Tipo','Campaña','Estado','Acciones'].map(h =>
-                <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 600, color: '#6b7280', borderBottom: '1px solid #e5e7eb', background: '#f9fafb', fontSize: 12, whiteSpace: 'nowrap' }}>{h}</th>
+                <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 600, color: 'var(--text-muted)', borderBottom: '1px solid var(--border)', background: 'var(--bg-subtle)', fontSize: 12, whiteSpace: 'nowrap' }}>{h}</th>
               )}</tr>
             </thead>
             <tbody>
@@ -177,7 +177,7 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
                       </span>
                     </td>
                     <td style={td} onClick={e => e.stopPropagation()}>
-                      <button onClick={() => handleReceipt(d)} style={{ padding: '3px 10px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', cursor: 'pointer', fontSize: 11 }}>
+                      <button onClick={() => handleReceipt(d)} style={{ padding: '3px 10px', border: '1px solid var(--border)', borderRadius: 6, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 11 }}>
                         📄 Recibo
                       </button>
                     </td>
@@ -187,9 +187,9 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan={2} style={{ padding: '10px 14px', fontWeight: 700, color: '#374151', borderTop: '1px solid #e5e7eb' }}>Total mostrado:</td>
-                <td style={{ padding: '10px 14px', fontWeight: 800, color: '#16a34a', fontSize: 15, borderTop: '1px solid #e5e7eb' }}>{fmt(totalAmount)}</td>
-                <td colSpan={5} style={{ padding: '10px 14px', color: '#9ca3af', fontSize: 12, borderTop: '1px solid #e5e7eb' }}>{total} donaciones</td>
+                <td colSpan={2} style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--text-secondary)', borderTop: '1px solid var(--border)' }}>Total mostrado:</td>
+                <td style={{ padding: '10px 14px', fontWeight: 800, color: '#16a34a', fontSize: 15, borderTop: '1px solid var(--border)' }}>{fmt(totalAmount)}</td>
+                <td colSpan={5} style={{ padding: '10px 14px', color: 'var(--text-faint)', fontSize: 12, borderTop: '1px solid var(--border)' }}>{total} donaciones</td>
               </tr>
             </tfoot>
           </table>
@@ -205,9 +205,9 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
             return (
               <button key={p} onClick={() => setPage(p)} style={{
                 padding: '7px 13px', borderRadius: 8, border: '1.5px solid',
-                borderColor: page === p ? '#16a34a' : '#e5e7eb',
-                background: page === p ? '#16a34a' : '#fff',
-                color: page === p ? '#fff' : '#374151',
+                borderColor: page === p ? '#16a34a' : 'var(--border)',
+                background: page === p ? '#16a34a' : 'var(--bg-surface)',
+                color: page === p ? '#fff' : 'var(--text-secondary)',
                 cursor: 'pointer', fontSize: 13, fontWeight: page === p ? 700 : 400,
               }}>{p}</button>
             );
@@ -222,10 +222,10 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
       {selectedDonation && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setSelectedDonation(null); }}>
-          <div style={{ background: '#fff', borderRadius: 16, padding: 28, maxWidth: 440, width: '100%', boxShadow: '0 20px 50px rgba(0,0,0,.2)' }}>
+          <div style={{ background: 'var(--bg-surface)', borderRadius: 16, padding: 28, maxWidth: 440, width: '100%', boxShadow: '0 20px 50px rgba(0,0,0,.2)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
               <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>Detalle de donación</h3>
-              <button onClick={() => setSelectedDonation(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: '#9ca3af' }}>✕</button>
+              <button onClick={() => setSelectedDonation(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-faint)' }}>✕</button>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
               <p style={{ fontSize: 40, fontWeight: 900, color: '#16a34a', margin: 0 }}>{fmt(selectedDonation.amount)}</p>
@@ -242,9 +242,9 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
               ['Referencia', selectedDonation.internal_reference || '—'],
               ['Registrado por', selectedDonation.registered_by_nombre || 'Sistema'],
             ].map(([k, v]) => (
-              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid #f3f4f6', fontSize: 13 }}>
-                <span style={{ color: '#6b7280' }}>{k}</span>
-                <span style={{ fontWeight: 500, color: '#111827' }}>{v}</span>
+              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: 13 }}>
+                <span style={{ color: 'var(--text-muted)' }}>{k}</span>
+                <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{v}</span>
               </div>
             ))}
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
@@ -260,16 +260,16 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
       {showDonors && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setShowDonors(false); }}>
-          <div style={{ background: '#fff', borderRadius: 16, width: '100%', maxWidth: 700, maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,.2)' }}>
-            <div style={{ padding: '20px 24px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, background: '#fff' }}>
+          <div style={{ background: 'var(--bg-surface)', borderRadius: 16, width: '100%', maxWidth: 700, maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,.2)' }}>
+            <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, background: 'var(--bg-surface)' }}>
               <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>👥 Directorio de donantes ({donors.length})</h3>
-              <button onClick={() => setShowDonors(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: '#9ca3af' }}>✕</button>
+              <button onClick={() => setShowDonors(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-faint)' }}>✕</button>
             </div>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
                   <tr>{['Donante','Total donado','Donaciones','¿Recurrente?','Última donación'].map(h =>
-                    <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 600, color: '#6b7280', borderBottom: '1px solid #e5e7eb', background: '#f9fafb', fontSize: 11 }}>{h}</th>
+                    <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 600, color: 'var(--text-muted)', borderBottom: '1px solid var(--border)', background: 'var(--bg-subtle)', fontSize: 11 }}>{h}</th>
                   )}</tr>
                 </thead>
                 <tbody>
@@ -280,14 +280,14 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
                           <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#16a34a' }}>{d.name?.[0] || '?'}</div>
                           <div>
                             <p style={{ margin: 0, fontWeight: 600 }}>{d.name || '—'}</p>
-                            <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>{d.email}</p>
+                            <p style={{ margin: 0, fontSize: 11, color: 'var(--text-faint)' }}>{d.email}</p>
                           </div>
                         </div>
                       </td>
                       <td style={{ ...td, fontWeight: 800, color: '#16a34a' }}>{fmt(d.total_donated)}</td>
                       <td style={td}>{d.donations_count}</td>
                       <td style={td}>{d.is_recurring ? <span style={{ color: '#16a34a', fontWeight: 700 }}>🔄 Sí</span> : '—'}</td>
-                      <td style={{ ...td, color: '#6b7280' }}>{d.last_donation_at ? new Date(d.last_donation_at).toLocaleDateString('es-ES') : '—'}</td>
+                      <td style={{ ...td, color: 'var(--text-muted)' }}>{d.last_donation_at ? new Date(d.last_donation_at).toLocaleDateString('es-ES') : '—'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -301,5 +301,5 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
 }
 
 import React from 'react';
-const td: React.CSSProperties = { padding: '10px 14px', borderBottom: '1px solid #f3f4f6', color: '#374151' };
-const sk = { background: 'linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.4s infinite' };
+const td: React.CSSProperties = { padding: '10px 14px', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' };
+const sk = { background: 'linear-gradient(90deg,var(--bg-subtle-2) 25%,var(--bg-subtle-2) 50%,var(--bg-subtle-2) 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.4s infinite' };

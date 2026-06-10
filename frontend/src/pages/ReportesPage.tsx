@@ -35,12 +35,12 @@ export default function ReportesPage() {
   const ActiveTab = TABS.find(t => t.id === tab)?.component;
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-subtle)', minHeight: '100vh' }}>
       <TopBar titulo="Reportes" showNew={false} />
 
       {/* Header con controles */}
       <div style={{
-        background: '#fff', borderBottom: '1px solid #e5e7eb',
+        background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)',
         padding: '0 28px',
       }}>
         {/* Period selector + export */}
@@ -49,15 +49,15 @@ export default function ReportesPage() {
           padding: '16px 0', gap: 12, flexWrap: 'wrap',
         }}>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 13, fontWeight: 500, color: '#6b7280' }}>Período:</span>
+            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-muted)' }}>Período:</span>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {PERIODS.map(p => (
                 <button key={p.period} onClick={() => setPeriod(p)} style={{
                   padding: '6px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 13,
                   border: '1.5px solid',
-                  borderColor: period.period === p.period ? '#16a34a' : '#e5e7eb',
-                  background: period.period === p.period ? '#f0fdf4' : '#fff',
-                  color: period.period === p.period ? '#16a34a' : '#374151',
+                  borderColor: period.period === p.period ? '#16a34a' : 'var(--border)',
+                  background: period.period === p.period ? '#f0fdf4' : 'var(--bg-surface)',
+                  color: period.period === p.period ? '#16a34a' : 'var(--text-secondary)',
                   fontWeight: period.period === p.period ? 600 : 400,
                   transition: 'all .15s',
                 }}>
@@ -68,10 +68,10 @@ export default function ReportesPage() {
             {period.period === 'custom' && (
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <input type="date" value={customFrom} onChange={e => setCustomFrom(e.target.value)}
-                  style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 13 }} />
-                <span style={{ color: '#9ca3af' }}>—</span>
+                  style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 13 }} />
+                <span style={{ color: 'var(--text-faint)' }}>—</span>
                 <input type="date" value={customTo} onChange={e => setCustomTo(e.target.value)}
-                  style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 13 }} />
+                  style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 13 }} />
               </div>
             )}
           </div>
@@ -91,7 +91,7 @@ export default function ReportesPage() {
             <button key={t.id} onClick={() => setTab(t.id)} style={{
               padding: '12px 20px', background: 'none', border: 'none', cursor: 'pointer',
               fontSize: 14, fontWeight: tab === t.id ? 700 : 400,
-              color: tab === t.id ? '#16a34a' : '#6b7280',
+              color: tab === t.id ? '#16a34a' : 'var(--text-muted)',
               borderBottom: tab === t.id ? '2.5px solid #16a34a' : '2.5px solid transparent',
               whiteSpace: 'nowrap', transition: 'all .15s',
             }}>

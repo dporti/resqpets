@@ -1,0 +1,55 @@
+:root {
+  --color-primary: #16a34a;
+  --color-primary-soft: #f0fdf4;
+
+  --bg-page: #f9fafb;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f9fafb;
+  --bg-subtle-2: #f3f4f6;
+  --bg-hover: #f0fdf4;
+
+  --border: #e5e7eb;
+  --border-subtle: #f3f4f6;
+
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --text-faint: #9ca3af;
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 6px 18px rgba(0, 0, 0, 0.07);
+  --shadow-overlay: -4px 0 24px rgba(0, 0, 0, 0.12);
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --color-primary: #22c55e;
+  --color-primary-soft: rgba(34, 197, 94, 0.14);
+
+  --bg-page: #0f1115;
+  --bg-surface: #181b21;
+  --bg-subtle: #1c2027;
+  --bg-subtle-2: #20242c;
+  --bg-hover: rgba(34, 197, 94, 0.1);
+
+  --border: #2a2f38;
+  --border-subtle: #20242c;
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --text-faint: #6b7280;
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 6px 18px rgba(0, 0, 0, 0.45);
+  --shadow-overlay: -4px 0 24px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
+}
+
+html, body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}

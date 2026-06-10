@@ -26,17 +26,17 @@ export function AdopcionesConfigSection({ config, onSave }: Props) {
           </Field>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-subtle)' }}>
             <div>
-              <p style={{ margin: 0, fontWeight: 600, fontSize: 13, color: '#111827' }}>Requiere visita al hogar</p>
-              <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>Un coordinador visita la vivienda del adoptante antes de aprobar</p>
+              <p style={{ margin: 0, fontWeight: 600, fontSize: 13, color: 'var(--text-primary)' }}>Requiere visita al hogar</p>
+              <p style={{ margin: 0, fontSize: 11, color: 'var(--text-faint)' }}>Un coordinador visita la vivienda del adoptante antes de aprobar</p>
             </div>
             <Toggle checked={homeVisit} onChange={setHomeVisit} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0' }}>
             <div>
-              <p style={{ margin: 0, fontWeight: 600, fontSize: 13, color: '#111827' }}>Requiere entrevista</p>
-              <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>Entrevista telefónica o presencial antes de aprobar</p>
+              <p style={{ margin: 0, fontWeight: 600, fontSize: 13, color: 'var(--text-primary)' }}>Requiere entrevista</p>
+              <p style={{ margin: 0, fontSize: 11, color: 'var(--text-faint)' }}>Entrevista telefónica o presencial antes de aprobar</p>
             </div>
             <Toggle checked={interview} onChange={setInterview} />
           </div>

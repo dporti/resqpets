@@ -54,13 +54,13 @@ function FaseProgress({ exp }: { exp: AdoptionExpedient }) {
           <div key={f} style={{ flex: 1, textAlign: 'center' }}>
             <div style={{
               width: 36, height: 36, borderRadius: '50%', margin: '0 auto 4px',
-              background: isComplete ? '#16a34a' : isActive ? '#2563eb' : '#e5e7eb',
+              background: isComplete ? '#16a34a' : isActive ? '#2563eb' : 'var(--bg-subtle-2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
             }}>{isComplete ? '✓' : FASE_ICONS[f]}</div>
-            <div style={{ fontSize: 10.5, fontWeight: isActive ? 700 : 400, color: isActive ? '#2563eb' : isComplete ? '#16a34a' : '#9ca3af' }}>
+            <div style={{ fontSize: 10.5, fontWeight: isActive ? 700 : 400, color: isActive ? '#2563eb' : isComplete ? '#16a34a' : 'var(--text-faint)' }}>
               F{f} {FASE_LABELS[f]}
             </div>
-            <div style={{ fontSize: 10, color: '#9ca3af' }}>{done}/{all}</div>
+            <div style={{ fontSize: 10, color: 'var(--text-faint)' }}>{done}/{all}</div>
           </div>
         );
       })}
@@ -118,7 +118,7 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
   if (loading) return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 620, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 620, background: 'var(--bg-surface)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Spinner size={36} />
       </div>
     </>
@@ -126,7 +126,7 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
   if (error) return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 620, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 620, background: 'var(--bg-surface)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <ErrorState onRetry={load} />
       </div>
     </>
@@ -136,17 +136,17 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 620, background: '#fff', zIndex: 50, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)', fontFamily: "'Inter', sans-serif", overflowY: 'auto' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 620, background: 'var(--bg-surface)', zIndex: 50, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)', fontFamily: "'Inter', sans-serif", overflowY: 'auto' }}>
 
         {/* Header */}
-        <div style={{ padding: '18px 22px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'sticky', top: 0, background: '#fff', zIndex: 10 }}>
+        <div style={{ padding: '18px 22px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'sticky', top: 0, background: 'var(--bg-surface)', zIndex: 10 }}>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 16, color: '#111' }}>Expediente #{exp.id}</div>
-            <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>
+            <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)' }}>Expediente #{exp.id}</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
               {exp.animal_nombre} → {exp.adoptante_nombre}
             </div>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#9ca3af' }}>×</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--text-faint)' }}>×</button>
         </div>
 
         <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 20, flex: 1 }}>
@@ -157,13 +157,13 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
               {exp.animal_foto ? <img src={exp.animal_foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : exp.animal_especie === 'perro' ? '🐕' : '🐈'}
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 600, fontSize: 14, color: '#111' }}>{exp.animal_nombre}</div>
-              <div style={{ fontSize: 12, color: '#9ca3af', textTransform: 'capitalize' }}>{exp.animal_especie} {exp.animal_raza && `· ${exp.animal_raza}`}</div>
+              <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>{exp.animal_nombre}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-faint)', textTransform: 'capitalize' }}>{exp.animal_especie} {exp.animal_raza && `· ${exp.animal_raza}`}</div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontWeight: 600, fontSize: 13, color: '#111' }}>{exp.adoptante_nombre}</div>
-              <div style={{ fontSize: 12, color: '#9ca3af' }}>{exp.adoptante_email}</div>
-              {exp.adoptante_telefono && <div style={{ fontSize: 12, color: '#9ca3af' }}>{exp.adoptante_telefono}</div>}
+              <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)' }}>{exp.adoptante_nombre}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>{exp.adoptante_email}</div>
+              {exp.adoptante_telefono && <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>{exp.adoptante_telefono}</div>}
             </div>
           </div>
 
@@ -177,12 +177,12 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
             return (
               <div key={fase} style={{ opacity: isCurrentOrPast ? 1 : 0.45 }}>
                 <div style={{
-                  fontWeight: 700, fontSize: 13.5, color: '#111', marginBottom: 10,
+                  fontWeight: 700, fontSize: 13.5, color: 'var(--text-primary)', marginBottom: 10,
                   display: 'flex', alignItems: 'center', gap: 8,
                 }}>
                   <span style={{
-                    background: exp.fase_actual === fase ? '#dbeafe' : exp.fase_actual > fase ? '#dcfce7' : '#f3f4f6',
-                    color: exp.fase_actual === fase ? '#1d4ed8' : exp.fase_actual > fase ? '#15803d' : '#9ca3af',
+                    background: exp.fase_actual === fase ? '#dbeafe' : exp.fase_actual > fase ? '#dcfce7' : 'var(--bg-subtle-2)',
+                    color: exp.fase_actual === fase ? '#1d4ed8' : exp.fase_actual > fase ? '#15803d' : 'var(--text-faint)',
                     padding: '2px 8px', borderRadius: 20, fontSize: 11.5,
                   }}>Fase {fase}</span>
                   {FASE_LABELS[fase]}
@@ -196,7 +196,7 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
                       <div key={item.key} style={{
                         display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 12px',
                         background: done ? '#f0fdf4' : '#f9fafb', borderRadius: 9,
-                        border: `1px solid ${done ? '#bbf7d0' : '#f3f4f6'}`,
+                        border: `1px solid ${done ? '#bbf7d0' : 'var(--border-subtle)'}`,
                         opacity: !isCurrentOrPast ? 0.6 : 1,
                       }}>
                         <button
@@ -204,8 +204,8 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
                           onClick={() => handleToggle(item.key, done, fase)}
                           style={{
                             width: 22, height: 22, borderRadius: 6, flexShrink: 0,
-                            border: `2px solid ${done ? '#16a34a' : '#d1d5db'}`,
-                            background: done ? '#16a34a' : '#fff',
+                            border: `2px solid ${done ? '#16a34a' : 'var(--border)'}`,
+                            background: done ? '#16a34a' : 'var(--bg-surface)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             cursor: can('adopciones:manage') && isCurrentOrPast ? 'pointer' : 'default',
                             color: '#fff', fontSize: 13, fontWeight: 700,
@@ -215,11 +215,11 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
                           {isToggling ? '...' : done ? '✓' : ''}
                         </button>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 13.5, fontWeight: done ? 600 : 400, color: done ? '#15803d' : '#374151', textDecoration: done ? 'none' : 'none' }}>
+                          <div style={{ fontSize: 13.5, fontWeight: done ? 600 : 400, color: done ? '#15803d' : 'var(--text-secondary)', textDecoration: done ? 'none' : 'none' }}>
                             {item.label}
                           </div>
                           {done && ci?.completado_at && (
-                            <div style={{ fontSize: 11.5, color: '#9ca3af', marginTop: 2 }}>
+                            <div style={{ fontSize: 11.5, color: 'var(--text-faint)', marginTop: 2 }}>
                               {formatDate(ci.completado_at)}{ci.completado_por_nombre && ` · ${ci.completado_por_nombre}`}
                             </div>
                           )}
@@ -255,13 +255,13 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
           {/* Timeline */}
           {exp.timeline && exp.timeline.length > 0 && (
             <div>
-              <div style={{ fontWeight: 600, fontSize: 13.5, color: '#111', marginBottom: 10 }}>Timeline del proceso</div>
+              <div style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', marginBottom: 10 }}>Timeline del proceso</div>
               {exp.timeline.map(t => (
                 <div key={t.id} style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#16a34a', marginTop: 5, flexShrink: 0 }} />
                   <div>
-                    <div style={{ fontSize: 12.5, color: '#374151' }}>{t.descripcion}</div>
-                    <div style={{ fontSize: 11, color: '#9ca3af' }}>{formatDateTime(t.created_at)}{t.usuario_nombre && ` · ${t.usuario_nombre}`}</div>
+                    <div style={{ fontSize: 12.5, color: 'var(--text-secondary)' }}>{t.descripcion}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{formatDateTime(t.created_at)}{t.usuario_nombre && ` · ${t.usuario_nombre}`}</div>
                   </div>
                 </div>
               ))}
@@ -274,14 +274,14 @@ export default function ExpedientePanel({ expedienteId, onClose, onCerrado }: Pr
       {showCerrarConfirm && (
         <>
           <div onClick={() => setShowCerrarConfirm(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 60 }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: '#fff', borderRadius: 16, width: 420, padding: 28, zIndex: 70, textAlign: 'center', fontFamily: "'Inter', sans-serif" }}>
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--bg-surface)', borderRadius: 16, width: 420, padding: 28, zIndex: 70, textAlign: 'center', fontFamily: "'Inter', sans-serif" }}>
             <div style={{ fontSize: 56, marginBottom: 12 }}>🐾❤️</div>
-            <div style={{ fontWeight: 800, fontSize: 18, color: '#111', marginBottom: 8 }}>¡Confirmar adopción!</div>
-            <div style={{ fontSize: 13.5, color: '#6b7280', marginBottom: 24, lineHeight: 1.6 }}>
+            <div style={{ fontWeight: 800, fontSize: 18, color: 'var(--text-primary)', marginBottom: 8 }}>¡Confirmar adopción!</div>
+            <div style={{ fontSize: 13.5, color: 'var(--text-muted)', marginBottom: 24, lineHeight: 1.6 }}>
               Esto marcará a <strong>{exp.animal_nombre}</strong> como adoptado, lo retirará del portal web y cerrará el expediente.
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
-              <button onClick={() => setShowCerrarConfirm(false)} style={{ padding: '10px 20px', border: '1px solid #e5e7eb', borderRadius: 9, background: '#fff', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+              <button onClick={() => setShowCerrarConfirm(false)} style={{ padding: '10px 20px', border: '1px solid var(--border)', borderRadius: 9, background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
               <button onClick={handleCerrar} disabled={cerrando} style={{ padding: '10px 24px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 9, fontWeight: 700, fontSize: 13.5, cursor: 'pointer', fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 8 }}>
                 {cerrando ? <><Spinner size={16} /> Procesando...</> : '🎉 Confirmar adopción'}
               </button>

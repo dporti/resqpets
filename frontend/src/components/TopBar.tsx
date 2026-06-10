@@ -11,14 +11,14 @@ export default function TopBar({ titulo, subtitulo, onNew, showNew = true, aviso
   return (
     <div style={{
       height: 60, padding: '0 24px', display: 'flex', alignItems: 'center',
-      justifyContent: 'space-between', background: '#fff',
-      borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, zIndex: 10,
+      justifyContent: 'space-between', background: 'var(--bg-surface)',
+      borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, zIndex: 10,
       fontFamily: "'Inter', sans-serif",
     }}>
       <div>
-        <div style={{ fontWeight: 700, fontSize: 16, color: '#111', lineHeight: 1.3 }}>{titulo}</div>
+        <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)', lineHeight: 1.3 }}>{titulo}</div>
         {subtitulo && (
-          <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 1 }}>{subtitulo}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-faint)', marginTop: 1 }}>{subtitulo}</div>
         )}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -35,7 +35,7 @@ export default function TopBar({ titulo, subtitulo, onNew, showNew = true, aviso
         {showNew && onNew && (
           <button onClick={onNew} style={{
             display: 'flex', alignItems: 'center', gap: 6,
-            background: '#16a34a', color: '#fff', border: 'none',
+            background: 'var(--color-primary)', color: '#fff', border: 'none',
             borderRadius: 8, padding: '8px 14px', fontSize: 13, fontWeight: 600,
             cursor: 'pointer', fontFamily: "'Inter', sans-serif",
           }}>

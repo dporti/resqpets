@@ -14,7 +14,7 @@ const KARMA_LEVEL = (pts: number) => {
   if (pts >= 1000) return { label: 'Diamante', emoji: '💎', color: '#06b6d4', bg: '#cffafe' };
   if (pts >= 600)  return { label: 'Platino',  emoji: '🏆', color: '#8b5cf6', bg: '#ede9fe' };
   if (pts >= 300)  return { label: 'Oro',      emoji: '🥇', color: '#f59e0b', bg: '#fef9c3' };
-  if (pts >= 100)  return { label: 'Plata',    emoji: '🥈', color: '#6b7280', bg: '#f3f4f6' };
+  if (pts >= 100)  return { label: 'Plata',    emoji: '🥈', color: 'var(--text-muted)', bg: '#f3f4f6' };
   return { label: 'Bronce', emoji: '🥉', color: '#92400e', bg: '#fef3c7' };
 };
 
@@ -25,7 +25,7 @@ const ROL_CFG: Record<string, { label: string; bg: string; color: string }> = {
 };
 
 const STATUS_COLS: { val: TaskStatus; label: string; color: string; bg: string }[] = [
-  { val: 'pending',     label: 'Pendiente',    color: '#6b7280', bg: '#f3f4f6' },
+  { val: 'pending',     label: 'Pendiente',    color: 'var(--text-muted)', bg: '#f3f4f6' },
   { val: 'in_progress', label: 'En progreso',  color: '#2563eb', bg: '#dbeafe' },
   { val: 'blocked',     label: 'Bloqueada',    color: '#dc2626', bg: '#fee2e2' },
   { val: 'completed',   label: 'Completada',   color: '#16a34a', bg: '#dcfce7' },
@@ -50,16 +50,16 @@ function TaskRow({ task, onToggle, onEdit, onDelete, canManage }: {
   return (
     <div style={{
       display: 'flex', gap: 12, padding: '11px 16px', alignItems: 'flex-start',
-      borderBottom: '1px solid #f3f4f6', background: completed ? '#f9fafb' : '#fff',
+      borderBottom: '1px solid var(--border-subtle)', background: completed ? '#f9fafb' : '#fff',
       transition: 'background 0.15s',
     }}
-      onMouseEnter={e => !completed && (e.currentTarget.style.background = '#f0fdf4')}
-      onMouseLeave={e => !completed && (e.currentTarget.style.background = '#fff')}
+      onMouseEnter={e => !completed && (e.currentTarget.style.background = 'var(--bg-hover)')}
+      onMouseLeave={e => !completed && (e.currentTarget.style.background = 'var(--bg-surface)')}
     >
       {/* Checkbox */}
       <button onClick={handleToggle} disabled={toggling} style={{
-        width: 22, height: 22, borderRadius: 6, border: `2px solid ${completed ? '#16a34a' : '#d1d5db'}`,
-        background: completed ? '#16a34a' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: 22, height: 22, borderRadius: 6, border: `2px solid ${completed ? '#16a34a' : 'var(--border)'}`,
+        background: completed ? '#16a34a' : 'var(--bg-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center',
         cursor: 'pointer', flexShrink: 0, marginTop: 1, color: '#fff', fontSize: 13, fontWeight: 700,
         transition: 'all 0.2s',
       }}>
@@ -69,14 +69,14 @@ function TaskRow({ task, onToggle, onEdit, onDelete, canManage }: {
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 13.5, fontWeight: 500, color: completed ? '#9ca3af' : '#111', textDecoration: completed ? 'line-through' : 'none', flex: 1 }}>{task.titulo}</span>
+          <span style={{ fontSize: 13.5, fontWeight: 500, color: completed ? 'var(--text-faint)' : 'var(--text-primary)', textDecoration: completed ? 'line-through' : 'none', flex: 1 }}>{task.titulo}</span>
           <span style={{ padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: prio.bg, color: prio.color, whiteSpace: 'nowrap' }}>{prio.label}</span>
         </div>
         <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap', alignItems: 'center' }}>
           <span style={{ padding: '1px 8px', borderRadius: 20, fontSize: 11, background: cat?.bg, color: cat?.color, fontWeight: 500 }}>{cat?.icon} {cat?.label}</span>
-          {task.animal_nombre && <span style={{ fontSize: 11.5, color: '#6b7280' }}>🐾 {task.animal_nombre}</span>}
+          {task.animal_nombre && <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>🐾 {task.animal_nombre}</span>}
           {task.fecha_limite && (
-            <span style={{ fontSize: 11.5, color: vencida ? '#dc2626' : hoy ? '#f97316' : '#9ca3af', fontWeight: vencida || hoy ? 600 : 400 }}>
+            <span style={{ fontSize: 11.5, color: vencida ? '#dc2626' : hoy ? '#f97316' : 'var(--text-faint)', fontWeight: vencida || hoy ? 600 : 400 }}>
               {vencida ? '⚠️ ' : hoy ? '⏰ ' : '📅 '}{formatDate(task.fecha_limite)}
             </span>
           )}
@@ -90,14 +90,14 @@ function TaskRow({ task, onToggle, onEdit, onDelete, canManage }: {
             </div>
           )}
         </div>
-        {task.descripcion && <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.descripcion}</div>}
+        {task.descripcion && <div style={{ fontSize: 12, color: 'var(--text-faint)', marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.descripcion}</div>}
       </div>
 
       {/* Actions */}
       {canManage && (
         <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
-          <button onClick={onEdit} style={{ padding: '3px 8px', border: '1px solid #e5e7eb', borderRadius: 5, background: '#fff', fontSize: 11.5, cursor: 'pointer', color: '#374151', fontFamily: "'Inter', sans-serif" }}>✏️</button>
-          <button onClick={onDelete} style={{ padding: '3px 8px', border: '1px solid #fecaca', borderRadius: 5, background: '#fff', fontSize: 11.5, cursor: 'pointer', color: '#dc2626', fontFamily: "'Inter', sans-serif" }}>🗑</button>
+          <button onClick={onEdit} style={{ padding: '3px 8px', border: '1px solid var(--border)', borderRadius: 5, background: 'var(--bg-surface)', fontSize: 11.5, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: "'Inter', sans-serif" }}>✏️</button>
+          <button onClick={onDelete} style={{ padding: '3px 8px', border: '1px solid #fecaca', borderRadius: 5, background: 'var(--bg-surface)', fontSize: 11.5, cursor: 'pointer', color: '#dc2626', fontFamily: "'Inter', sans-serif" }}>🗑</button>
         </div>
       )}
     </div>
@@ -112,11 +112,11 @@ function KanbanCard({ task }: { task: Task }) {
   const vencida = task.fecha_limite && new Date(task.fecha_limite) < new Date() && task.estado !== 'completed';
   return (
     <div ref={setNodeRef} {...listeners} {...attributes} style={{
-      background: '#fff', borderRadius: 9, border: '1px solid #e5e7eb', padding: '10px 12px',
+      background: 'var(--bg-surface)', borderRadius: 9, border: '1px solid var(--border)', padding: '10px 12px',
       marginBottom: 7, cursor: 'grab', transform: CSS.Translate.toString(transform), opacity: isDragging ? 0.8 : 1,
-      boxShadow: isDragging ? '0 8px 24px rgba(0,0,0,0.15)' : '0 1px 3px rgba(0,0,0,0.04)',
+      boxShadow: isDragging ? '0 8px 24px rgba(0,0,0,0.15)' : 'var(--shadow-card)',
     }}>
-      <div style={{ fontSize: 13, fontWeight: 600, color: '#111', marginBottom: 5 }}>{task.titulo}</div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 5 }}>{task.titulo}</div>
       <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
         <span style={{ fontSize: 11, padding: '1px 7px', borderRadius: 20, background: cat?.bg, color: cat?.color }}>{cat?.icon} {cat?.label}</span>
         <span style={{ fontSize: 11, padding: '1px 7px', borderRadius: 20, background: prio.bg, color: prio.color, fontWeight: 600 }}>{prio.label}</span>
@@ -138,10 +138,10 @@ function KanbanCard({ task }: { task: Task }) {
 function KanbanCol({ col, tasks, onDrop }: { col: typeof STATUS_COLS[0]; tasks: Task[]; onDrop: (id: number, st: TaskStatus) => void }) {
   const { isOver, setNodeRef } = useDroppable({ id: col.val });
   return (
-    <div ref={setNodeRef} style={{ flex: '0 0 220px', minHeight: 400, background: isOver ? '#f0fdf4' : '#f9fafb', borderRadius: 10, padding: '12px 10px', border: `1px solid ${isOver ? '#86efac' : '#e5e7eb'}`, transition: 'all 0.15s' }}>
+    <div ref={setNodeRef} style={{ flex: '0 0 220px', minHeight: 400, background: isOver ? '#f0fdf4' : '#f9fafb', borderRadius: 10, padding: '12px 10px', border: `1px solid ${isOver ? '#86efac' : 'var(--border)'}`, transition: 'all 0.15s' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 12 }}>
         <span style={{ padding: '3px 9px', borderRadius: 20, fontSize: 11.5, fontWeight: 700, background: col.bg, color: col.color }}>{col.label}</span>
-        <span style={{ fontSize: 11.5, color: '#9ca3af', fontWeight: 600 }}>{tasks.length}</span>
+        <span style={{ fontSize: 11.5, color: 'var(--text-faint)', fontWeight: 600 }}>{tasks.length}</span>
       </div>
       {tasks.map(t => <KanbanCard key={t.id} task={t} />)}
     </div>
@@ -164,7 +164,7 @@ function Podio({ top3 }: { top3: RankingEntry[] }) {
               {entry.avatar_url ? <img src={entry.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} /> : entry.nombre.charAt(0)}
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#111' }}>{entry.nombre.split(' ')[0]}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{entry.nombre.split(' ')[0]}</div>
               <div style={{ fontSize: 12, color: karma.color, fontWeight: 600 }}>{karma.emoji} {entry.karma_periodo.toLocaleString('es-ES')} pts</div>
             </div>
             <div style={{
@@ -294,7 +294,7 @@ export default function VoluntariosPage() {
   const pendientesCount = tasks.filter(t => t.estado === 'pending').length;
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-subtle)', minHeight: '100vh' }}>
       <TopBar
         titulo="Voluntarios"
         subtitulo={vista === 'voluntarios' ? `${total} voluntarios` : vista === 'tareas' ? `${tasks.length} tareas` : 'Rankings'}
@@ -304,7 +304,7 @@ export default function VoluntariosPage() {
       />
 
       {/* Sub-nav */}
-      <div style={{ padding: '0 24px', borderBottom: '1px solid #e5e7eb', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ padding: '0 24px', borderBottom: '1px solid var(--border)', background: 'var(--bg-surface)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex' }}>
           {([
             { val: 'voluntarios', label: '👥 Voluntarios' },
@@ -315,7 +315,7 @@ export default function VoluntariosPage() {
               padding: '12px 18px', background: 'none', border: 'none',
               borderBottom: `2px solid ${vista === v.val ? '#16a34a' : 'transparent'}`,
               fontSize: 13.5, fontWeight: vista === v.val ? 700 : 400,
-              color: vista === v.val ? '#16a34a' : '#6b7280', cursor: 'pointer',
+              color: vista === v.val ? '#16a34a' : 'var(--text-muted)', cursor: 'pointer',
               fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 6,
             }}>
               {v.label}
@@ -328,7 +328,7 @@ export default function VoluntariosPage() {
         {vista === 'tareas' && (
           <div style={{ display: 'flex', gap: 6 }}>
             {(['lista', 'kanban'] as const).map(m => (
-              <button key={m} onClick={() => setTaskViewMode(m)} style={{ padding: '5px 12px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 12.5, background: taskViewMode === m ? '#111827' : '#fff', color: taskViewMode === m ? '#fff' : '#6b7280', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
+              <button key={m} onClick={() => setTaskViewMode(m)} style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12.5, background: taskViewMode === m ? '#111827' : '#fff', color: taskViewMode === m ? '#fff' : '#6b7280', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
                 {m === 'lista' ? '≡ Lista' : '⊟ Kanban'}
               </button>
             ))}
@@ -341,12 +341,12 @@ export default function VoluntariosPage() {
         <div style={{ padding: '16px 24px 24px' }}>
           <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
             <div style={{ position: 'relative', flex: '1 1 200px', maxWidth: 280 }}>
-              <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }}>🔍</span>
+              <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-faint)' }}>🔍</span>
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar voluntario..."
-                style={{ width: '100%', padding: '8px 12px 8px 34px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13.5, outline: 'none', fontFamily: "'Inter', sans-serif", boxSizing: 'border-box' }} />
+                style={{ width: '100%', padding: '8px 12px 8px 34px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13.5, outline: 'none', fontFamily: "'Inter', sans-serif", boxSizing: 'border-box' }} />
             </div>
             <select value={filtroRol} onChange={e => setFiltroRol(e.target.value)}
-              style={{ padding: '7px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13.5, outline: 'none', fontFamily: "'Inter', sans-serif" }}>
+              style={{ padding: '7px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13.5, outline: 'none', fontFamily: "'Inter', sans-serif" }}>
               <option value="">Todos los roles</option>
               <option value="admin">Admin</option>
               <option value="coordinador">Coordinador</option>
@@ -366,7 +366,7 @@ export default function VoluntariosPage() {
                 const karma = KARMA_LEVEL(v.karma_puntos || 0);
                 const rolCfg = ROL_CFG[v.rol] || ROL_CFG.voluntario;
                 return (
-                  <div key={v.id} style={{ background: '#fff', borderRadius: 14, border: '1px solid #e5e7eb', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.05)', opacity: v.activo ? 1 : 0.6 }}>
+                  <div key={v.id} style={{ background: 'var(--bg-surface)', borderRadius: 14, border: '1px solid var(--border)', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.05)', opacity: v.activo ? 1 : 0.6 }}>
                     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                       <div style={{ position: 'relative', flexShrink: 0 }}>
                         <div style={{ width: 46, height: 46, borderRadius: '50%', background: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: '#1d4ed8', overflow: 'hidden' }}>
@@ -377,7 +377,7 @@ export default function VoluntariosPage() {
                         )}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: 700, fontSize: 14, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v.nombre}</div>
+                        <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v.nombre}</div>
                         <div style={{ display: 'flex', gap: 6, marginTop: 3, flexWrap: 'wrap' }}>
                           <span style={{ padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: rolCfg.bg, color: rolCfg.color }}>{rolCfg.label}</span>
                           <span style={{ fontSize: 11.5 }}>{karma.emoji} <strong style={{ color: karma.color }}>{v.karma_puntos || 0}pts</strong></span>
@@ -394,18 +394,18 @@ export default function VoluntariosPage() {
                     )}
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 12 }}>
-                      <div style={{ background: '#f9fafb', borderRadius: 7, padding: '6px 8px' }}>
-                        <div style={{ color: '#9ca3af' }}>Tareas mes</div>
-                        <div style={{ fontWeight: 700, color: '#111' }}>{v.tareas_mes || 0}</div>
+                      <div style={{ background: 'var(--bg-subtle)', borderRadius: 7, padding: '6px 8px' }}>
+                        <div style={{ color: 'var(--text-faint)' }}>Tareas mes</div>
+                        <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{v.tareas_mes || 0}</div>
                       </div>
-                      <div style={{ background: '#f9fafb', borderRadius: 7, padding: '6px 8px' }}>
-                        <div style={{ color: '#9ca3af' }}>Pendientes</div>
-                        <div style={{ fontWeight: 700, color: (v.tareas_pendientes || 0) > 0 ? '#f59e0b' : '#111' }}>{v.tareas_pendientes || 0}</div>
+                      <div style={{ background: 'var(--bg-subtle)', borderRadius: 7, padding: '6px 8px' }}>
+                        <div style={{ color: 'var(--text-faint)' }}>Pendientes</div>
+                        <div style={{ fontWeight: 700, color: (v.tareas_pendientes || 0) > 0 ? '#f59e0b' : 'var(--text-primary)' }}>{v.tareas_pendientes || 0}</div>
                       </div>
                     </div>
 
                     <div style={{ display: 'flex', gap: 8, marginTop: 2 }}>
-                      <button onClick={() => setSelectedVolId(v.id)} style={{ flex: 1, padding: '7px 0', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', fontSize: 12.5, cursor: 'pointer', fontWeight: 500, fontFamily: "'Inter', sans-serif" }}>Ver perfil</button>
+                      <button onClick={() => setSelectedVolId(v.id)} style={{ flex: 1, padding: '7px 0', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', fontSize: 12.5, cursor: 'pointer', fontWeight: 500, fontFamily: "'Inter', sans-serif" }}>Ver perfil</button>
                       {can('animales:update') && (
                         <button onClick={() => { setEditTask(null); setShowTaskForm(true); }} style={{ flex: 1, padding: '7px 0', border: 'none', borderRadius: 7, background: '#16a34a', color: '#fff', fontSize: 12.5, cursor: 'pointer', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>+ Tarea</button>
                       )}
@@ -417,14 +417,14 @@ export default function VoluntariosPage() {
           )}
 
           {totalPages > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', marginTop: 12, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12 }}>
-              <span style={{ fontSize: 12.5, color: '#9ca3af' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', marginTop: 12, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 12 }}>
+              <span style={{ fontSize: 12.5, color: 'var(--text-faint)' }}>
                 Mostrando {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, total)} de {total}
               </span>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <button onClick={() => setPage(p => p - 1)} disabled={page === 1} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', cursor: page === 1 ? 'not-allowed' : 'pointer', fontSize: 12.5, color: page === 1 ? '#d1d5db' : '#374151', fontFamily: "'Inter', sans-serif" }}>← Anterior</button>
-                <span style={{ fontSize: 13, color: '#374151' }}>{page} / {totalPages}</span>
-                <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', cursor: page === totalPages ? 'not-allowed' : 'pointer', fontSize: 12.5, color: page === totalPages ? '#d1d5db' : '#374151', fontFamily: "'Inter', sans-serif" }}>Siguiente →</button>
+                <button onClick={() => setPage(p => p - 1)} disabled={page === 1} style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 6, background: 'var(--bg-surface)', cursor: page === 1 ? 'not-allowed' : 'pointer', fontSize: 12.5, color: page === 1 ? 'var(--border)' : '#374151', fontFamily: "'Inter', sans-serif" }}>← Anterior</button>
+                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{page} / {totalPages}</span>
+                <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 6, background: 'var(--bg-surface)', cursor: page === totalPages ? 'not-allowed' : 'pointer', fontSize: 12.5, color: page === totalPages ? 'var(--border)' : '#374151', fontFamily: "'Inter', sans-serif" }}>Siguiente →</button>
               </div>
             </div>
           )}
@@ -447,9 +447,9 @@ export default function VoluntariosPage() {
               {['todas', 'pending', 'in_progress', 'blocked', 'completed', 'vencidas'].map(e => (
                 <button key={e} onClick={() => setFiltroEstado(e)} style={{
                   padding: '5px 12px', borderRadius: 20, border: '1px solid', fontSize: 12.5, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
-                  borderColor: filtroEstado === e ? '#16a34a' : '#e5e7eb',
-                  background: filtroEstado === e ? '#16a34a' : '#fff',
-                  color: filtroEstado === e ? '#fff' : '#6b7280',
+                  borderColor: filtroEstado === e ? '#16a34a' : 'var(--border)',
+                  background: filtroEstado === e ? '#16a34a' : 'var(--bg-surface)',
+                  color: filtroEstado === e ? '#fff' : 'var(--text-muted)',
                   fontWeight: filtroEstado === e ? 600 : 400,
                 }}>
                   {e === 'todas' ? 'Todas' : e === 'pending' ? 'Pendientes' : e === 'in_progress' ? 'En progreso' : e === 'blocked' ? 'Bloqueadas' : e === 'completed' ? 'Completadas' : `⚠️ Vencidas`}
@@ -471,7 +471,7 @@ export default function VoluntariosPage() {
           ) :tasks.length === 0 ? (
             <div style={{ padding: '0 24px' }}><EmptyState icon="✅" title="Sin tareas" subtitle="Crea la primera tarea del equipo" /></div>
           ) : taskViewMode === 'lista' ? (
-            <div style={{ margin: '0 24px 24px', background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+            <div style={{ margin: '0 24px 24px', background: 'var(--bg-surface)', borderRadius: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
               {tasks.map(t => (
                 <TaskRow key={t.id} task={t}
                   onToggle={() => handleToggleTask(t)}
@@ -505,9 +505,9 @@ export default function VoluntariosPage() {
               {(['mes', 'año', 'total'] as const).map(p => (
                 <button key={p} onClick={() => setRankingPeriodo(p)} style={{
                   padding: '6px 14px', borderRadius: 20, border: '1px solid', fontSize: 13,
-                  borderColor: rankingPeriodo === p ? '#16a34a' : '#e5e7eb',
-                  background: rankingPeriodo === p ? '#16a34a' : '#fff',
-                  color: rankingPeriodo === p ? '#fff' : '#6b7280',
+                  borderColor: rankingPeriodo === p ? '#16a34a' : 'var(--border)',
+                  background: rankingPeriodo === p ? '#16a34a' : 'var(--bg-surface)',
+                  color: rankingPeriodo === p ? '#fff' : 'var(--text-muted)',
                   fontWeight: rankingPeriodo === p ? 600 : 400, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 }}>{p === 'mes' ? 'Este mes' : p === 'año' ? 'Este año' : 'Histórico'}</button>
               ))}
@@ -515,8 +515,8 @@ export default function VoluntariosPage() {
             <div style={{ display: 'flex', gap: 6 }}>
               {(['voluntarios', 'familias'] as const).map(t => (
                 <button key={t} onClick={() => setRankingTab(t)} style={{
-                  padding: '6px 14px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13,
-                  background: rankingTab === t ? '#111827' : '#fff', color: rankingTab === t ? '#fff' : '#6b7280',
+                  padding: '6px 14px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13,
+                  background: rankingTab === t ? '#111827' : 'var(--bg-surface)', color: rankingTab === t ? '#fff' : 'var(--text-muted)',
                   cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 }}>{t === 'voluntarios' ? '👥 Voluntarios' : '🏠 Familias'}</button>
               ))}
@@ -537,12 +537,12 @@ export default function VoluntariosPage() {
               })()}
 
               {/* Tabla */}
-              <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden', marginTop: 16 }}>
+              <div style={{ background: 'var(--bg-surface)', borderRadius: 12, border: '1px solid var(--border)', overflow: 'hidden', marginTop: 16 }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
-                    <tr style={{ background: '#f9fafb' }}>
+                    <tr style={{ background: 'var(--bg-subtle)' }}>
                       {['#', rankingTab === 'voluntarios' ? 'Voluntario' : 'Familia', 'Nivel', 'Puntos período', 'Total', rankingTab === 'voluntarios' ? 'Tareas mes' : 'Acogidas', ''].map((h, i) => (
-                        <th key={i} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 12, color: '#6b7280', fontWeight: 600, borderBottom: '1px solid #f3f4f6' }}>{h}</th>
+                        <th key={i} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, borderBottom: '1px solid var(--border-subtle)' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -552,17 +552,17 @@ export default function VoluntariosPage() {
                       const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
                       return (
                         <tr key={entry.id} style={{ borderBottom: '1px solid #f9fafb' }}
-                          onMouseEnter={e => (e.currentTarget.style.background = '#f0fdf4')}
+                          onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
                           onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
-                          <td style={{ padding: '11px 14px', fontSize: 13.5, fontWeight: 700, color: '#111' }}>{medal || `#${i + 1}`}</td>
+                          <td style={{ padding: '11px 14px', fontSize: 13.5, fontWeight: 700, color: 'var(--text-primary)' }}>{medal || `#${i + 1}`}</td>
                           <td style={{ padding: '11px 14px' }}>
                             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                               <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#1d4ed8', flexShrink: 0 }}>
                                 {entry.nombre.charAt(0)}
                               </div>
                               <div>
-                                <div style={{ fontSize: 13.5, fontWeight: 600, color: '#111' }}>{entry.nombre}</div>
-                                {entry.rol && <div style={{ fontSize: 11.5, color: '#9ca3af', textTransform: 'capitalize' }}>{entry.rol}</div>}
+                                <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)' }}>{entry.nombre}</div>
+                                {entry.rol && <div style={{ fontSize: 11.5, color: 'var(--text-faint)', textTransform: 'capitalize' }}>{entry.rol}</div>}
                               </div>
                             </div>
                           </td>
@@ -572,13 +572,13 @@ export default function VoluntariosPage() {
                             </span>
                           </td>
                           <td style={{ padding: '11px 14px', fontSize: 14, fontWeight: 700, color: '#16a34a' }}>{entry.karma_periodo.toLocaleString('es-ES')}</td>
-                          <td style={{ padding: '11px 14px', fontSize: 13, color: '#6b7280' }}>{entry.karma_total.toLocaleString('es-ES')}</td>
-                          <td style={{ padding: '11px 14px', fontSize: 13, color: '#374151' }}>
+                          <td style={{ padding: '11px 14px', fontSize: 13, color: 'var(--text-muted)' }}>{entry.karma_total.toLocaleString('es-ES')}</td>
+                          <td style={{ padding: '11px 14px', fontSize: 13, color: 'var(--text-secondary)' }}>
                             {rankingTab === 'voluntarios' ? (entry.tareas_mes || 0) : (entry.acogidas_total || 0)}
                           </td>
                           <td style={{ padding: '11px 14px' }}>
                             {rankingTab === 'voluntarios' && (
-                              <button onClick={() => setSelectedVolId(entry.id)} style={{ padding: '4px 10px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', fontSize: 12, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Ver</button>
+                              <button onClick={() => setSelectedVolId(entry.id)} style={{ padding: '4px 10px', border: '1px solid var(--border)', borderRadius: 6, background: 'var(--bg-surface)', fontSize: 12, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Ver</button>
                             )}
                           </td>
                         </tr>
@@ -589,8 +589,8 @@ export default function VoluntariosPage() {
               </div>
 
               {/* Beneficios */}
-              <div style={{ marginTop: 20, background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', padding: '16px 20px' }}>
-                <div style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 12 }}>Beneficios por nivel</div>
+              <div style={{ marginTop: 20, background: 'var(--bg-surface)', borderRadius: 12, border: '1px solid var(--border)', padding: '16px 20px' }}>
+                <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', marginBottom: 12 }}>Beneficios por nivel</div>
                 <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                   {[
                     { emoji: '🥉', nivel: 'Bronce', pts: '0-99', beneficio: 'Acceso básico al CRM' },
@@ -599,11 +599,11 @@ export default function VoluntariosPage() {
                     { emoji: '🏆', nivel: 'Platino', pts: '600-999', beneficio: 'Merchandising ResQPet exclusivo' },
                     { emoji: '💎', nivel: 'Diamante', pts: '1000+', beneficio: 'Eventos exclusivos' },
                   ].map(b => (
-                    <div key={b.nivel} style={{ flex: '1 1 150px', background: '#f9fafb', borderRadius: 10, padding: '10px 12px', textAlign: 'center', border: '1px solid #e5e7eb' }}>
+                    <div key={b.nivel} style={{ flex: '1 1 150px', background: 'var(--bg-subtle)', borderRadius: 10, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
                       <div style={{ fontSize: 24, marginBottom: 4 }}>{b.emoji}</div>
-                      <div style={{ fontSize: 12.5, fontWeight: 700, color: '#111' }}>{b.nivel}</div>
-                      <div style={{ fontSize: 11, color: '#9ca3af', marginBottom: 4 }}>{b.pts} pts</div>
-                      <div style={{ fontSize: 12, color: '#374151' }}>{b.beneficio}</div>
+                      <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--text-primary)' }}>{b.nivel}</div>
+                      <div style={{ fontSize: 11, color: 'var(--text-faint)', marginBottom: 4 }}>{b.pts} pts</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{b.beneficio}</div>
                     </div>
                   ))}
                 </div>
@@ -632,29 +632,29 @@ export default function VoluntariosPage() {
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
         }} onClick={() => setShowNuevoVol(false)}>
           <div
-            style={{ background: '#fff', borderRadius: 12, padding: 28, width: 420, boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
+            style={{ background: 'var(--bg-surface)', borderRadius: 12, padding: 28, width: 420, boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
             onClick={e => e.stopPropagation()}
           >
-            <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 20 }}>Añadir voluntario</h2>
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>Añadir voluntario</h2>
             {(['nombre', 'email', 'password'] as const).map(field => (
               <div key={field} style={{ marginBottom: 14 }}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 5 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 5 }}>
                   {field === 'password' ? 'Contraseña' : field.charAt(0).toUpperCase() + field.slice(1)}
                 </label>
                 <input
                   type={field === 'password' ? 'password' : field === 'email' ? 'email' : 'text'}
                   value={nuevoVolForm[field]}
                   onChange={e => setNuevoVolForm({ ...nuevoVolForm, [field]: e.target.value })}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 13, fontFamily: "'Inter', sans-serif", boxSizing: 'border-box', outline: 'none' }}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 13, fontFamily: "'Inter', sans-serif", boxSizing: 'border-box', outline: 'none' }}
                 />
               </div>
             ))}
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 5 }}>Rol</label>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 5 }}>Rol</label>
               <select
                 value={nuevoVolForm.rol}
                 onChange={e => setNuevoVolForm({ ...nuevoVolForm, rol: e.target.value })}
-                style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 13, fontFamily: "'Inter', sans-serif" }}
+                style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 13, fontFamily: "'Inter', sans-serif" }}
               >
                 <option value="voluntario">Voluntario</option>
                 <option value="coordinador">Coordinador</option>
@@ -669,7 +669,7 @@ export default function VoluntariosPage() {
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button
                 onClick={() => setShowNuevoVol(false)}
-                style={{ padding: '9px 18px', borderRadius: 8, border: '1px solid #e5e7eb', background: '#fff', fontSize: 13, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}
+                style={{ padding: '9px 18px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-surface)', fontSize: 13, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}
               >Cancelar</button>
               <button
                 onClick={handleCrearVoluntario}

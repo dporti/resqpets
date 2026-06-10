@@ -140,7 +140,7 @@ export function AdopcionesTab({ period }: { period: Period }) {
                   <tr key={r.id}>
                     <td style={tdStyle}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <div style={{ width: 32, height: 32, borderRadius: 6, background: '#f3f4f6', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 32, height: 32, borderRadius: 6, background: 'var(--bg-subtle-2)', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {r.foto ? <img src={r.foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 14 }}>🐾</span>}
                         </div>
                         <span style={{ fontWeight: 600 }}>{r.animal || '—'}</span>

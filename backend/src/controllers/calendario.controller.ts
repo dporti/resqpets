@@ -44,13 +44,14 @@ export async function getEvents(req: AuthRequest, res: Response) {
 
     const r = await query(`
       SELECT e.*,
-        a.nombre AS animal_nombre, a.foto_principal AS animal_foto,
+        a.nombre AS animal_nombre, f.url AS animal_foto,
         (SELECT json_agg(json_build_object('id', u.id, 'nombre', u.nombre, 'avatar_url', u.avatar_url))
          FROM unnest(e.assigned_to) AS uid
          JOIN usuarios u ON u.id = uid) AS assignees_info,
         u.nombre AS creator_nombre
       FROM events e
       LEFT JOIN animales a ON e.animal_id = a.id
+      LEFT JOIN animal_fotos f ON f.animal_id = a.id AND f.es_principal = true
       LEFT JOIN usuarios u ON e.created_by = u.id
       WHERE ${conditions.join(' AND ')}
       ORDER BY e.start_at ASC

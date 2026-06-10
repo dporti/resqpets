@@ -14,8 +14,8 @@ const CHANNELS = [
   { v: 'other',    label: '🔷 Otro' },
 ];
 
-const inp: React.CSSProperties = { width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' };
-const lbl: React.CSSProperties = { display: 'block', fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 5 };
+const inp: React.CSSProperties = { width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' };
+const lbl: React.CSSProperties = { display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 5 };
 
 import React from 'react';
 
@@ -75,13 +75,13 @@ export function DonacionModal({ onClose, onCreated }: Props) {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
     }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div style={{
-        background: '#fff', borderRadius: 16, width: '100%', maxWidth: 540,
+        background: 'var(--bg-surface)', borderRadius: 16, width: '100%', maxWidth: 540,
         maxHeight: '90vh', overflowY: 'auto',
         boxShadow: '0 20px 50px rgba(0,0,0,.25)',
       }}>
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>💚 Registrar donación manual</h3>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: '#9ca3af' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-faint)' }}>✕</button>
         </div>
 
         <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -105,8 +105,8 @@ export function DonacionModal({ onClose, onCreated }: Props) {
               {CHANNELS.map(c => (
                 <button key={c.v} onClick={() => setChannel(c.v)} style={{
                   padding: '7px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 12,
-                  border: '1.5px solid', borderColor: channel === c.v ? '#16a34a' : '#e5e7eb',
-                  background: channel === c.v ? '#f0fdf4' : '#fff', color: channel === c.v ? '#16a34a' : '#374151',
+                  border: '1.5px solid', borderColor: channel === c.v ? '#16a34a' : 'var(--border)',
+                  background: channel === c.v ? '#f0fdf4' : 'var(--bg-surface)', color: channel === c.v ? '#16a34a' : '#374151',
                   fontWeight: channel === c.v ? 700 : 400,
                 }}>{c.label}</button>
               ))}
@@ -120,8 +120,8 @@ export function DonacionModal({ onClose, onCreated }: Props) {
               {[{ v: 'one_time', l: '💳 Única' }, { v: 'recurring', l: '🔄 Recurrente' }].map(t => (
                 <button key={t.v} onClick={() => setDonationType(t.v)} style={{
                   padding: '7px 16px', borderRadius: 20, cursor: 'pointer', fontSize: 12,
-                  border: '1.5px solid', borderColor: donationType === t.v ? '#16a34a' : '#e5e7eb',
-                  background: donationType === t.v ? '#f0fdf4' : '#fff', color: donationType === t.v ? '#16a34a' : '#374151',
+                  border: '1.5px solid', borderColor: donationType === t.v ? '#16a34a' : 'var(--border)',
+                  background: donationType === t.v ? '#f0fdf4' : 'var(--bg-surface)', color: donationType === t.v ? '#16a34a' : '#374151',
                   fontWeight: donationType === t.v ? 700 : 400,
                 }}>{t.l}</button>
               ))}
@@ -141,7 +141,7 @@ export function DonacionModal({ onClose, onCreated }: Props) {
           </label>
 
           {!isAnon && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '14px', background: '#f9fafb', borderRadius: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '14px', background: 'var(--bg-subtle)', borderRadius: 10 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 <div><label style={lbl}>Nombre</label><input style={inp} value={donorName} onChange={e => setDonorName(e.target.value)} /></div>
                 <div><label style={lbl}>Email</label><input type="email" style={inp} value={donorEmail} onChange={e => setDonorEmail(e.target.value)} /></div>
@@ -155,7 +155,7 @@ export function DonacionModal({ onClose, onCreated }: Props) {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <label style={lbl}>Campaña asociada</label>
-              <select style={{ ...inp, background: '#fff' }} value={campaignId} onChange={e => setCampaignId(e.target.value)}>
+              <select style={{ ...inp, background: 'var(--bg-surface)' }} value={campaignId} onChange={e => setCampaignId(e.target.value)}>
                 <option value="">Sin campaña</option>
                 {campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
@@ -173,8 +173,8 @@ export function DonacionModal({ onClose, onCreated }: Props) {
           {error && <p style={{ color: '#ef4444', fontSize: 13, background: '#fef2f2', padding: '8px 12px', borderRadius: 8, margin: 0 }}>{error}</p>}
         </div>
 
-        <div style={{ padding: '14px 24px', borderTop: '1px solid #f3f4f6', display: 'flex', gap: 10 }}>
-          <button onClick={onClose} style={{ flex: 1, padding: '11px', background: '#f3f4f6', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13 }}>Cancelar</button>
+        <div style={{ padding: '14px 24px', borderTop: '1px solid var(--border-subtle)', display: 'flex', gap: 10 }}>
+          <button onClick={onClose} style={{ flex: 1, padding: '11px', background: 'var(--bg-subtle-2)', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13 }}>Cancelar</button>
           <button onClick={submit} disabled={loading || !amount} style={{
             flex: 2, padding: '11px', background: loading || !amount ? '#d1d5db' : '#16a34a',
             color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 700, fontSize: 14,

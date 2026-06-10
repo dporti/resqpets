@@ -61,7 +61,7 @@ export default function UsuariosPage() {
   }
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-subtle)', minHeight: '100vh' }}>
       <TopBar
         titulo="Usuarios"
         subtitulo="Gestión de usuarios y roles"
@@ -78,14 +78,14 @@ export default function UsuariosPage() {
         ) : usuarios.length === 0 ? (
           <EmptyState icon="👥" title="No hay usuarios" subtitle="Invita a tu equipo para empezar" />
         ) : (
-          <div style={{ background: '#fff', borderRadius: 10, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--bg-surface)', borderRadius: 10, border: '1px solid var(--border)', overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ background: '#f9fafb' }}>
+                <tr style={{ background: 'var(--bg-subtle)' }}>
                   {['Usuario', 'Email', 'Rol', 'Estado', 'Último acceso', ''].map((h, i) => (
                     <th key={i} style={{
                       padding: '10px 16px', textAlign: 'left', fontSize: 12,
-                      color: '#6b7280', fontWeight: 600, borderBottom: '1px solid #f3f4f6',
+                      color: 'var(--text-muted)', fontWeight: 600, borderBottom: '1px solid var(--border-subtle)',
                     }}>{h}</th>
                   ))}
                 </tr>
@@ -101,21 +101,21 @@ export default function UsuariosPage() {
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           color: '#fff', fontWeight: 700, fontSize: 13,
                         }}>{u.nombre.charAt(0)}</div>
-                        <span style={{ fontWeight: 600, fontSize: 13.5, color: '#111' }}>{u.nombre}</span>
+                        <span style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)' }}>{u.nombre}</span>
                       </div>
                     </td>
-                    <td style={{ padding: '12px 16px', fontSize: 13, color: '#374151' }}>{u.email}</td>
+                    <td style={{ padding: '12px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{u.email}</td>
                     <td style={{ padding: '12px 16px' }}><RolBadge rol={u.rol} /></td>
                     <td style={{ padding: '12px 16px' }}>
                       <span style={{
                         fontSize: 12, fontWeight: 600, padding: '3px 8px', borderRadius: 4,
-                        background: u.activo ? '#dcfce7' : '#f3f4f6',
-                        color: u.activo ? '#15803d' : '#6b7280',
+                        background: u.activo ? '#dcfce7' : 'var(--bg-subtle-2)',
+                        color: u.activo ? '#15803d' : 'var(--text-muted)',
                       }}>
                         {u.activo ? 'Activo' : 'Inactivo'}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 16px', fontSize: 13, color: '#9ca3af' }}>
+                    <td style={{ padding: '12px 16px', fontSize: 13, color: 'var(--text-faint)' }}>
                       {u.ultimoAcceso
                         ? new Date(u.ultimoAcceso).toLocaleDateString('es-ES')
                         : 'Nunca'}
@@ -126,7 +126,7 @@ export default function UsuariosPage() {
                           onClick={() => handleToggleActivo(u)}
                           style={{
                             fontSize: 12, padding: '5px 10px', borderRadius: 6,
-                            border: '1px solid #e5e7eb', background: '#fff',
+                            border: '1px solid var(--border)', background: 'var(--bg-surface)',
                             cursor: 'pointer', color: u.activo ? '#dc2626' : '#16a34a',
                             fontFamily: "'Inter', sans-serif",
                           }}
@@ -151,15 +151,15 @@ export default function UsuariosPage() {
         }} onClick={() => setShowForm(false)}>
           <div
             style={{
-              background: '#fff', borderRadius: 12, padding: 28, width: 420,
+              background: 'var(--bg-surface)', borderRadius: 12, padding: 28, width: 420,
               boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
             }}
             onClick={e => e.stopPropagation()}
           >
-            <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 20 }}>Nuevo usuario</h2>
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>Nuevo usuario</h2>
             {['nombre', 'email', 'password'].map(field => (
               <div key={field} style={{ marginBottom: 14 }}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 5, textTransform: 'capitalize' }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 5, textTransform: 'capitalize' }}>
                   {field === 'password' ? 'Contraseña' : field.charAt(0).toUpperCase() + field.slice(1)}
                 </label>
                 <input
@@ -168,20 +168,20 @@ export default function UsuariosPage() {
                   onChange={e => setForm({ ...form, [field]: e.target.value })}
                   style={{
                     width: '100%', padding: '9px 12px', borderRadius: 8,
-                    border: '1px solid #d1d5db', fontSize: 13,
+                    border: '1px solid var(--border)', fontSize: 13,
                     fontFamily: "'Inter', sans-serif", boxSizing: 'border-box', outline: 'none',
                   }}
                 />
               </div>
             ))}
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 5 }}>Rol</label>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 5 }}>Rol</label>
               <select
                 value={form.rol}
                 onChange={e => setForm({ ...form, rol: e.target.value })}
                 style={{
                   width: '100%', padding: '9px 12px', borderRadius: 8,
-                  border: '1px solid #d1d5db', fontSize: 13,
+                  border: '1px solid var(--border)', fontSize: 13,
                   fontFamily: "'Inter', sans-serif",
                 }}
               >
@@ -199,8 +199,8 @@ export default function UsuariosPage() {
               <button
                 onClick={() => setShowForm(false)}
                 style={{
-                  padding: '9px 18px', borderRadius: 8, border: '1px solid #e5e7eb',
-                  background: '#fff', fontSize: 13, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
+                  padding: '9px 18px', borderRadius: 8, border: '1px solid var(--border)',
+                  background: 'var(--bg-surface)', fontSize: 13, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 }}
               >Cancelar</button>
               <button

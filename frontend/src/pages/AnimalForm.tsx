@@ -57,17 +57,17 @@ function initForm(a: Animal | null): FormData {
 const TABS = ['Básico', 'Salud', 'Comportamiento', 'Apariencia', 'Descripción'];
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 7,
-  fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', color: '#111',
-  background: '#fff', boxSizing: 'border-box',
+  width: '100%', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: 7,
+  fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', color: 'var(--text-primary)',
+  background: 'var(--bg-surface)', boxSizing: 'border-box',
 };
 const labelStyle: React.CSSProperties = {
-  fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 4, display: 'block',
+  fontSize: 12.5, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4, display: 'block',
 };
 const rowStyle: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 };
 const checkboxRowStyle: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: 8, padding: '8px 0', cursor: 'pointer',
-  fontSize: 13.5, color: '#374151',
+  fontSize: 13.5, color: 'var(--text-secondary)',
 };
 
 function SliderRow({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
@@ -75,12 +75,12 @@ function SliderRow({ label, value, onChange }: { label: string; value: number; o
   return (
     <div style={{ marginBottom: 12 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-        <span style={{ fontSize: 12.5, fontWeight: 600, color: '#374151' }}>{label}</span>
+        <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-secondary)' }}>{label}</span>
         <span style={{ fontSize: 12, color: '#16a34a', fontWeight: 600 }}>{labels[value]}</span>
       </div>
       <input type="range" min={0} max={5} value={value} onChange={e => onChange(Number(e.target.value))}
         style={{ width: '100%', accentColor: '#16a34a' }} />
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#9ca3af' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-faint)' }}>
         <span>0</span><span>5</span>
       </div>
     </div>
@@ -130,34 +130,34 @@ export default function AnimalForm({ animal, onClose, onSaved }: Props) {
       {/* Panel */}
       <div style={{
         position: 'fixed', top: 0, right: 0, bottom: 0, width: 540,
-        background: '#fff', zIndex: 50, display: 'flex', flexDirection: 'column',
+        background: 'var(--bg-surface)', zIndex: 50, display: 'flex', flexDirection: 'column',
         boxShadow: '-4px 0 24px rgba(0,0,0,0.12)', fontFamily: "'Inter', sans-serif",
       }}>
         {/* Header */}
         <div style={{
-          padding: '18px 24px', borderBottom: '1px solid #e5e7eb',
+          padding: '18px 24px', borderBottom: '1px solid var(--border)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0,
         }}>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 16, color: '#111' }}>
+            <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)' }}>
               {animal ? `Editar: ${animal.nombre}` : 'Nuevo animal'}
             </div>
-            {animal && <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>{(animal as Animal & { id_interno?: string }).id_interno}</div>}
+            {animal && <div style={{ fontSize: 12, color: 'var(--text-faint)', marginTop: 2 }}>{(animal as Animal & { id_interno?: string }).id_interno}</div>}
           </div>
           <button onClick={onClose} style={{
             background: 'none', border: 'none', fontSize: 22, cursor: 'pointer',
-            color: '#9ca3af', lineHeight: 1, padding: 4,
+            color: 'var(--text-faint)', lineHeight: 1, padding: 4,
           }}>×</button>
         </div>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', flexShrink: 0, padding: '0 16px' }}>
+        <div style={{ display: 'flex', borderBottom: '1px solid var(--border)', flexShrink: 0, padding: '0 16px' }}>
           {TABS.map(t => (
             <button key={t} onClick={() => setTab(t)} style={{
               padding: '10px 12px', background: 'none', border: 'none',
               borderBottom: `2px solid ${tab === t ? '#16a34a' : 'transparent'}`,
               fontSize: 13, fontWeight: tab === t ? 600 : 400, cursor: 'pointer',
-              color: tab === t ? '#16a34a' : '#6b7280',
+              color: tab === t ? '#16a34a' : 'var(--text-muted)',
               fontFamily: "'Inter', sans-serif", marginBottom: -1,
             }}>{t}</button>
           ))}
@@ -253,7 +253,7 @@ export default function AnimalForm({ animal, onClose, onSaved }: Props) {
                 <option value="Crónico">Crónico</option>
               </select>
             </div>
-            <div style={{ background: '#f9fafb', borderRadius: 10, padding: 16, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <div style={{ background: 'var(--bg-subtle)', borderRadius: 10, padding: 16, display: 'flex', flexDirection: 'column', gap: 2 }}>
               {[
                 { field: 'vacunado' as const, label: '💉 Vacunado' },
                 { field: 'esterilizado' as const, label: '✂️ Esterilizado / Castrado' },
@@ -334,7 +334,7 @@ export default function AnimalForm({ animal, onClose, onSaved }: Props) {
               <label style={labelStyle}>Descripción pública</label>
               <textarea rows={8} style={{ ...inputStyle, resize: 'vertical' }} value={form.descripcion} onChange={e => set('descripcion', e.target.value)} placeholder="Describe la personalidad, historia y necesidades del animal..." />
             </div>
-            <div style={{ fontSize: 12, color: '#9ca3af' }}>
+            <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>
               Esta descripción se mostrará en la web de adopción si el animal está publicado.
             </div>
           </>}
@@ -348,13 +348,13 @@ export default function AnimalForm({ animal, onClose, onSaved }: Props) {
 
         {/* Footer */}
         <div style={{
-          padding: '16px 24px', borderTop: '1px solid #e5e7eb', display: 'flex',
-          justifyContent: 'flex-end', gap: 10, flexShrink: 0, background: '#fff',
+          padding: '16px 24px', borderTop: '1px solid var(--border)', display: 'flex',
+          justifyContent: 'flex-end', gap: 10, flexShrink: 0, background: 'var(--bg-surface)',
         }}>
           <button type="button" onClick={onClose} style={{
-            padding: '9px 18px', border: '1px solid #e5e7eb', borderRadius: 8,
-            background: '#fff', fontSize: 13.5, fontWeight: 500, cursor: 'pointer',
-            fontFamily: "'Inter', sans-serif", color: '#374151',
+            padding: '9px 18px', border: '1px solid var(--border)', borderRadius: 8,
+            background: 'var(--bg-surface)', fontSize: 13.5, fontWeight: 500, cursor: 'pointer',
+            fontFamily: "'Inter', sans-serif", color: 'var(--text-secondary)',
           }}>Cancelar</button>
           <button onClick={handleSubmit as unknown as React.MouseEventHandler} disabled={saving} style={{
             padding: '9px 20px', border: 'none', borderRadius: 8,

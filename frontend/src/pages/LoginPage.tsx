@@ -28,9 +28,9 @@ export default function LoginPage() {
       fontFamily: "'Inter', sans-serif",
     }}>
       <div style={{
-        background: '#fff', borderRadius: 16, padding: '40px 36px',
+        background: 'var(--bg-surface)', borderRadius: 16, padding: '40px 36px',
         width: 400, boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
-        border: '1px solid #e5e7eb',
+        border: '1px solid var(--border)',
       }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -39,13 +39,13 @@ export default function LoginPage() {
             background: 'linear-gradient(135deg,#16a34a,#22c55e)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28,
           }}>🐾</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: '#111' }}>ResQPet</div>
-          <div style={{ fontSize: 13, color: '#9ca3af', marginTop: 2 }}>Gestión de Protectoras</div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)' }}>ResQPet</div>
+          <div style={{ fontSize: 13, color: 'var(--text-faint)', marginTop: 2 }}>Gestión de Protectoras</div>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>
               Email
             </label>
             <input
@@ -56,17 +56,17 @@ export default function LoginPage() {
               required
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #d1d5db', fontSize: 14, outline: 'none',
+                border: '1px solid var(--border)', fontSize: 14, outline: 'none',
                 fontFamily: "'Inter', sans-serif", boxSizing: 'border-box',
                 transition: 'border-color 0.15s',
               }}
               onFocus={e => e.target.style.borderColor = '#16a34a'}
-              onBlur={e => e.target.style.borderColor = '#d1d5db'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}
             />
           </div>
 
           <div style={{ marginBottom: 24 }}>
-            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>
               Contraseña
             </label>
             <input
@@ -77,11 +77,11 @@ export default function LoginPage() {
               required
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #d1d5db', fontSize: 14, outline: 'none',
+                border: '1px solid var(--border)', fontSize: 14, outline: 'none',
                 fontFamily: "'Inter', sans-serif", boxSizing: 'border-box',
               }}
               onFocus={e => e.target.style.borderColor = '#16a34a'}
-              onBlur={e => e.target.style.borderColor = '#d1d5db'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}
             />
           </div>
 
@@ -112,10 +112,10 @@ export default function LoginPage() {
 
         {/* Demo credentials */}
         <div style={{
-          marginTop: 24, padding: '12px 14px', background: '#f9fafb',
-          borderRadius: 8, border: '1px solid #e5e7eb',
+          marginTop: 24, padding: '12px 14px', background: 'var(--bg-subtle)',
+          borderRadius: 8, border: '1px solid var(--border)',
         }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-faint)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
             Usuarios de demo
           </div>
           {[
@@ -128,12 +128,12 @@ export default function LoginPage() {
               onClick={() => { setEmail(u.email); setPassword(u.pass); }}
               style={{
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                padding: '5px 0', cursor: 'pointer', borderBottom: '1px solid #f3f4f6',
+                padding: '5px 0', cursor: 'pointer', borderBottom: '1px solid var(--border-subtle)',
               }}
             >
               <div>
-                <span style={{ fontSize: 12, color: '#374151', fontWeight: 500 }}>{u.email}</span>
-                <span style={{ fontSize: 11, color: '#9ca3af', marginLeft: 6 }}>/ {u.pass}</span>
+                <span style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500 }}>{u.email}</span>
+                <span style={{ fontSize: 11, color: 'var(--text-faint)', marginLeft: 6 }}>/ {u.pass}</span>
               </div>
               <span style={{
                 fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4,

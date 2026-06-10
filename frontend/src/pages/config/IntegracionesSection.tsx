@@ -36,9 +36,9 @@ export function IntegracionesSection({ config, onSave }: Props) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{
             padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700,
-            background: isStripeConnected ? '#f0fdf4' : '#f9fafb',
-            color: isStripeConnected ? '#16a34a' : '#9ca3af',
-            border: `1px solid ${isStripeConnected ? '#bbf7d0' : '#e5e7eb'}`,
+            background: isStripeConnected ? '#f0fdf4' : 'var(--bg-subtle)',
+            color: isStripeConnected ? '#16a34a' : 'var(--text-faint)',
+            border: `1px solid ${isStripeConnected ? '#bbf7d0' : 'var(--border)'}`,
           }}>
             {isStripeConnected ? '● Configurado' : '○ No configurado'}
           </div>
@@ -52,7 +52,7 @@ export function IntegracionesSection({ config, onSave }: Props) {
           </Field>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <span style={{ fontSize: 13, color: '#374151' }}>Mostrar botón de donación en el portal público</span>
+          <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Mostrar botón de donación en el portal público</span>
           <Toggle checked={donEnabled} onChange={setDonEnabled} />
         </div>
         <Field label="Importes predefinidos del widget (€)">
@@ -60,11 +60,11 @@ export function IntegracionesSection({ config, onSave }: Props) {
             {amounts.map(a => (
               <span key={a} style={{ display: 'flex', alignItems: 'center', gap: 4, background: '#f0fdf4', color: '#16a34a', padding: '4px 10px', borderRadius: 20, fontSize: 13, fontWeight: 600 }}>
                 {a}€
-                <button onClick={() => setAmounts(prev => prev.filter(x => x !== a))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 14, lineHeight: 1, padding: 0 }}>×</button>
+                <button onClick={() => setAmounts(prev => prev.filter(x => x !== a))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-faint)', fontSize: 14, lineHeight: 1, padding: 0 }}>×</button>
               </span>
             ))}
             <div style={{ display: 'flex', gap: 6 }}>
-              <input type="number" min={1} value={newAmt} onChange={e => setNewAmt(e.target.value)} style={{ width: 70, padding: '4px 8px', borderRadius: 20, border: '1.5px solid #e5e7eb', fontSize: 12 }} placeholder="€" />
+              <input type="number" min={1} value={newAmt} onChange={e => setNewAmt(e.target.value)} style={{ width: 70, padding: '4px 8px', borderRadius: 20, border: '1.5px solid var(--border)', fontSize: 12 }} placeholder="€" />
               <button onClick={addAmount} style={{ padding: '4px 12px', background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 20, cursor: 'pointer', fontSize: 12 }}>+ Añadir</button>
             </div>
           </div>
@@ -76,15 +76,15 @@ export function IntegracionesSection({ config, onSave }: Props) {
 
       {/* Resend */}
       <SectionCard title="📧 Email transaccional — Resend">
-        <p style={{ fontSize: 13, color: '#6b7280', marginTop: 0 }}>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 0 }}>
           Actualmente se usa Supabase Auth para los emails de sistema. Configura Resend para usar tu propio dominio.
         </p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{
             padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700,
-            background: isResendConnected ? '#f0fdf4' : '#f9fafb',
-            color: isResendConnected ? '#16a34a' : '#9ca3af',
-            border: `1px solid ${isResendConnected ? '#bbf7d0' : '#e5e7eb'}`,
+            background: isResendConnected ? '#f0fdf4' : 'var(--bg-subtle)',
+            color: isResendConnected ? '#16a34a' : 'var(--text-faint)',
+            border: `1px solid ${isResendConnected ? '#bbf7d0' : 'var(--border)'}`,
           }}>
             {isResendConnected ? '● Configurado' : '○ No configurado'}
           </div>
@@ -104,8 +104,8 @@ export function IntegracionesSection({ config, onSave }: Props) {
         </div>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
           <button onClick={sendTestEmail} disabled={testSending || !resendKey} style={{
-            padding: '9px 18px', border: '1.5px solid #e5e7eb', borderRadius: 9, background: '#fff',
-            cursor: resendKey ? 'pointer' : 'not-allowed', fontSize: 13, color: '#374151',
+            padding: '9px 18px', border: '1.5px solid var(--border)', borderRadius: 9, background: 'var(--bg-surface)',
+            cursor: resendKey ? 'pointer' : 'not-allowed', fontSize: 13, color: 'var(--text-secondary)',
           }}>
             {testSending ? '⏳ Enviando...' : '📧 Enviar email de prueba'}
           </button>
@@ -116,11 +116,11 @@ export function IntegracionesSection({ config, onSave }: Props) {
       {/* Google Calendar */}
       <SectionCard title="📅 Google Calendar">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-          <div style={{ padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700, background: '#f9fafb', color: '#9ca3af', border: '1px solid #e5e7eb' }}>
+          <div style={{ padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700, background: 'var(--bg-subtle)', color: 'var(--text-faint)', border: '1px solid var(--border)' }}>
             ○ No conectado
           </div>
         </div>
-        <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 12px' }}>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: '0 0 12px' }}>
           Sincroniza los eventos del CRM con tu Google Calendar para que el equipo los vea en su calendario personal.
         </p>
         <button style={{ padding: '9px 18px', background: '#4285f4', color: '#fff', border: 'none', borderRadius: 9, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
@@ -133,7 +133,7 @@ export function IntegracionesSection({ config, onSave }: Props) {
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <span style={{ background: '#fef9c3', color: '#92400e', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>Próximamente</span>
         </div>
-        <p style={{ fontSize: 13, color: '#6b7280', margin: '10px 0' }}>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: '10px 0' }}>
           Envía notificaciones automáticas por WhatsApp a adoptantes y familias de acogida: confirmaciones, recordatorios de citas veterinarias, actualizaciones de solicitudes.
         </p>
         <button style={{ padding: '9px 18px', background: '#25d366', color: '#fff', border: 'none', borderRadius: 9, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>

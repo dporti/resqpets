@@ -7,11 +7,11 @@ const ESTADO_CONFIG: Record<string, { label: string; bg: string; color: string }
   en_adopcion:   { label: 'En adopción',   bg: '#f3e8ff', color: '#9333ea' },
   en_proceso:    { label: 'En proceso',    bg: '#e0e7ff', color: '#4338ca' },
   en_evaluacion: { label: 'En evaluación', bg: '#fef9c3', color: '#b45309' },
-  fallecido:     { label: 'Fallecido',     bg: '#f3f4f6', color: '#9ca3af' },
+  fallecido:     { label: 'Fallecido',     bg: '#f3f4f6', color: 'var(--text-faint)' },
 };
 
 export function Badge({ estado }: { estado: string }) {
-  const cfg = ESTADO_CONFIG[estado] || { label: estado, bg: '#f3f4f6', color: '#374151' };
+  const cfg = ESTADO_CONFIG[estado] || { label: estado, bg: '#f3f4f6', color: 'var(--text-secondary)' };
   return (
     <span style={{
       display: 'inline-block', padding: '3px 9px', borderRadius: 20,
@@ -29,7 +29,7 @@ const ROL_CONFIG: Record<string, { label: string; bg: string; color: string }> =
 };
 
 export function RolBadge({ rol }: { rol: string }) {
-  const cfg = ROL_CONFIG[rol] || { label: rol, bg: '#f3f4f6', color: '#374151' };
+  const cfg = ROL_CONFIG[rol] || { label: rol, bg: '#f3f4f6', color: 'var(--text-secondary)' };
   return (
     <span style={{
       display: 'inline-block', padding: '3px 9px', borderRadius: 20,
@@ -59,8 +59,8 @@ export function AnimalAvatar({ especie, id, size = 40 }: { especie: string; id: 
 export function Spinner({ size = 24 }: { size?: number }) {
   return (
     <div style={{
-      width: size, height: size, border: `${size * 0.1}px solid #e5e7eb`,
-      borderTop: `${size * 0.1}px solid #16a34a`, borderRadius: '50%',
+      width: size, height: size, border: `${size * 0.1}px solid var(--border)`,
+      borderTop: `${size * 0.1}px solid var(--color-primary)`, borderRadius: '50%',
       animation: 'resqpet-spin 0.8s linear infinite',
     }}>
       <style>{`@keyframes resqpet-spin { to { transform: rotate(360deg); } }`}</style>
@@ -73,10 +73,10 @@ export function EmptyState({ icon, title, subtitle }: { icon: string; title: str
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', padding: 64, color: '#9ca3af', gap: 12,
+      justifyContent: 'center', padding: 64, color: 'var(--text-faint)', gap: 12,
     }}>
       <div style={{ fontSize: 48 }}>{icon}</div>
-      <div style={{ fontSize: 16, fontWeight: 600, color: '#374151' }}>{title}</div>
+      <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-secondary)' }}>{title}</div>
       {subtitle && <div style={{ fontSize: 13 }}>{subtitle}</div>}
     </div>
   );
@@ -87,15 +87,15 @@ export function ErrorState({ message, onRetry }: { message?: string; onRetry?: (
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', padding: 64, color: '#9ca3af', gap: 12,
+      justifyContent: 'center', padding: 64, color: 'var(--text-faint)', gap: 12,
     }}>
       <div style={{ fontSize: 48 }}>⚠️</div>
-      <div style={{ fontSize: 16, fontWeight: 600, color: '#374151' }}>Error al cargar los datos</div>
+      <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-secondary)' }}>Error al cargar los datos</div>
       {message && <div style={{ fontSize: 13 }}>{message}</div>}
       {onRetry && (
         <button onClick={onRetry} style={{
-          marginTop: 4, padding: '8px 16px', borderRadius: 8, border: '1px solid #e5e7eb',
-          background: '#fff', color: '#374151', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+          marginTop: 4, padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)',
+          background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
           fontFamily: "'Inter', sans-serif",
         }}>Reintentar</button>
       )}
@@ -110,7 +110,7 @@ export function SkeletonList({ rows = 5 }: { rows?: number }) {
       <style>{`@keyframes resqpet-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
       {Array.from({ length: rows }, (_, i) => (
         <div key={i} style={{
-          height: 48, borderRadius: 8, background: '#f3f4f6',
+          height: 48, borderRadius: 8, background: 'var(--bg-subtle-2)',
           animation: 'resqpet-pulse 1.5s ease-in-out infinite',
           animationDelay: `${i * 0.08}s`,
         }} />
@@ -123,8 +123,8 @@ export function SkeletonList({ rows = 5 }: { rows?: number }) {
 export function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
     <div style={{
-      background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.04)', overflow: 'hidden', ...style,
+      background: 'var(--bg-surface)', borderRadius: 12, border: '1px solid var(--border)',
+      boxShadow: 'var(--shadow-card)', overflow: 'hidden', ...style,
     }}>
       {children}
     </div>
@@ -136,9 +136,9 @@ export function CardHeader({ title, action }: { title: string; action?: React.Re
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '14px 16px', borderBottom: '1px solid #f3f4f6',
+      padding: '14px 16px', borderBottom: '1px solid var(--border-subtle)',
     }}>
-      <span style={{ fontWeight: 600, fontSize: 14, color: '#111' }}>{title}</span>
+      <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>{title}</span>
       {action}
     </div>
   );
@@ -147,13 +147,13 @@ export function CardHeader({ title, action }: { title: string; action?: React.Re
 // ── DOTS BAR ───────────────────────────────────────────
 export function DotsBar({ value, val, max = 5 }: { value?: number; val?: number; max?: number }) {
   const v = value ?? val ?? 0;
-  if (v === 0) return <span style={{ fontSize: 12, color: '#9ca3af' }}>No testado</span>;
+  if (v === 0) return <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>No testado</span>;
   return (
     <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
       {Array.from({ length: max }, (_, i) => (
         <div key={i} style={{
           width: 10, height: 10, borderRadius: 2,
-          background: i < v ? '#16a34a' : '#e5e7eb',
+          background: i < v ? 'var(--color-primary)' : 'var(--border)',
         }} />
       ))}
     </div>

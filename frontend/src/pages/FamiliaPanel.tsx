@@ -15,14 +15,14 @@ const KARMA_LEVEL = (pts: number) => {
   if (pts >= 1000) return { label: 'Diamante', emoji: '💎', color: '#06b6d4' };
   if (pts >= 600) return { label: 'Platino', emoji: '🏆', color: '#8b5cf6' };
   if (pts >= 300) return { label: 'Oro', emoji: '🥇', color: '#f59e0b' };
-  if (pts >= 100) return { label: 'Plata', emoji: '🥈', color: '#6b7280' };
+  if (pts >= 100) return { label: 'Plata', emoji: '🥈', color: 'var(--text-muted)' };
   return { label: 'Bronce', emoji: '🥉', color: '#92400e' };
 };
 
 const STATUS_CFG: Record<FamilyStatus, { label: string; bg: string; color: string }> = {
   available: { label: 'Disponible', bg: '#dcfce7', color: '#16a34a' },
   full:      { label: 'Ocupada',    bg: '#fef9c3', color: '#d97706' },
-  paused:    { label: 'En pausa',   bg: '#f3f4f6', color: '#6b7280' },
+  paused:    { label: 'En pausa',   bg: '#f3f4f6', color: 'var(--text-muted)' },
   inactive:  { label: 'Inactiva',   bg: '#fee2e2', color: '#dc2626' },
 };
 
@@ -41,8 +41,8 @@ function Stars({ val, onChange }: { val: number; onChange?: (v: number) => void 
   );
 }
 
-const inp: React.CSSProperties = { width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', boxSizing: 'border-box' };
-const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 3, display: 'block' };
+const inp: React.CSSProperties = { width: '100%', padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', boxSizing: 'border-box' };
+const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 3, display: 'block' };
 const row2: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 };
 
 export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar }: Props) {
@@ -85,7 +85,7 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
   if (loading) return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: 'var(--bg-surface)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Spinner size={36} />
       </div>
     </>
@@ -93,7 +93,7 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
   if (error) return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: 'var(--bg-surface)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <ErrorState onRetry={load} />
       </div>
     </>
@@ -107,34 +107,34 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: '#fff', zIndex: 50, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)', fontFamily: "'Inter', sans-serif", overflowY: 'auto' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: 'var(--bg-surface)', zIndex: 50, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)', fontFamily: "'Inter', sans-serif", overflowY: 'auto' }}>
 
         {/* Header */}
-        <div style={{ padding: '18px 22px', borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, background: '#fff', zIndex: 10 }}>
+        <div style={{ padding: '18px 22px', borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, background: 'var(--bg-surface)', zIndex: 10 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
               <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 700, color: '#1d4ed8', flexShrink: 0, overflow: 'hidden' }}>
                 {familia.avatar_url ? <img src={familia.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : familia.nombre.charAt(0).toUpperCase()}
               </div>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 16, color: '#111' }}>{familia.nombre}</div>
+                <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)' }}>{familia.nombre}</div>
                 <div style={{ display: 'flex', gap: 8, marginTop: 3, alignItems: 'center' }}>
                   <span style={{ padding: '2px 9px', borderRadius: 20, fontSize: 11.5, fontWeight: 600, background: statusCfg.bg, color: statusCfg.color }}>{statusCfg.label}</span>
                   <span style={{ fontSize: 12.5 }}>{karma.emoji} <strong style={{ color: karma.color }}>{karma.label}</strong> · {familia.karma_puntos}pts</span>
                 </div>
               </div>
             </div>
-            <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#9ca3af' }}>×</button>
+            <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--text-faint)' }}>×</button>
           </div>
           {can('animales:update') && (
             <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-              <button onClick={() => setEditing(v => !v)} style={{ padding: '6px 14px', border: '1px solid #e5e7eb', borderRadius: 7, background: editing ? '#111827' : '#fff', color: editing ? '#fff' : '#374151', fontSize: 12.5, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
+              <button onClick={() => setEditing(v => !v)} style={{ padding: '6px 14px', border: '1px solid var(--border)', borderRadius: 7, background: editing ? '#111827' : '#fff', color: editing ? '#fff' : '#374151', fontSize: 12.5, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
                 {editing ? '✕ Cancelar' : '✏️ Editar'}
               </button>
-              <button onClick={() => onAsignar(familia.id)} disabled={slotsLibres === 0} style={{ padding: '6px 14px', border: 'none', borderRadius: 7, background: slotsLibres > 0 ? '#16a34a' : '#e5e7eb', color: slotsLibres > 0 ? '#fff' : '#9ca3af', fontSize: 12.5, fontWeight: 600, cursor: slotsLibres > 0 ? 'pointer' : 'not-allowed', fontFamily: "'Inter', sans-serif" }}>
+              <button onClick={() => onAsignar(familia.id)} disabled={slotsLibres === 0} style={{ padding: '6px 14px', border: 'none', borderRadius: 7, background: slotsLibres > 0 ? '#16a34a' : 'var(--border)', color: slotsLibres > 0 ? '#fff' : '#9ca3af', fontSize: 12.5, fontWeight: 600, cursor: slotsLibres > 0 ? 'pointer' : 'not-allowed', fontFamily: "'Inter', sans-serif" }}>
                 🐾 Asignar animal
               </button>
-              <button onClick={() => setShowPausarModal(true)} style={{ padding: '6px 14px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', color: '#6b7280', fontSize: 12.5, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
+              <button onClick={() => setShowPausarModal(true)} style={{ padding: '6px 14px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', color: 'var(--text-muted)', fontSize: 12.5, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
                 {familia.estado === 'paused' ? '▶️ Activar' : '⏸ Pausar'}
               </button>
             </div>
@@ -166,8 +166,8 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
                   </select>
                 </div>
               </div>
-              <div style={{ background: '#f9fafb', borderRadius: 10, padding: '12px 14px' }}>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: '#374151', marginBottom: 10 }}>Acepta</div>
+              <div style={{ background: 'var(--bg-subtle)', borderRadius: 10, padding: '12px 14px' }}>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 10 }}>Acepta</div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
                   {[
                     { key: 'acepta_perros', label: '🐕 Perros' },
@@ -198,7 +198,7 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
             /* ── VIEW MODE ─── */
             <>
               {/* Contacto */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px', background: '#f9fafb', borderRadius: 10, padding: '12px 14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px', background: 'var(--bg-subtle)', borderRadius: 10, padding: '12px 14px' }}>
                 {[
                   { label: 'Email', val: familia.email || '—' },
                   { label: 'Teléfono', val: familia.telefono || '—' },
@@ -208,8 +208,8 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
                   { label: 'Slots', val: `${familia.animales_actuales}/${familia.max_animales} (${slotsLibres} libre${slotsLibres !== 1 ? 's' : ''})` },
                 ].map(f => (
                   <div key={f.label}>
-                    <div style={{ fontSize: 11, color: '#9ca3af' }}>{f.label}</div>
-                    <div style={{ fontSize: 13, fontWeight: 500, color: '#111' }}>{f.val}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{f.label}</div>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{f.val}</div>
                   </div>
                 ))}
               </div>
@@ -217,41 +217,41 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
               {/* Slots visual */}
               <div style={{ display: 'flex', gap: 6 }}>
                 {Array.from({ length: familia.max_animales }, (_, i) => (
-                  <div key={i} style={{ width: 14, height: 14, borderRadius: '50%', background: i < familia.animales_actuales ? '#16a34a' : '#e5e7eb', border: '1px solid', borderColor: i < familia.animales_actuales ? '#86efac' : '#d1d5db' }} />
+                  <div key={i} style={{ width: 14, height: 14, borderRadius: '50%', background: i < familia.animales_actuales ? '#16a34a' : 'var(--border)', border: '1px solid', borderColor: i < familia.animales_actuales ? '#86efac' : 'var(--border)' }} />
                 ))}
-                <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 4 }}>{slotsLibres > 0 ? `${slotsLibres} disponible${slotsLibres !== 1 ? 's' : ''}` : 'Completa'}</span>
+                <span style={{ fontSize: 12, color: 'var(--text-faint)', marginLeft: 4 }}>{slotsLibres > 0 ? `${slotsLibres} disponible${slotsLibres !== 1 ? 's' : ''}` : 'Completa'}</span>
               </div>
 
               {/* Capacidad */}
               <div>
-                <div style={{ fontWeight: 600, fontSize: 13.5, color: '#111', marginBottom: 8 }}>Acepta</div>
+                <div style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', marginBottom: 8 }}>Acepta</div>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   {familia.acepta_perros && <span style={{ background: '#dcfce7', color: '#15803d', padding: '3px 9px', borderRadius: 20, fontSize: 12 }}>🐕 Perros</span>}
                   {familia.acepta_gatos && <span style={{ background: '#dcfce7', color: '#15803d', padding: '3px 9px', borderRadius: 20, fontSize: 12 }}>🐈 Gatos</span>}
                   {familia.acepta_otros && <span style={{ background: '#dcfce7', color: '#15803d', padding: '3px 9px', borderRadius: 20, fontSize: 12 }}>🐾 Otros</span>}
-                  {familia.acepta_pequeño && <span style={{ background: '#f0fdf4', color: '#374151', padding: '3px 9px', borderRadius: 20, fontSize: 12, border: '1px solid #e5e7eb' }}>Pequeños</span>}
-                  {familia.acepta_mediano && <span style={{ background: '#f0fdf4', color: '#374151', padding: '3px 9px', borderRadius: 20, fontSize: 12, border: '1px solid #e5e7eb' }}>Medianos</span>}
-                  {familia.acepta_grande && <span style={{ background: '#f0fdf4', color: '#374151', padding: '3px 9px', borderRadius: 20, fontSize: 12, border: '1px solid #e5e7eb' }}>Grandes</span>}
+                  {familia.acepta_pequeño && <span style={{ background: '#f0fdf4', color: 'var(--text-secondary)', padding: '3px 9px', borderRadius: 20, fontSize: 12, border: '1px solid var(--border)' }}>Pequeños</span>}
+                  {familia.acepta_mediano && <span style={{ background: '#f0fdf4', color: 'var(--text-secondary)', padding: '3px 9px', borderRadius: 20, fontSize: 12, border: '1px solid var(--border)' }}>Medianos</span>}
+                  {familia.acepta_grande && <span style={{ background: '#f0fdf4', color: 'var(--text-secondary)', padding: '3px 9px', borderRadius: 20, fontSize: 12, border: '1px solid var(--border)' }}>Grandes</span>}
                   {familia.acepta_necesidades_especiales && <span style={{ background: '#ede9fe', color: '#6d28d9', padding: '3px 9px', borderRadius: 20, fontSize: 12 }}>♿ Especiales</span>}
                   {familia.acepta_cachorros && <span style={{ background: '#fef9c3', color: '#92400e', padding: '3px 9px', borderRadius: 20, fontSize: 12 }}>🐣 Cachorros</span>}
                   {familia.acepta_seniors && <span style={{ background: '#f3e8ff', color: '#7c3aed', padding: '3px 9px', borderRadius: 20, fontSize: 12 }}>🧓 Seniors</span>}
                   {familia.tiene_jardin && <span style={{ background: '#dcfce7', color: '#15803d', padding: '3px 9px', borderRadius: 20, fontSize: 12 }}>🌿 Jardín</span>}
                   {familia.ninos_casa && <span style={{ background: '#dbeafe', color: '#1d4ed8', padding: '3px 9px', borderRadius: 20, fontSize: 12 }}>👶 Niños{familia.edades_ninos ? ` (${familia.edades_ninos})` : ''}</span>}
                 </div>
-                {familia.otros_animales_casa && <div style={{ fontSize: 12.5, color: '#6b7280', marginTop: 6 }}>Otros animales: {familia.otros_animales_casa}</div>}
+                {familia.otros_animales_casa && <div style={{ fontSize: 12.5, color: 'var(--text-muted)', marginTop: 6 }}>Otros animales: {familia.otros_animales_casa}</div>}
                 {familia.notas && <div style={{ fontSize: 12.5, color: '#4b5563', marginTop: 6, fontStyle: 'italic' }}>{familia.notas}</div>}
               </div>
 
               {/* Acogidas actuales */}
               {familia.acogidas_activas && familia.acogidas_activas.length > 0 && (
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: 13.5, color: '#111', marginBottom: 8 }}>Animales en acogida ahora</div>
+                  <div style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', marginBottom: 8 }}>Animales en acogida ahora</div>
                   {familia.acogidas_activas.map(a => (
                     <div key={a.id} style={{ display: 'flex', gap: 10, padding: '8px 10px', background: '#f0fdf4', borderRadius: 8, marginBottom: 6, alignItems: 'center' }}>
                       <span style={{ fontSize: 20 }}>{a.animal_especie === 'perro' ? '🐕' : '🐈'}</span>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: 13, fontWeight: 600 }}>{a.animal_nombre}</div>
-                        <div style={{ fontSize: 11.5, color: '#6b7280' }}>Desde {formatDate(a.iniciada_at)}</div>
+                        <div style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>Desde {formatDate(a.iniciada_at)}</div>
                       </div>
                     </div>
                   ))}
@@ -261,10 +261,10 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
               {/* Karma historial */}
               {familia.karma_historial && familia.karma_historial.length > 0 && (
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: 13.5, color: '#111', marginBottom: 8 }}>Historial karma {karma.emoji} {familia.karma_puntos} pts</div>
+                  <div style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', marginBottom: 8 }}>Historial karma {karma.emoji} {familia.karma_puntos} pts</div>
                   {familia.karma_historial.map(k => (
-                    <div key={k.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f3f4f6', fontSize: 12.5 }}>
-                      <span style={{ color: '#374151' }}>{k.razon}</span>
+                    <div key={k.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: 12.5 }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>{k.razon}</span>
                       <span style={{ fontWeight: 700, color: k.puntos > 0 ? '#16a34a' : '#dc2626' }}>+{k.puntos}pts</span>
                     </div>
                   ))}
@@ -278,7 +278,7 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
       {showPausarModal && (
         <>
           <div onClick={() => setShowPausarModal(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 60 }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: '#fff', borderRadius: 14, width: 380, padding: 24, zIndex: 70, fontFamily: "'Inter', sans-serif" }}>
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--bg-surface)', borderRadius: 14, width: 380, padding: 24, zIndex: 70, fontFamily: "'Inter', sans-serif" }}>
             <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 12 }}>
               {familia.estado === 'paused' ? 'Reactivar familia' : 'Poner en pausa'}
             </div>
@@ -286,7 +286,7 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
               <textarea rows={3} value={motivoPausa} onChange={e => setMotivoPausa(e.target.value)} placeholder="Motivo de la pausa (opcional)..." style={{ ...inp, marginBottom: 14, resize: 'none' }} />
             )}
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-              <button onClick={() => setShowPausarModal(false)} style={{ padding: '8px 16px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+              <button onClick={() => setShowPausarModal(false)} style={{ padding: '8px 16px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
               <button onClick={handlePausar} style={{ padding: '8px 18px', background: familia.estado === 'paused' ? '#16a34a' : '#f59e0b', color: '#fff', border: 'none', borderRadius: 7, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
                 {familia.estado === 'paused' ? 'Reactivar' : 'Pausar'}
               </button>

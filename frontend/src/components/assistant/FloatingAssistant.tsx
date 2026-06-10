@@ -228,7 +228,7 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
           transform: 'translate(-50%,-50%)',
           width: 640, maxWidth: 'calc(100vw - 32px)',
           maxHeight: '75vh',
-          background: '#fff', borderRadius: 18,
+          background: 'var(--bg-surface)', borderRadius: 18,
           boxShadow: '0 24px 80px rgba(0,0,0,.25)',
           zIndex: 1001, display: 'flex', flexDirection: 'column',
           overflow: 'hidden',
@@ -238,7 +238,7 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
       >
         {/* Header */}
         <div style={{
-          padding: '16px 20px', borderBottom: '1px solid #f3f4f6',
+          padding: '16px 20px', borderBottom: '1px solid var(--border-subtle)',
           display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
         }}>
           <div style={{
@@ -247,26 +247,26 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
           }}>✨</div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 700, fontSize: 15, color: '#111827', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 8 }}>
               Asistente ResQPet
               <span style={{ background: '#f0fdf4', color: '#16a34a', padding: '1px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>IA</span>
             </div>
-            <div style={{ fontSize: 11, color: '#9ca3af' }}>
+            <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>
               {streaming ? '🟢 Escribiendo...' : `Claude · ${user?.refugioNombre || 'ResQPet'}`}
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             {messages.length > 0 && (
               <button onClick={() => setMessages([])} style={{
-                padding: '4px 12px', border: '1.5px solid #e5e7eb', borderRadius: 8,
-                background: '#fff', cursor: 'pointer', fontSize: 11, color: '#6b7280',
+                padding: '4px 12px', border: '1.5px solid var(--border)', borderRadius: 8,
+                background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 11, color: 'var(--text-muted)',
               }}>
                 Nueva conversación
               </button>
             )}
             <button onClick={onClose} style={{
               width: 32, height: 32, borderRadius: 8, border: 'none',
-              background: '#f3f4f6', cursor: 'pointer', fontSize: 18, color: '#6b7280',
+              background: 'var(--bg-subtle-2)', cursor: 'pointer', fontSize: 18, color: 'var(--text-muted)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>✕</button>
           </div>
@@ -280,20 +280,20 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
           {messages.length === 0 ? (
             /* Suggestions */
             <div>
-              <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 16px', textAlign: 'center' }}>
+              <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: '0 0 16px', textAlign: 'center' }}>
                 👋 Hola, {user?.nombre?.split(' ')[0] || 'coordinador'}. ¿En qué puedo ayudarte?
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 {SUGGESTIONS.map(s => (
                   <button key={s.text} onClick={() => sendMessage(s.text)} style={{
-                    padding: '10px 12px', border: '1.5px solid #e5e7eb', borderRadius: 10,
+                    padding: '10px 12px', border: '1.5px solid var(--border)', borderRadius: 10,
                     background: '#fafafa', cursor: 'pointer', textAlign: 'left',
-                    fontSize: 12, color: '#374151', lineHeight: 1.4,
+                    fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4,
                     transition: 'border-color .15s, background .15s',
                     display: 'flex', gap: 8, alignItems: 'flex-start',
                   }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#16a34a'; (e.currentTarget as HTMLButtonElement).style.background = '#f0fdf4'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#e5e7eb'; (e.currentTarget as HTMLButtonElement).style.background = '#fafafa'; }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#16a34a'; (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-hover)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLButtonElement).style.background = '#fafafa'; }}
                   >
                     <span style={{ fontSize: 16, flexShrink: 0 }}>{s.icon}</span>
                     <span>{s.text}</span>
@@ -320,9 +320,9 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
                   <div style={{
                     padding: '10px 14px',
                     borderRadius: msg.role === 'user' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
-                    background: msg.role === 'user' ? 'linear-gradient(135deg,#16a34a,#059669)' : '#fff',
-                    border: msg.role === 'user' ? 'none' : '1px solid #e5e7eb',
-                    color: msg.role === 'user' ? '#fff' : '#111827',
+                    background: msg.role === 'user' ? 'linear-gradient(135deg,#16a34a,#059669)' : 'var(--bg-surface)',
+                    border: msg.role === 'user' ? 'none' : '1px solid var(--border)',
+                    color: msg.role === 'user' ? '#fff' : 'var(--text-primary)',
                     fontSize: 13, lineHeight: 1.6,
                     boxShadow: msg.role === 'assistant' ? '0 1px 4px rgba(0,0,0,.06)' : 'none',
                   }}>
@@ -351,7 +351,7 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
                           borderRadius: 10, padding: '10px 14px',
                           display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12,
                         }}>
-                          <span style={{ fontSize: 13, color: '#374151' }}>
+                          <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
                             <span style={{ marginRight: 6 }}>{action.icon}</span>
                             {action.label}
                           </span>
@@ -361,8 +361,8 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
                               border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 600,
                             }}>Ejecutar</button>
                             <button onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, actions: m.actions?.filter((_, j) => j !== i) } : m))} style={{
-                              padding: '5px 10px', background: '#fff', color: '#6b7280',
-                              border: '1px solid #e5e7eb', borderRadius: 8, cursor: 'pointer', fontSize: 12,
+                              padding: '5px 10px', background: 'var(--bg-surface)', color: 'var(--text-muted)',
+                              border: '1px solid var(--border)', borderRadius: 8, cursor: 'pointer', fontSize: 12,
                             }}>✕</button>
                           </div>
                         </div>
@@ -370,7 +370,7 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
                     </div>
                   )}
 
-                  <span style={{ fontSize: 10, color: '#9ca3af', alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', paddingInline: 4 }}>
+                  <span style={{ fontSize: 10, color: 'var(--text-faint)', alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', paddingInline: 4 }}>
                     {msg.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
@@ -380,7 +380,7 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
         </div>
 
         {/* Input area */}
-        <div style={{ padding: '12px 16px', borderTop: '1px solid #f3f4f6', flexShrink: 0, background: '#fff' }}>
+        <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border-subtle)', flexShrink: 0, background: 'var(--bg-surface)' }}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
             <textarea
               ref={inputRef}
@@ -392,10 +392,10 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
               disabled={streaming}
               style={{
                 flex: 1, padding: '10px 14px', borderRadius: 12,
-                border: '1.5px solid #e5e7eb', fontSize: 13, resize: 'none',
+                border: '1.5px solid var(--border)', fontSize: 13, resize: 'none',
                 fontFamily: 'inherit', outline: 'none', lineHeight: 1.5,
                 minHeight: 42, maxHeight: 100, overflowY: 'auto',
-                background: streaming ? '#f9fafb' : '#fff',
+                background: streaming ? 'var(--bg-subtle)' : 'var(--bg-surface)',
               }}
             />
             <button
@@ -403,7 +403,7 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
               disabled={!input.trim() || streaming}
               style={{
                 width: 42, height: 42, borderRadius: '50%', border: 'none', cursor: 'pointer',
-                background: input.trim() && !streaming ? 'linear-gradient(135deg,#16a34a,#059669)' : '#e5e7eb',
+                background: input.trim() && !streaming ? 'linear-gradient(135deg,#16a34a,#059669)' : 'var(--bg-subtle-2)',
                 fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0, transition: 'background .15s',
               }}
@@ -412,7 +412,7 @@ export function FloatingAssistant({ onNavigate, onClose }: Props) {
               {streaming ? '⏸' : '➤'}
             </button>
           </div>
-          <p style={{ fontSize: 10, color: '#d1d5db', margin: '6px 0 0', textAlign: 'center' }}>
+          <p style={{ fontSize: 10, color: 'var(--text-faint)', margin: '6px 0 0', textAlign: 'center' }}>
             IA generativa — puede cometer errores · Ctrl+K para abrir/cerrar
           </p>
         </div>

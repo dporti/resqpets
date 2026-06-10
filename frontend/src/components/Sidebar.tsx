@@ -1,4 +1,6 @@
+import { Sun, Moon, Power } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { usePlan } from '../lib/billing/PlanContext';
 import { PlanFeatures } from '../lib/billing/plans';
 
@@ -29,16 +31,17 @@ const NAV_ITEMS: {
 export default function Sidebar({ vista, setVista, unreadMsgs = 0 }: Props) {
   const { can: canPermiso, user, logout } = useAuth();
   const { can: canFeature } = usePlan();
+  const { dark, toggleDark } = useTheme();
 
   return (
     <div style={{
-      width: 220, flexShrink: 0, background: '#fff', borderRight: '1px solid #e5e7eb',
+      width: 220, flexShrink: 0, background: 'var(--bg-surface)', borderRight: '1px solid var(--border)',
       display: 'flex', flexDirection: 'column', height: '100vh', position: 'sticky', top: 0,
       fontFamily: "'Inter', sans-serif",
     }}>
       {/* Logo */}
       <div style={{
-        padding: '20px 16px 14px', borderBottom: '1px solid #f3f4f6',
+        padding: '20px 16px 14px', borderBottom: '1px solid var(--border-subtle)',
         display: 'flex', alignItems: 'center', gap: 10,
       }}>
         <div style={{
@@ -46,8 +49,8 @@ export default function Sidebar({ vista, setVista, unreadMsgs = 0 }: Props) {
           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
         }}>🐾</div>
         <div>
-          <div style={{ fontWeight: 700, fontSize: 15, color: '#111', lineHeight: 1.2 }}>ResQPet</div>
-          <div style={{ fontSize: 11, color: '#9ca3af', lineHeight: 1.2 }}>{user?.refugioNombre || 'Protectora'}</div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)', lineHeight: 1.2 }}>ResQPet</div>
+          <div style={{ fontSize: 11, color: 'var(--text-faint)', lineHeight: 1.2 }}>{user?.refugioNombre || 'Protectora'}</div>
         </div>
       </div>
 
@@ -75,8 +78,8 @@ export default function Sidebar({ vista, setVista, unreadMsgs = 0 }: Props) {
               style={{
                 display: 'flex', alignItems: 'center', gap: 10, width: '100%',
                 padding: '8px 10px', borderRadius: 7, border: 'none', cursor: 'pointer',
-                background: active ? '#f0fdf4' : 'transparent',
-                color: active ? '#16a34a' : locked ? '#9ca3af' : '#374151',
+                background: active ? 'var(--bg-hover)' : 'transparent',
+                color: active ? 'var(--color-primary)' : locked ? 'var(--text-faint)' : 'var(--text-secondary)',
                 fontWeight: active ? 600 : 400, fontSize: 13.5,
                 fontFamily: "'Inter', sans-serif", marginBottom: 2,
                 transition: 'background 0.15s',
@@ -106,30 +109,49 @@ export default function Sidebar({ vista, setVista, unreadMsgs = 0 }: Props) {
         })}
       </nav>
 
+      {/* Dark mode toggle */}
+      <div style={{ padding: '0 12px 8px' }}>
+        <button
+          onClick={() => toggleDark()}
+          title={dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+            padding: '8px 10px', borderRadius: 7, border: '1px solid var(--border)', cursor: 'pointer',
+            background: 'var(--bg-subtle)', color: 'var(--text-secondary)',
+            fontWeight: 500, fontSize: 13, fontFamily: "'Inter', sans-serif",
+            transition: 'background 0.15s',
+          }}
+        >
+          {dark ? <Sun size={15} /> : <Moon size={15} />}
+          <span style={{ flex: 1, textAlign: 'left' }}>{dark ? 'Modo claro' : 'Modo oscuro'}</span>
+        </button>
+      </div>
+
       {/* User footer */}
       <div style={{
-        padding: '12px 12px', borderTop: '1px solid #f3f4f6',
+        padding: '12px 12px', borderTop: '1px solid var(--border-subtle)',
         display: 'flex', alignItems: 'center', gap: 10,
       }}>
         <div style={{
-          width: 32, height: 32, borderRadius: 16, background: '#dcfce7',
+          width: 32, height: 32, borderRadius: 16, background: 'var(--color-primary-soft)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 14, fontWeight: 700, color: '#16a34a', flexShrink: 0,
+          fontSize: 14, fontWeight: 700, color: 'var(--color-primary)', flexShrink: 0,
         }}>
           {user?.nombre?.charAt(0).toUpperCase()}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {user?.nombre}
           </div>
-          <div style={{ fontSize: 11, color: '#9ca3af', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: 11, color: 'var(--text-faint)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {user?.rol}
           </div>
         </div>
         <button onClick={logout} title="Cerrar sesión" style={{
-          background: 'none', border: 'none', cursor: 'pointer', fontSize: 16,
-          color: '#9ca3af', padding: 4, borderRadius: 4, flexShrink: 0,
-        }}>⏻</button>
+          background: 'none', border: 'none', cursor: 'pointer',
+          color: 'var(--text-faint)', padding: 4, borderRadius: 4, flexShrink: 0,
+          display: 'flex', alignItems: 'center',
+        }}><Power size={16} /></button>
       </div>
     </div>
   );

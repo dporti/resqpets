@@ -1,7 +1,7 @@
 import { SectionCard } from './shared';
 
 const PLANS = [
-  { name: 'Gratuito', price: '0€/mes', color: '#6b7280', features: { animales: 50, voluntarios: 5, storage: '1 GB', portal: '✓', sos: '✓', reportes: 'Básico', soporte: 'Email' } },
+  { name: 'Gratuito', price: '0€/mes', color: 'var(--text-muted)', features: { animales: 50, voluntarios: 5, storage: '1 GB', portal: '✓', sos: '✓', reportes: 'Básico', soporte: 'Email' } },
   { name: 'Básico',   price: '29€/mes', color: '#3b82f6', features: { animales: 200, voluntarios: 20, storage: '10 GB', portal: '✓', sos: '✓', reportes: 'Avanzado', soporte: 'Chat' } },
   { name: 'Pro',      price: '79€/mes', color: '#16a34a', features: { animales: '∞', voluntarios: '∞', storage: '100 GB', portal: '✓', sos: '✓', reportes: 'Completo', soporte: 'Dedicado' }, recommended: true },
 ];
@@ -23,18 +23,18 @@ export function PlanSection({ stats }: { stats: Stats }) {
           ].map(item => {
             const pct = Math.min(100, Math.round((item.current / item.max) * 100));
             return (
-              <div key={item.label} style={{ background: '#f9fafb', borderRadius: 12, padding: 14 }}>
+              <div key={item.label} style={{ background: 'var(--bg-subtle)', borderRadius: 12, padding: 14 }}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
                   <span>{item.icon}</span>
-                  <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#374151' }}>{item.label}</p>
+                  <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>{item.label}</p>
                 </div>
-                <p style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 800, color: '#111827' }}>
-                  {item.current}<span style={{ fontSize: 13, color: '#9ca3af', fontWeight: 400 }}>/{item.max}{item.unit || ''}</span>
+                <p style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 800, color: 'var(--text-primary)' }}>
+                  {item.current}<span style={{ fontSize: 13, color: 'var(--text-faint)', fontWeight: 400 }}>/{item.max}{item.unit || ''}</span>
                 </p>
-                <div style={{ height: 6, background: '#e5e7eb', borderRadius: 3, overflow: 'hidden' }}>
+                <div style={{ height: 6, background: 'var(--bg-subtle-2)', borderRadius: 3, overflow: 'hidden' }}>
                   <div style={{ width: `${pct}%`, height: '100%', background: pct > 80 ? '#ef4444' : '#16a34a', borderRadius: 3, transition: 'width .5s' }} />
                 </div>
-                <p style={{ margin: '4px 0 0', fontSize: 11, color: '#9ca3af' }}>{pct}% usado</p>
+                <p style={{ margin: '4px 0 0', fontSize: 11, color: 'var(--text-faint)' }}>{pct}% usado</p>
               </div>
             );
           })}
@@ -52,15 +52,15 @@ export function PlanSection({ stats }: { stats: Stats }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
               <tr>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: '#6b7280', borderBottom: '2px solid #e5e7eb' }}>Característica</th>
+                <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text-muted)', borderBottom: '2px solid var(--border)' }}>Característica</th>
                 {PLANS.map(p => (
                   <th key={p.name} style={{
-                    padding: '12px 16px', textAlign: 'center', borderBottom: '2px solid #e5e7eb',
+                    padding: '12px 16px', textAlign: 'center', borderBottom: '2px solid var(--border)',
                     borderTop: p.recommended ? `3px solid ${p.color}` : 'none',
                   }}>
                     {p.recommended && <div style={{ fontSize: 10, color: p.color, fontWeight: 700, marginBottom: 2 }}>RECOMENDADO</div>}
                     <div style={{ fontWeight: 700, color: p.color, fontSize: 14 }}>{p.name}</div>
-                    <div style={{ fontWeight: 800, fontSize: 16, color: '#111827', marginTop: 2 }}>{p.price}</div>
+                    <div style={{ fontWeight: 800, fontSize: 16, color: 'var(--text-primary)', marginTop: 2 }}>{p.price}</div>
                   </th>
                 ))}
               </tr>
@@ -76,12 +76,12 @@ export function PlanSection({ stats }: { stats: Stats }) {
                 ['Soporte', 'soporte'],
               ].map(([label, key]) => (
                 <tr key={key}>
-                  <td style={{ padding: '10px 16px', borderBottom: '1px solid #f3f4f6', color: '#374151' }}>{label}</td>
+                  <td style={{ padding: '10px 16px', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}>{label}</td>
                   {PLANS.map(p => (
                     <td key={p.name} style={{
-                      padding: '10px 16px', textAlign: 'center', borderBottom: '1px solid #f3f4f6',
+                      padding: '10px 16px', textAlign: 'center', borderBottom: '1px solid var(--border-subtle)',
                       fontWeight: p.name === 'Pro' ? 600 : 400,
-                      color: p.name === 'Gratuito' ? '#374151' : p.color,
+                      color: p.name === 'Gratuito' ? 'var(--text-secondary)' : p.color,
                     }}>
                       {(p.features as Record<string, string | number>)[key]}
                     </td>
@@ -94,7 +94,7 @@ export function PlanSection({ stats }: { stats: Stats }) {
       </SectionCard>
 
       <SectionCard title="Historial de facturas">
-        <div style={{ textAlign: 'center', padding: '30px 0', color: '#9ca3af' }}>
+        <div style={{ textAlign: 'center', padding: '30px 0', color: 'var(--text-faint)' }}>
           <p style={{ fontSize: 32 }}>🧾</p>
           <p style={{ fontSize: 14 }}>No hay facturas aún</p>
           <p style={{ fontSize: 12 }}>Estás en el plan gratuito</p>

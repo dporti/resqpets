@@ -254,12 +254,12 @@ export function ExportModal({ period, refugioNombre, onClose }: Props) {
       alignItems: 'center', justifyContent: 'center', padding: 20,
     }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div style={{
-        background: '#fff', borderRadius: 16, padding: 28, width: '100%', maxWidth: 480,
+        background: 'var(--bg-surface)', borderRadius: 16, padding: 28, width: '100%', maxWidth: 480,
         boxShadow: '0 20px 50px rgba(0,0,0,.2)',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Exportar informe</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: '#9ca3af' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--text-faint)' }}>✕</button>
         </div>
 
         {/* Formato */}
@@ -267,8 +267,8 @@ export function ExportModal({ period, refugioNombre, onClose }: Props) {
           {(['pdf', 'csv'] as const).map(f => (
             <button key={f} onClick={() => setFormat(f)} style={{
               flex: 1, padding: '10px', borderRadius: 10, cursor: 'pointer', fontWeight: 600,
-              border: '2px solid', borderColor: format === f ? '#16a34a' : '#e5e7eb',
-              background: format === f ? '#f0fdf4' : '#fff', color: format === f ? '#16a34a' : '#374151',
+              border: '2px solid', borderColor: format === f ? '#16a34a' : 'var(--border)',
+              background: format === f ? '#f0fdf4' : 'var(--bg-surface)', color: format === f ? '#16a34a' : '#374151',
               fontSize: 14,
             }}>
               {f === 'pdf' ? '📄 PDF' : '📊 CSV (ZIP)'}
@@ -279,17 +279,17 @@ export function ExportModal({ period, refugioNombre, onClose }: Props) {
         {format === 'pdf' && (
           <>
             <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 6 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: 6 }}>
                 Nombre del informe
               </label>
               <input value={reportName} onChange={e => setReportName(e.target.value)} style={{
-                width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb',
+                width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid var(--border)',
                 fontSize: 13, boxSizing: 'border-box',
               }} />
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 8 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: 8 }}>
                 Secciones a incluir
               </label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -311,7 +311,7 @@ export function ExportModal({ period, refugioNombre, onClose }: Props) {
           </>
         )}
 
-        <div style={{ background: '#f9fafb', borderRadius: 8, padding: '10px 14px', marginBottom: 20, fontSize: 13, color: '#6b7280' }}>
+        <div style={{ background: 'var(--bg-subtle)', borderRadius: 8, padding: '10px 14px', marginBottom: 20, fontSize: 13, color: 'var(--text-muted)' }}>
           📅 Período: <strong>{period.label}</strong> — {new Date().toLocaleDateString('es-ES')}
         </div>
 

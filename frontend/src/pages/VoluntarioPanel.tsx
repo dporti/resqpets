@@ -15,7 +15,7 @@ const KARMA_LEVEL = (pts: number) => {
   if (pts >= 1000) return { label: 'Diamante', emoji: '💎', color: '#06b6d4', next: null, nextPts: 0 };
   if (pts >= 600) return { label: 'Platino', emoji: '🏆', color: '#8b5cf6', next: 'Diamante', nextPts: 1000 };
   if (pts >= 300) return { label: 'Oro', emoji: '🥇', color: '#f59e0b', next: 'Platino', nextPts: 600 };
-  if (pts >= 100) return { label: 'Plata', emoji: '🥈', color: '#6b7280', next: 'Oro', nextPts: 300 };
+  if (pts >= 100) return { label: 'Plata', emoji: '🥈', color: 'var(--text-muted)', next: 'Oro', nextPts: 300 };
   return { label: 'Bronce', emoji: '🥉', color: '#92400e', next: 'Plata', nextPts: 100 };
 };
 
@@ -27,7 +27,7 @@ const BENEFICIOS = [
   { nivel: 'Diamante', emoji: '💎', pts: 1000, beneficio: 'Invitación a eventos exclusivos' },
 ];
 
-const inp: React.CSSProperties = { width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', boxSizing: 'border-box' };
+const inp: React.CSSProperties = { width: '100%', padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', boxSizing: 'border-box' };
 
 export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Props) {
   const { can, user } = useAuth();
@@ -63,7 +63,7 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
   if (loading) return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 540, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 540, background: 'var(--bg-surface)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Spinner size={36} />
       </div>
     </>
@@ -71,7 +71,7 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
   if (error) return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 540, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 540, background: 'var(--bg-surface)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <ErrorState onRetry={load} />
       </div>
     </>
@@ -92,29 +92,29 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 540, background: '#fff', zIndex: 50, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)', fontFamily: "'Inter', sans-serif", overflowY: 'auto' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 540, background: 'var(--bg-surface)', zIndex: 50, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)', fontFamily: "'Inter', sans-serif", overflowY: 'auto' }}>
 
         {/* Header */}
-        <div style={{ padding: '18px 22px', borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, background: '#fff', zIndex: 10 }}>
+        <div style={{ padding: '18px 22px', borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, background: 'var(--bg-surface)', zIndex: 10 }}>
           <div style={{ display: 'flex', gap: 14, alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
               <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 700, color: '#1d4ed8', flexShrink: 0, overflow: 'hidden' }}>
                 {vol.avatarUrl ? <img src={vol.avatarUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : vol.nombre.charAt(0).toUpperCase()}
               </div>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 16, color: '#111' }}>{vol.nombre}</div>
+                <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)' }}>{vol.nombre}</div>
                 <div style={{ display: 'flex', gap: 8, marginTop: 3, alignItems: 'center' }}>
                   <span style={{ padding: '2px 9px', borderRadius: 20, fontSize: 11.5, fontWeight: 600, background: rolCfg.bg, color: rolCfg.color }}>{rolCfg.label}</span>
                   <span style={{ fontSize: 12.5 }}>{karma.emoji} <strong style={{ color: karma.color }}>{karma.label}</strong> · {vol.karma_puntos || 0}pts</span>
-                  <span style={{ fontSize: 11.5, color: vol.es_disponible ? '#16a34a' : '#9ca3af', background: vol.es_disponible ? '#f0fdf4' : '#f3f4f6', padding: '2px 8px', borderRadius: 20 }}>
+                  <span style={{ fontSize: 11.5, color: vol.es_disponible ? '#16a34a' : '#9ca3af', background: vol.es_disponible ? '#f0fdf4' : 'var(--border-subtle)', padding: '2px 8px', borderRadius: 20 }}>
                     {vol.es_disponible ? '● Disponible' : '○ No disponible'}
                   </span>
                 </div>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              {canEdit && <button onClick={() => setEditing(v => !v)} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 7, background: editing ? '#111827' : '#fff', color: editing ? '#fff' : '#374151', fontSize: 12, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>{editing ? '✕' : '✏️ Editar'}</button>}
-              <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#9ca3af' }}>×</button>
+              {canEdit && <button onClick={() => setEditing(v => !v)} style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 7, background: editing ? '#111827' : '#fff', color: editing ? '#fff' : '#374151', fontSize: 12, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>{editing ? '✕' : '✏️ Editar'}</button>}
+              <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--text-faint)' }}>×</button>
             </div>
           </div>
         </div>
@@ -124,11 +124,11 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
           {editing ? (
             <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 3, display: 'block' }}>Bio / Presentación</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 3, display: 'block' }}>Bio / Presentación</label>
                 <textarea rows={3} style={{ ...inp, resize: 'vertical' }} value={editForm.bio} onChange={e => setEditForm(f => ({ ...f, bio: e.target.value }))} placeholder="Cuéntanos un poco sobre ti..." />
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 3, display: 'block' }}>Especialidades (separadas por comas)</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 3, display: 'block' }}>Especialidades (separadas por comas)</label>
                 <input style={inp} value={editForm.especialidades} onChange={e => setEditForm(f => ({ ...f, especialidades: e.target.value }))} placeholder="Fotografía, Transporte, Veterinaria..." />
               </div>
               <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13.5, cursor: 'pointer' }}>
@@ -136,7 +136,7 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
                 Disponible para tareas
               </label>
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-                <button type="button" onClick={() => setEditing(false)} style={{ padding: '7px 14px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+                <button type="button" onClick={() => setEditing(false)} style={{ padding: '7px 14px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
                 <button type="submit" disabled={saving} style={{ padding: '7px 18px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 7, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
                   {saving ? 'Guardando...' : 'Guardar'}
                 </button>
@@ -145,7 +145,7 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
           ) : (
             <>
               {/* Info básica */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px', background: '#f9fafb', borderRadius: 10, padding: '12px 14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px', background: 'var(--bg-subtle)', borderRadius: 10, padding: '12px 14px' }}>
                 {[
                   { label: 'Email', val: vol.email },
                   { label: 'Alta', val: formatDate(vol.createdAt) },
@@ -153,8 +153,8 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
                   { label: 'Racha actual', val: `${vol.racha_dias || 0} días` },
                 ].map(f => (
                   <div key={f.label}>
-                    <div style={{ fontSize: 11, color: '#9ca3af' }}>{f.label}</div>
-                    <div style={{ fontSize: 13, fontWeight: 500, color: '#111' }}>{f.val || '—'}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{f.label}</div>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{f.val || '—'}</div>
                   </div>
                 ))}
               </div>
@@ -180,10 +180,10 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
               { icon: '📅', val: vol.tareas_mes || 0, label: 'Este mes' },
               { icon: '⏳', val: vol.tareas_pendientes || 0, label: 'Pendientes' },
             ].map(s => (
-              <div key={s.label} style={{ background: '#f9fafb', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid #e5e7eb' }}>
+              <div key={s.label} style={{ background: 'var(--bg-subtle)', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid var(--border)' }}>
                 <div style={{ fontSize: 22 }}>{s.icon}</div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: '#111', margin: '4px 0 2px' }}>{s.val}</div>
-                <div style={{ fontSize: 11, color: '#9ca3af' }}>{s.label}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', margin: '4px 0 2px' }}>{s.val}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -191,11 +191,11 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
           {/* Karma progress */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-              <span style={{ fontSize: 13.5, fontWeight: 600, color: '#111' }}>{karma.emoji} {karma.label} — {vol.karma_puntos || 0} pts</span>
-              {karma.next && <span style={{ fontSize: 12, color: '#9ca3af' }}>→ {karma.next} ({karma.nextPts} pts)</span>}
+              <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)' }}>{karma.emoji} {karma.label} — {vol.karma_puntos || 0} pts</span>
+              {karma.next && <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>→ {karma.next} ({karma.nextPts} pts)</span>}
             </div>
             {karma.next && (
-              <div style={{ background: '#f3f4f6', borderRadius: 6, height: 8 }}>
+              <div style={{ background: 'var(--bg-subtle-2)', borderRadius: 6, height: 8 }}>
                 <div style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${karma.color}, ${karma.color}99)`, height: '100%', borderRadius: 6, transition: 'width 0.5s' }} />
               </div>
             )}
@@ -204,10 +204,10 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
           {/* Karma historial */}
           {vol.karma_historial && vol.karma_historial.length > 0 && (
             <div>
-              <div style={{ fontWeight: 600, fontSize: 13.5, color: '#111', marginBottom: 8 }}>Historial de karma</div>
+              <div style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', marginBottom: 8 }}>Historial de karma</div>
               {vol.karma_historial.slice(0, 10).map(k => (
-                <div key={k.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f3f4f6', fontSize: 12.5 }}>
-                  <span style={{ color: '#374151' }}>{k.razon}</span>
+                <div key={k.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: 12.5 }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>{k.razon}</span>
                   <span style={{ fontWeight: 700, color: '#16a34a' }}>+{k.puntos}pts</span>
                 </div>
               ))}
@@ -217,19 +217,19 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
           {/* Tareas asignadas */}
           {vol.tareas && vol.tareas.filter(t => t.estado !== 'completed').length > 0 && (
             <div>
-              <div style={{ fontWeight: 600, fontSize: 13.5, color: '#111', marginBottom: 8 }}>Tareas asignadas</div>
+              <div style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', marginBottom: 8 }}>Tareas asignadas</div>
               {vol.tareas.filter(t => t.estado !== 'completed').slice(0, 5).map(t => {
                 const cat = CAT_CFG[t.categoria];
                 const prio = PRIO_CFG[t.prioridad];
                 const vencida = t.fecha_limite && new Date(t.fecha_limite) < new Date();
                 return (
-                  <div key={t.id} style={{ display: 'flex', gap: 10, padding: '8px 10px', background: '#f9fafb', borderRadius: 8, marginBottom: 6, alignItems: 'flex-start' }}>
+                  <div key={t.id} style={{ display: 'flex', gap: 10, padding: '8px 10px', background: 'var(--bg-subtle)', borderRadius: 8, marginBottom: 6, alignItems: 'flex-start' }}>
                     <span style={{ fontSize: 16, flexShrink: 0 }}>{cat?.icon}</span>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.titulo}</div>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.titulo}</div>
                       <div style={{ display: 'flex', gap: 6, marginTop: 3 }}>
                         <span style={{ fontSize: 11, padding: '1px 7px', borderRadius: 20, background: prio?.bg, color: prio?.color, fontWeight: 600 }}>{prio?.label}</span>
-                        {t.fecha_limite && <span style={{ fontSize: 11, color: vencida ? '#dc2626' : '#9ca3af' }}>{vencida ? '⚠️ Vencida' : formatDate(t.fecha_limite)}</span>}
+                        {t.fecha_limite && <span style={{ fontSize: 11, color: vencida ? '#dc2626' : 'var(--text-faint)' }}>{vencida ? '⚠️ Vencida' : formatDate(t.fecha_limite)}</span>}
                       </div>
                     </div>
                   </div>
@@ -240,15 +240,15 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
 
           {/* Beneficios */}
           <div>
-            <div style={{ fontWeight: 600, fontSize: 13.5, color: '#111', marginBottom: 8 }}>Beneficios por nivel</div>
+            <div style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)', marginBottom: 8 }}>Beneficios por nivel</div>
             {BENEFICIOS.map(b => {
               const unlocked = (vol.karma_puntos || 0) >= b.pts;
               return (
                 <div key={b.nivel} style={{ display: 'flex', gap: 10, padding: '8px 10px', marginBottom: 4, borderRadius: 8, background: unlocked ? '#f0fdf4' : '#f9fafb', opacity: unlocked ? 1 : 0.5 }}>
                   <span style={{ fontSize: 18 }}>{b.emoji}</span>
                   <div>
-                    <div style={{ fontSize: 12.5, fontWeight: 600, color: unlocked ? '#15803d' : '#6b7280' }}>{b.nivel} ({b.pts}+ pts)</div>
-                    <div style={{ fontSize: 12, color: '#6b7280' }}>{b.beneficio}</div>
+                    <div style={{ fontSize: 12.5, fontWeight: 600, color: unlocked ? '#15803d' : 'var(--text-muted)' }}>{b.nivel} ({b.pts}+ pts)</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{b.beneficio}</div>
                   </div>
                   {unlocked && <span style={{ marginLeft: 'auto', color: '#16a34a', fontSize: 16 }}>✓</span>}
                 </div>

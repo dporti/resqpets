@@ -99,10 +99,10 @@ export function SosPetTab({ period }: { period: Period }) {
                 return (
                   <div key={z.zona} style={{ marginBottom: 12 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 13 }}>
-                      <span style={{ color: '#374151' }}>#{i+1} {z.zona}</span>
-                      <span style={{ fontWeight: 700, color: '#111827' }}>{z.total}</span>
+                      <span style={{ color: 'var(--text-secondary)' }}>#{i+1} {z.zona}</span>
+                      <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{z.total}</span>
                     </div>
-                    <div style={{ height: 8, background: '#f3f4f6', borderRadius: 4, overflow: 'hidden' }}>
+                    <div style={{ height: 8, background: 'var(--bg-subtle-2)', borderRadius: 4, overflow: 'hidden' }}>
                       <div style={{ width: `${pct}%`, height: '100%', background: C.red, borderRadius: 4, transition: 'width .5s' }} />
                     </div>
                   </div>
@@ -132,7 +132,7 @@ export function SosPetTab({ period }: { period: Period }) {
                     <tr key={s.id}>
                       <td style={tdStyle}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <div style={{ width: 32, height: 32, borderRadius: 6, background: '#f3f4f6', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <div style={{ width: 32, height: 32, borderRadius: 6, background: 'var(--bg-subtle-2)', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {s.fotos?.[0] ? <img src={s.fotos[0]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span>🐾</span>}
                           </div>
                           <span style={{ fontWeight: 600, fontSize: 12 }}>{s.nombre_animal || s.especie || '—'}</span>

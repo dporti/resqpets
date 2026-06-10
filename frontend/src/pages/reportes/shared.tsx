@@ -59,11 +59,11 @@ export function KPICard({ label, value, prev, unit, sparkData, color = C.green, 
 
   return (
     <div style={{
-      background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '18px 20px',
+      background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '18px 20px',
       display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0,
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <p style={{ margin: 0, fontSize: 12, color: '#9ca3af', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '.4px' }}>
+        <p style={{ margin: 0, fontSize: 12, color: 'var(--text-faint)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '.4px' }}>
           {icon && <span style={{ marginRight: 4 }}>{icon}</span>}{label}
         </p>
         {trend !== null && (
@@ -76,9 +76,9 @@ export function KPICard({ label, value, prev, unit, sparkData, color = C.green, 
           </span>
         )}
       </div>
-      <p style={{ margin: 0, fontSize: 28, fontWeight: 800, color: '#111827' }}>
+      <p style={{ margin: 0, fontSize: 28, fontWeight: 800, color: 'var(--text-primary)' }}>
         {typeof value === 'number' ? value.toLocaleString('es-ES') : value}
-        {unit && <span style={{ fontSize: 14, fontWeight: 400, color: '#6b7280', marginLeft: 4 }}>{unit}</span>}
+        {unit && <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--text-muted)', marginLeft: 4 }}>{unit}</span>}
       </p>
       {sparkData && sparkData.length > 1 && (
         <div style={{ height: 32, marginTop: 4 }}>
@@ -98,7 +98,7 @@ export function ChartEmpty({ text = 'Sin datos para este período' }: { text?: s
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', height: 200, color: '#9ca3af', gap: 8,
+      justifyContent: 'center', height: 200, color: 'var(--text-faint)', gap: 8,
     }}>
       <span style={{ fontSize: 40 }}>📊</span>
       <p style={{ margin: 0, fontSize: 14 }}>{text}</p>
@@ -110,10 +110,10 @@ export function ChartEmpty({ text = 'Sin datos para este período' }: { text?: s
 export function ChartCard({ title, children, minHeight = 260 }: { title: string; children: React.ReactNode; minHeight?: number }) {
   return (
     <div style={{
-      background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14,
+      background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14,
       padding: '20px 24px', minHeight,
     }}>
-      <h3 style={{ margin: '0 0 20px', fontSize: 15, fontWeight: 700, color: '#374151' }}>{title}</h3>
+      <h3 style={{ margin: '0 0 20px', fontSize: 15, fontWeight: 700, color: 'var(--text-secondary)' }}>{title}</h3>
       {children}
     </div>
   );
@@ -160,7 +160,7 @@ export function ActivityHeatmap({ data }: { data: HeatmapDay[] }) {
       <div style={{ display: 'flex', gap: 4, alignItems: 'flex-start' }}>
         {/* Day labels */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2, paddingTop: 20 }}>
-          {DAYS.map(d => <span key={d} style={{ fontSize: 9, color: '#9ca3af', height: 12, lineHeight: '12px' }}>{d}</span>)}
+          {DAYS.map(d => <span key={d} style={{ fontSize: 9, color: 'var(--text-faint)', height: 12, lineHeight: '12px' }}>{d}</span>)}
         </div>
         {/* Grid */}
         <div style={{ overflowX: 'auto', flex: 1 }}>
@@ -170,7 +170,7 @@ export function ActivityHeatmap({ data }: { data: HeatmapDay[] }) {
               {weeks.map((week, wi) => {
                 const firstDayOfMonth = week[0].getDate() <= 7;
                 return (
-                  <div key={wi} style={{ width: 12, fontSize: 9, color: '#9ca3af', overflow: 'visible', whiteSpace: 'nowrap' }}>
+                  <div key={wi} style={{ width: 12, fontSize: 9, color: 'var(--text-faint)', overflow: 'visible', whiteSpace: 'nowrap' }}>
                     {firstDayOfMonth ? MONTHS[week[0].getMonth()] : ''}
                   </div>
                 );
@@ -200,11 +200,11 @@ export function ActivityHeatmap({ data }: { data: HeatmapDay[] }) {
         </div>
       </div>
       <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginTop: 8, justifyContent: 'flex-end' }}>
-        <span style={{ fontSize: 11, color: '#9ca3af' }}>Menos</span>
+        <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>Menos</span>
         {['#f3f4f6','#bbf7d0','#4ade80','#16a34a','#064e3b'].map(c => (
           <div key={c} style={{ width: 12, height: 12, borderRadius: 2, background: c }} />
         ))}
-        <span style={{ fontSize: 11, color: '#9ca3af' }}>Más</span>
+        <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>Más</span>
       </div>
     </div>
   );
@@ -215,7 +215,7 @@ export function Skeleton({ height = 200, width = '100%' }: { height?: number; wi
   return (
     <div style={{
       height, width,
-      background: 'linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%)',
+      background: 'linear-gradient(90deg,var(--bg-subtle-2) 25%,var(--bg-subtle-2) 50%,var(--bg-subtle-2) 75%)',
       backgroundSize: '200% 100%',
       animation: 'shimmer 1.4s infinite',
       borderRadius: 8,
@@ -229,11 +229,11 @@ export const tbStyle: React.CSSProperties = {
 };
 export const thStyle: React.CSSProperties = {
   padding: '10px 12px', textAlign: 'left', fontWeight: 600,
-  color: '#6b7280', borderBottom: '1px solid #e5e7eb',
-  background: '#f9fafb', fontSize: 12, whiteSpace: 'nowrap',
+  color: 'var(--text-muted)', borderBottom: '1px solid var(--border)',
+  background: 'var(--bg-subtle)', fontSize: 12, whiteSpace: 'nowrap',
 };
 export const tdStyle: React.CSSProperties = {
-  padding: '10px 12px', borderBottom: '1px solid #f3f4f6', color: '#374151',
+  padding: '10px 12px', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-secondary)',
 };
 
 // ── FUNNEL ────────────────────────────────────────────────────────────
@@ -248,13 +248,13 @@ export function FunnelChart({ data }: { data: { name: string; value: number }[] 
         return (
           <div key={d.name}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3, fontSize: 13 }}>
-              <span style={{ color: '#374151' }}>{d.name}</span>
-              <span style={{ fontWeight: 700, color: '#111827' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>{d.name}</span>
+              <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
                 {d.value.toLocaleString('es-ES')}
-                {conv !== null && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>({conv}%)</span>}
+                {conv !== null && <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 6 }}>({conv}%)</span>}
               </span>
             </div>
-            <div style={{ height: 28, background: '#f3f4f6', borderRadius: 6, overflow: 'hidden' }}>
+            <div style={{ height: 28, background: 'var(--bg-subtle-2)', borderRadius: 6, overflow: 'hidden' }}>
               <div style={{
                 width: `${pct}%`, height: '100%',
                 background: `hsl(${140 - i * 18}, 70%, ${45 + i * 3}%)`,
@@ -274,10 +274,10 @@ export function CustomTooltip({ active, payload, label }: { active?: boolean; pa
   if (!active || !payload?.length) return null;
   return (
     <div style={{
-      background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10,
+      background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10,
       padding: '10px 14px', boxShadow: '0 4px 12px rgba(0,0,0,.1)',
     }}>
-      <p style={{ margin: '0 0 6px', fontWeight: 600, color: '#111827', fontSize: 13 }}>{label}</p>
+      <p style={{ margin: '0 0 6px', fontWeight: 600, color: 'var(--text-primary)', fontSize: 13 }}>{label}</p>
       {payload.map(p => (
         <p key={p.name} style={{ margin: '0 0 2px', fontSize: 12, color: p.color }}>
           {p.name}: <strong>{p.value}</strong>

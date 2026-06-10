@@ -84,7 +84,7 @@ export function FinanzasTab({ period }: { period: Period }) {
                 <div key={c.category} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontSize: 13 }}>
                   <span style={{ width: 10, height: 10, borderRadius: '50%', background: PIE_COLORS[i % PIE_COLORS.length], flexShrink: 0 }} />
                   <span style={{ flex: 1, color: '#4b5563' }}>{CATEGORY_LABEL[c.category] || c.category}</span>
-                  <span style={{ fontWeight: 700, color: '#111827' }}>{fmt(c.total)}</span>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{fmt(c.total)}</span>
                 </div>
               ))}
             </div>
@@ -112,7 +112,7 @@ export function FinanzasTab({ period }: { period: Period }) {
                       <td style={tdStyle}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <div style={{
-                            width: 36, height: 36, borderRadius: 8, background: '#f3f4f6',
+                            width: 36, height: 36, borderRadius: 8, background: 'var(--bg-subtle-2)',
                             overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
                           }}>
                             {a.foto

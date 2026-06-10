@@ -16,7 +16,7 @@ export const CAT_CFG: Record<TaskCategoria, { icon: string; label: string; color
   difusion:        { icon: '📸', label: 'Difusión',       color: '#9333ea', bg: '#f3e8ff' },
   transporte:      { icon: '🚗', label: 'Transporte',     color: '#f97316', bg: '#ffedd5' },
   adopcion:        { icon: '🎯', label: 'Adopción',       color: '#ec4899', bg: '#fce7f3' },
-  mantenimiento:   { icon: '🔧', label: 'Mantenimiento',  color: '#6b7280', bg: '#f3f4f6' },
+  mantenimiento:   { icon: '🔧', label: 'Mantenimiento',  color: 'var(--text-muted)', bg: '#f3f4f6' },
 };
 
 export const PRIO_CFG: Record<TaskPriority, { label: string; color: string; bg: string; pts: number }> = {
@@ -25,8 +25,8 @@ export const PRIO_CFG: Record<TaskPriority, { label: string; color: string; bg: 
   baja:  { label: 'Baja',  color: '#16a34a', bg: '#dcfce7', pts: 2 },
 };
 
-const inp: React.CSSProperties = { width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', boxSizing: 'border-box' };
-const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 3, display: 'block' };
+const inp: React.CSSProperties = { width: '100%', padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13.5, fontFamily: "'Inter', sans-serif", outline: 'none', boxSizing: 'border-box' };
+const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 3, display: 'block' };
 
 export default function TareaForm({ tarea, onClose, onSaved }: Props) {
   const [form, setForm] = useState({
@@ -69,10 +69,10 @@ export default function TareaForm({ tarea, onClose, onSaved }: Props) {
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 60 }} />
-      <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: '#fff', borderRadius: 14, width: 560, maxHeight: '92vh', overflowY: 'auto', zIndex: 70, fontFamily: "'Inter', sans-serif" }}>
-        <div style={{ padding: '18px 22px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--bg-surface)', borderRadius: 14, width: 560, maxHeight: '92vh', overflowY: 'auto', zIndex: 70, fontFamily: "'Inter', sans-serif" }}>
+        <div style={{ padding: '18px 22px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between' }}>
           <span style={{ fontWeight: 700, fontSize: 15 }}>{tarea ? 'Editar tarea' : 'Nueva tarea'}</span>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#9ca3af' }}>×</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-faint)' }}>×</button>
         </div>
 
         <form onSubmit={handleSubmit} style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -86,9 +86,9 @@ export default function TareaForm({ tarea, onClose, onSaved }: Props) {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {(Object.entries(CAT_CFG) as [TaskCategoria, typeof CAT_CFG[TaskCategoria]][]).map(([k, v]) => (
                 <button key={k} type="button" onClick={() => setForm(f => ({ ...f, categoria: k }))} style={{
-                  padding: '5px 11px', borderRadius: 20, border: `2px solid ${form.categoria === k ? v.color : '#e5e7eb'}`,
-                  background: form.categoria === k ? v.bg : '#fff',
-                  color: form.categoria === k ? v.color : '#6b7280',
+                  padding: '5px 11px', borderRadius: 20, border: `2px solid ${form.categoria === k ? v.color : 'var(--border)'}`,
+                  background: form.categoria === k ? v.bg : 'var(--bg-surface)',
+                  color: form.categoria === k ? v.color : 'var(--text-muted)',
                   fontSize: 12.5, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                   fontWeight: form.categoria === k ? 700 : 400,
                 }}>{v.icon} {v.label}</button>
@@ -101,8 +101,8 @@ export default function TareaForm({ tarea, onClose, onSaved }: Props) {
             <div style={{ display: 'flex', gap: 8 }}>
               {(Object.entries(PRIO_CFG) as [TaskPriority, typeof PRIO_CFG[TaskPriority]][]).map(([k, v]) => (
                 <button key={k} type="button" onClick={() => setForm(f => ({ ...f, prioridad: k }))} style={{
-                  flex: 1, padding: '7px 0', borderRadius: 8, border: `2px solid ${form.prioridad === k ? v.color : '#e5e7eb'}`,
-                  background: form.prioridad === k ? v.bg : '#fff', color: form.prioridad === k ? v.color : '#6b7280',
+                  flex: 1, padding: '7px 0', borderRadius: 8, border: `2px solid ${form.prioridad === k ? v.color : 'var(--border)'}`,
+                  background: form.prioridad === k ? v.bg : 'var(--bg-surface)', color: form.prioridad === k ? v.color : '#6b7280',
                   fontSize: 13, cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: form.prioridad === k ? 700 : 400,
                 }}>{v.label}</button>
               ))}
@@ -131,13 +131,13 @@ export default function TareaForm({ tarea, onClose, onSaved }: Props) {
                 return (
                   <button key={v.id} type="button" onClick={() => toggleAsignado(v.id)} style={{
                     display: 'flex', alignItems: 'center', gap: 7, padding: '5px 10px',
-                    borderRadius: 20, border: `2px solid ${sel ? '#16a34a' : '#e5e7eb'}`,
-                    background: sel ? '#f0fdf4' : '#fff', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
+                    borderRadius: 20, border: `2px solid ${sel ? '#16a34a' : 'var(--border)'}`,
+                    background: sel ? '#f0fdf4' : 'var(--bg-surface)', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                   }}>
                     <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#1d4ed8' }}>
                       {v.nombre.charAt(0)}
                     </div>
-                    <span style={{ fontSize: 12.5, color: sel ? '#16a34a' : '#374151', fontWeight: sel ? 600 : 400 }}>{v.nombre}</span>
+                    <span style={{ fontSize: 12.5, color: sel ? '#16a34a' : 'var(--text-secondary)', fontWeight: sel ? 600 : 400 }}>{v.nombre}</span>
                   </button>
                 );
               })}
@@ -149,7 +149,7 @@ export default function TareaForm({ tarea, onClose, onSaved }: Props) {
             <textarea rows={3} style={{ ...inp, resize: 'vertical' }} value={form.descripcion} onChange={e => setForm(f => ({ ...f, descripcion: e.target.value }))} placeholder="Detalles adicionales..." />
           </div>
 
-          <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13.5, cursor: 'pointer', padding: '8px 10px', background: '#f9fafb', borderRadius: 8 }}>
+          <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13.5, cursor: 'pointer', padding: '8px 10px', background: 'var(--bg-subtle)', borderRadius: 8 }}>
             <input type="checkbox" checked={form.es_recurrente} onChange={e => setForm(f => ({ ...f, es_recurrente: e.target.checked }))} style={{ accentColor: '#16a34a', width: 16, height: 16 }} />
             <span style={{ fontWeight: 500 }}>🔄 Tarea recurrente</span>
           </label>
@@ -168,9 +168,9 @@ export default function TareaForm({ tarea, onClose, onSaved }: Props) {
           )}
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-            <button type="button" onClick={onClose} style={{ padding: '8px 16px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+            <button type="button" onClick={onClose} style={{ padding: '8px 16px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-surface)', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
             <button type="submit" disabled={saving || !form.titulo.trim()} style={{
-              padding: '8px 22px', background: form.titulo.trim() ? '#16a34a' : '#e5e7eb',
+              padding: '8px 22px', background: form.titulo.trim() ? '#16a34a' : 'var(--bg-subtle-2)',
               color: form.titulo.trim() ? '#fff' : '#9ca3af', border: 'none', borderRadius: 7,
               fontWeight: 600, cursor: form.titulo.trim() ? 'pointer' : 'not-allowed',
               fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 8,

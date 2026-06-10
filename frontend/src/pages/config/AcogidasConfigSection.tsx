@@ -14,10 +14,10 @@ export function AcogidasConfigSection({ config, onSave }: Props) {
   return (
     <div>
       <SectionCard title="Proceso de acogida">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f3f4f6', marginBottom: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-subtle)', marginBottom: 16 }}>
           <div>
             <p style={{ margin: 0, fontWeight: 600, fontSize: 13 }}>Requiere visita previa a la familia</p>
-            <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>Un coordinador visita el hogar antes de asignar un animal</p>
+            <p style={{ margin: 0, fontSize: 11, color: 'var(--text-faint)' }}>Un coordinador visita el hogar antes de asignar un animal</p>
           </div>
           <Toggle checked={familyVisit} onChange={setFamilyVisit} />
         </div>
@@ -26,7 +26,7 @@ export function AcogidasConfigSection({ config, onSave }: Props) {
             <input type="number" min={1} max={730} style={inp} value={maxDays} onChange={e => setMaxDays(Number(e.target.value))} />
           </Field>
           <Field label="Frecuencia de contacto de seguimiento">
-            <select style={{ ...inp, background: '#fff' }} value={freq} onChange={e => setFreq(e.target.value)}>
+            <select style={{ ...inp, background: 'var(--bg-surface)' }} value={freq} onChange={e => setFreq(e.target.value)}>
               <option value="weekly">Semanal</option>
               <option value="biweekly">Quincenal</option>
               <option value="monthly">Mensual</option>

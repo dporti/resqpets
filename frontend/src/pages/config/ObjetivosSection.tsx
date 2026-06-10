@@ -24,15 +24,15 @@ export function ObjetivosSection({ config, onSave }: Props) {
       <SectionCard title="Objetivos mensuales" description="Estos valores se usan en el dashboard y en el módulo de Reportes para calcular el progreso">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
           {goals.map(g => (
-            <div key={g.label} style={{ background: '#f9fafb', borderRadius: 12, padding: 16 }}>
+            <div key={g.label} style={{ background: 'var(--bg-subtle)', borderRadius: 12, padding: 16 }}>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
                 <span style={{ fontSize: 20 }}>{g.icon}</span>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#374151' }}>{g.label}</p>
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>{g.label}</p>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input type="number" min={0} value={g.val} onChange={e => g.set(Number(e.target.value))}
                   style={{ ...inp, width: 90, textAlign: 'right' }} />
-                <span style={{ fontSize: 12, color: '#9ca3af' }}>{g.unit}/mes</span>
+                <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>{g.unit}/mes</span>
               </div>
             </div>
           ))}
@@ -43,7 +43,7 @@ export function ObjetivosSection({ config, onSave }: Props) {
         <Field label="Capacidad máxima (animales)">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, maxWidth: 200 }}>
             <input type="number" min={1} max={9999} style={inp} value={capacity} onChange={e => setCapacity(Number(e.target.value))} />
-            <span style={{ fontSize: 13, color: '#9ca3af', whiteSpace: 'nowrap' }}>animales</span>
+            <span style={{ fontSize: 13, color: 'var(--text-faint)', whiteSpace: 'nowrap' }}>animales</span>
           </div>
         </Field>
       </SectionCard>

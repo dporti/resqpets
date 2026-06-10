@@ -1,7 +1,7 @@
 # ResQPet — Estado del Proyecto
 
 **CRM para protectoras de animales + Portal Público + Landing Page**  
-Última actualización: junio 2026  
+Última actualización: 2026-06-11  
 Repositorio: https://github.com/dporti/resqpets
 
 ---
@@ -193,6 +193,14 @@ Sub-sidebar con 10 secciones:
 - Historial multi-turn (últimos 6 mensajes)
 - Markdown renderizado inline (tablas, negrita, listas, código)
 - Muestra error amigable si Anthropic no tiene créditos
+
+### ✅ 14b. Modo oscuro (CRM completo)
+- `theme.css`: variables CSS (`--bg-*`, `--text-*`, `--border*`, `--shadow-*`, `--color-primary*`) por `[data-theme='dark']`
+- `ThemeContext.tsx`: `useTheme()` (`dark`, `toggleDark()`), persistencia en `localStorage` (`resqpet_dark`)
+- Toggle en Sidebar (icono Sun/Moon) y en Config → Apariencia (mismo estado global)
+- Migración masiva de colores hardcodeados → variables en ~49 archivos (componentes, páginas, modales)
+- Colores semánticos (badges de estado, avatares, tipos de evento) se mantienen como literales intencionalmente
+- `SosPublicPage.tsx` excluida (renderiza fuera del `ThemeProvider`, portal público)
 
 ### ✅ 14. Sistema de Planes y Feature Gates (`/configuracion` → Plan y Facturación)
 - 4 planes: `free` (0€) · `starter` (29,95€) · `pro` (59,95€) · `enterprise` (99,95€)
@@ -521,6 +529,13 @@ Seed de prueba multi-tenant: `scripts/seed-multitenancy.js` crea un segundo refu
 |-------|-----|
 | **caveman** | Comprime output de Claude ~65%. Activa con `caveman mode` o `/caveman` |
 | **ui-ux-pro-max** | Design intelligence: 67 estilos, 96 paletas, 57 font pairings. Uso: `py .claude\skills\ui-ux-pro-max\scripts\search.py "query" --design-system` |
+
+---
+
+## Bugs corregidos recientes
+
+- **Calendario (`GET /calendario/events`) devolvía 500**: la query referenciaba `a.foto_principal`, columna inexistente en `animales` (las fotos viven en `animal_fotos`). Corregido con `LEFT JOIN animal_fotos f ON f.animal_id = a.id AND f.es_principal = true` y `f.url AS animal_foto`.
+- **z-index `SosAlertPanel`**: el mapa Leaflet (z-index ~1000) tapaba el panel. Subido 40/50/60/70 → 1040/1050/1060/1070.
 
 ---
 

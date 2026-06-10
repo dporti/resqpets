@@ -28,7 +28,7 @@ function karmaLevel(pts: number) {
   if (pts >= 1000) return { label: 'Diamante', color: '#06b6d4' };
   if (pts >= 600)  return { label: 'Platino',  color: '#8b5cf6' };
   if (pts >= 300)  return { label: 'Oro',      color: '#f59e0b' };
-  if (pts >= 100)  return { label: 'Plata',    color: '#9ca3af' };
+  if (pts >= 100)  return { label: 'Plata',    color: 'var(--text-faint)' };
   return { label: 'Bronce', color: '#92400e' };
 }
 
@@ -132,7 +132,7 @@ export function AcogidasTab({ period }: { period: Period }) {
                   const lv = karmaLevel(f.karma_puntos);
                   return (
                     <tr key={f.id}>
-                      <td style={{ ...tdStyle, fontWeight: 700, color: '#9ca3af' }}>#{i + 1}</td>
+                      <td style={{ ...tdStyle, fontWeight: 700, color: 'var(--text-faint)' }}>#{i + 1}</td>
                       <td style={{ ...tdStyle, fontWeight: 600 }}>{f.nombre}</td>
                       <td style={tdStyle}>
                         <span style={{ color: lv.color, fontWeight: 700, fontSize: 12 }}>

@@ -114,10 +114,10 @@ export default function ConfiguracionPage() {
   // Solo admin puede ver Configuración
   if (!isAdmin && !can('config:manage')) {
     return (
-      <div style={{ fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#6b7280' }}>
+      <div style={{ fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--text-muted)' }}>
         <div style={{ textAlign: 'center' }}>
           <p style={{ fontSize: 48 }}>🔒</p>
-          <h2 style={{ color: '#374151' }}>Acceso restringido</h2>
+          <h2 style={{ color: 'var(--text-secondary)' }}>Acceso restringido</h2>
           <p>Solo los administradores pueden acceder a la configuración.</p>
         </div>
       </div>
@@ -125,14 +125,14 @@ export default function ConfiguracionPage() {
   }
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", display: 'flex', height: '100vh', overflow: 'hidden', background: '#f9fafb' }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--bg-subtle)' }}>
 
       {/* Sub-sidebar */}
       <div style={{
-        width: 220, flexShrink: 0, background: '#fff', borderRight: '1px solid #e5e7eb',
+        width: 220, flexShrink: 0, background: 'var(--bg-surface)', borderRight: '1px solid var(--border)',
         overflowY: 'auto', padding: '16px 8px',
       }} className="config-sidebar">
-        <p style={{ margin: '0 8px 12px', fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.5px' }}>
+        <p style={{ margin: '0 8px 12px', fontSize: 11, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
           Configuración
         </p>
         {SECTIONS.map(s => (
@@ -140,7 +140,7 @@ export default function ConfiguracionPage() {
             display: 'flex', alignItems: 'center', gap: 9, width: '100%',
             padding: '9px 10px', borderRadius: 8, border: 'none', cursor: 'pointer',
             background: section === s.id ? '#f0fdf4' : 'transparent',
-            color: section === s.id ? '#16a34a' : '#374151',
+            color: section === s.id ? '#16a34a' : 'var(--text-secondary)',
             fontWeight: section === s.id ? 700 : 400, fontSize: 13,
             fontFamily: "'Inter', sans-serif", marginBottom: 2, textAlign: 'left',
             transition: 'background .1s',
@@ -156,12 +156,12 @@ export default function ConfiguracionPage() {
         {/* Top bar */}
         <div style={{
           height: 60, padding: '0 28px', display: 'flex', alignItems: 'center',
-          justifyContent: 'space-between', background: '#fff', borderBottom: '1px solid #e5e7eb',
+          justifyContent: 'space-between', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)',
           position: 'sticky', top: 0, zIndex: 10,
         }}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <span style={{ fontSize: 18 }}>{activeSection?.icon}</span>
-            <span style={{ fontWeight: 700, fontSize: 16, color: '#111827' }}>{activeSection?.label}</span>
+            <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)' }}>{activeSection?.label}</span>
           </div>
           {saved && (
             <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 600, background: '#f0fdf4', padding: '4px 12px', borderRadius: 20 }}>

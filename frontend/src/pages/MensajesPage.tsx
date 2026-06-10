@@ -64,7 +64,7 @@ function Avatar({ name, url, size = 36 }: { name?: string; url?: string; size?: 
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%', flexShrink: 0,
-      background: url ? '#f3f4f6' : color,
+      background: url ? 'var(--bg-subtle-2)' : color,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: size * 0.38, fontWeight: 700, color: '#fff',
       overflow: 'hidden',
@@ -128,12 +128,12 @@ function NewConvModal({ onClose, onCreated, users }: {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
     }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div style={{
-        background: '#fff', borderRadius: 16, width: '100%', maxWidth: 460,
+        background: 'var(--bg-surface)', borderRadius: 16, width: '100%', maxWidth: 460,
         boxShadow: '0 20px 50px rgba(0,0,0,.25)',
       }}>
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>Nueva conversación</h3>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: '#9ca3af' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-faint)' }}>✕</button>
         </div>
 
         <div style={{ padding: '20px 24px' }}>
@@ -147,12 +147,12 @@ function NewConvModal({ onClose, onCreated, users }: {
               ] as const).map(o => (
                 <button key={o.v} onClick={() => setType(o.v)} style={{
                   padding: '12px 16px', borderRadius: 10, border: '2px solid',
-                  borderColor: type === o.v ? '#16a34a' : '#e5e7eb',
-                  background: type === o.v ? '#f0fdf4' : '#fff',
+                  borderColor: type === o.v ? '#16a34a' : 'var(--border)',
+                  background: type === o.v ? '#f0fdf4' : 'var(--bg-surface)',
                   cursor: 'pointer', textAlign: 'left',
                 }}>
-                  <p style={{ margin: 0, fontWeight: 600, fontSize: 14, color: type === o.v ? '#16a34a' : '#111827' }}>{o.label}</p>
-                  <p style={{ margin: 0, fontSize: 12, color: '#6b7280' }}>{o.desc}</p>
+                  <p style={{ margin: 0, fontWeight: 600, fontSize: 14, color: type === o.v ? '#16a34a' : 'var(--text-primary)' }}>{o.label}</p>
+                  <p style={{ margin: 0, fontSize: 12, color: 'var(--text-muted)' }}>{o.desc}</p>
                 </button>
               ))}
             </div>
@@ -163,12 +163,12 @@ function NewConvModal({ onClose, onCreated, users }: {
               {type === 'group' && (
                 <input value={groupName} onChange={e => setGroupName(e.target.value)}
                   placeholder="Nombre del grupo..."
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 14, marginBottom: 12, boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 14, marginBottom: 12, boxSizing: 'border-box' }}
                 />
               )}
               <input value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Buscar usuarios..."
-                style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 14, marginBottom: 10, boxSizing: 'border-box' }}
+                style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 14, marginBottom: 10, boxSizing: 'border-box' }}
               />
               <div style={{ maxHeight: 220, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 {filteredUsers.map(u => {
@@ -178,13 +178,13 @@ function NewConvModal({ onClose, onCreated, users }: {
                       type === 'internal' ? [u.id] : sel ? prev.filter(id => id !== u.id) : [...prev, u.id],
                     )} style={{
                       display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px',
-                      border: '1.5px solid', borderColor: sel ? '#16a34a' : '#e5e7eb',
+                      border: '1.5px solid', borderColor: sel ? '#16a34a' : 'var(--border)',
                       background: sel ? '#f0fdf4' : '#fff', borderRadius: 8, cursor: 'pointer',
                     }}>
                       <Avatar name={u.nombre} url={u.avatar_url} size={32} />
                       <div style={{ textAlign: 'left', flex: 1 }}>
-                        <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#111827' }}>{u.nombre}</p>
-                        <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>{u.rol}</p>
+                        <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{u.nombre}</p>
+                        <p style={{ margin: 0, fontSize: 11, color: 'var(--text-faint)' }}>{u.rol}</p>
                       </div>
                       {sel && <span style={{ color: '#16a34a', fontWeight: 700 }}>✓</span>}
                     </button>
@@ -197,15 +197,15 @@ function NewConvModal({ onClose, onCreated, users }: {
           {step === 2 && (type === 'adoptant' || type === 'foster') && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Nombre *</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Nombre *</label>
                 <input value={contactName} onChange={e => setContactName(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 14, boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 14, boxSizing: 'border-box' }}
                   placeholder={type === 'adoptant' ? 'Nombre del adoptante' : 'Nombre de la familia'} />
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Email</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Email</label>
                 <input value={contactEmail} onChange={e => setContactEmail(e.target.value)} type="email"
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 14, boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 14, boxSizing: 'border-box' }}
                   placeholder="email@ejemplo.com" />
               </div>
             </div>
@@ -213,20 +213,20 @@ function NewConvModal({ onClose, onCreated, users }: {
 
           {step === 3 && (
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 6 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: 6 }}>
                 Mensaje inicial (opcional)
               </label>
               <textarea value={firstMsg} onChange={e => setFirstMsg(e.target.value)}
-                style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 14, resize: 'vertical', minHeight: 90, boxSizing: 'border-box', fontFamily: 'inherit' }}
+                style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 14, resize: 'vertical', minHeight: 90, boxSizing: 'border-box', fontFamily: 'inherit' }}
                 placeholder="Escribe el primer mensaje..." />
             </div>
           )}
         </div>
 
-        <div style={{ padding: '16px 24px', borderTop: '1px solid #f3f4f6', display: 'flex', gap: 10 }}>
-          {step > 1 && <button onClick={() => setStep(s => s - 1)} style={{ flex: 1, padding: '10px', borderRadius: 8, border: '1.5px solid #e5e7eb', background: '#fff', cursor: 'pointer', fontSize: 13 }}>← Atrás</button>}
+        <div style={{ padding: '16px 24px', borderTop: '1px solid var(--border-subtle)', display: 'flex', gap: 10 }}>
+          {step > 1 && <button onClick={() => setStep(s => s - 1)} style={{ flex: 1, padding: '10px', borderRadius: 8, border: '1.5px solid var(--border)', background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 13 }}>← Atrás</button>}
           {step < 3
-            ? <button disabled={!canNext} onClick={() => setStep(s => s + 1)} style={{ flex: 2, padding: '10px', borderRadius: 8, border: 'none', background: canNext ? '#16a34a' : '#d1d5db', color: '#fff', cursor: canNext ? 'pointer' : 'not-allowed', fontSize: 14, fontWeight: 600 }}>Siguiente →</button>
+            ? <button disabled={!canNext} onClick={() => setStep(s => s + 1)} style={{ flex: 2, padding: '10px', borderRadius: 8, border: 'none', background: canNext ? '#16a34a' : 'var(--border)', color: '#fff', cursor: canNext ? 'pointer' : 'not-allowed', fontSize: 14, fontWeight: 600 }}>Siguiente →</button>
             : <button disabled={loading} onClick={handleCreate} style={{ flex: 2, padding: '10px', borderRadius: 8, border: 'none', background: '#16a34a', color: '#fff', cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
                 {loading ? 'Creando...' : 'Crear conversación'}
               </button>
@@ -342,15 +342,15 @@ export default function MensajesPage() {
   });
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", display: 'flex', height: '100vh', background: '#fff', overflow: 'hidden' }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", display: 'flex', height: '100vh', background: 'var(--bg-surface)', overflow: 'hidden' }}>
 
       {/* ── LEFT COLUMN ── */}
       <div style={{
-        width: 300, flexShrink: 0, borderRight: '1px solid #e5e7eb',
-        display: 'flex', flexDirection: 'column', background: '#fff',
+        width: 300, flexShrink: 0, borderRight: '1px solid var(--border)',
+        display: 'flex', flexDirection: 'column', background: 'var(--bg-surface)',
       }}>
         {/* Header */}
-        <div style={{ padding: '16px 16px 0', borderBottom: '1px solid #f3f4f6' }}>
+        <div style={{ padding: '16px 16px 0', borderBottom: '1px solid var(--border-subtle)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <h2 style={{ margin: 0, fontSize: 17, fontWeight: 700 }}>
               Mensajes {totalUnread > 0 && <span style={{ background: '#16a34a', color: '#fff', fontSize: 11, padding: '1px 6px', borderRadius: 10, marginLeft: 4 }}>{totalUnread}</span>}
@@ -362,7 +362,7 @@ export default function MensajesPage() {
           </div>
           <input value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Buscar conversaciones..."
-            style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 13, marginBottom: 10, boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1.5px solid var(--border)', fontSize: 13, marginBottom: 10, boxSizing: 'border-box' }}
           />
           {/* Filter tabs */}
           <div style={{ display: 'flex', gap: 0, overflowX: 'auto' }}>
@@ -376,7 +376,7 @@ export default function MensajesPage() {
               <button key={f.id} onClick={() => setFilter(f.id)} style={{
                 padding: '8px 10px', background: 'none', border: 'none', cursor: 'pointer',
                 fontSize: 11.5, fontWeight: filter === f.id ? 700 : 400,
-                color: filter === f.id ? '#16a34a' : '#6b7280',
+                color: filter === f.id ? '#16a34a' : 'var(--text-muted)',
                 borderBottom: filter === f.id ? '2px solid #16a34a' : '2px solid transparent',
                 whiteSpace: 'nowrap',
               }}>{f.label}</button>
@@ -388,7 +388,7 @@ export default function MensajesPage() {
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {loadingConvs ? <SkeletonList rows={6} /> : errorConvs ? <ErrorState onRetry={loadConvs} /> : <>
           {filteredConvs.length === 0 && (
-            <div style={{ padding: '40px 20px', textAlign: 'center', color: '#9ca3af' }}>
+            <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-faint)' }}>
               <p style={{ fontSize: 32 }}>💬</p>
               <p style={{ fontSize: 13 }}>Sin conversaciones</p>
             </div>
@@ -401,18 +401,18 @@ export default function MensajesPage() {
             return (
               <button key={c.id} onClick={() => setActiveId(c.id)} style={{
                 width: '100%', display: 'flex', alignItems: 'flex-start', gap: 10,
-                padding: '12px 16px', background: isActive ? '#f0fdf4' : '#fff',
-                border: 'none', borderBottom: '1px solid #f3f4f6', cursor: 'pointer',
+                padding: '12px 16px', background: isActive ? '#f0fdf4' : 'var(--bg-surface)',
+                border: 'none', borderBottom: '1px solid var(--border-subtle)', cursor: 'pointer',
                 textAlign: 'left', transition: 'background .1s',
               }}>
                 <Avatar name={name} size={40} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
-                    <span style={{ fontSize: 13, fontWeight: unread > 0 ? 700 : 600, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 140 }}>{name}</span>
-                    <span style={{ fontSize: 11, color: '#9ca3af', flexShrink: 0 }}>{relativeTime(c.last_message_at)}</span>
+                    <span style={{ fontSize: 13, fontWeight: unread > 0 ? 700 : 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 140 }}>{name}</span>
+                    <span style={{ fontSize: 11, color: 'var(--text-faint)', flexShrink: 0 }}>{relativeTime(c.last_message_at)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 12, color: '#9ca3af', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 170 }}>
+                    <span style={{ fontSize: 12, color: 'var(--text-faint)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 170 }}>
                       {c.last_message || 'Sin mensajes'}
                     </span>
                     <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexShrink: 0 }}>
@@ -430,9 +430,9 @@ export default function MensajesPage() {
       </div>
 
       {/* ── RIGHT COLUMN ── */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, background: '#f9fafb' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, background: 'var(--bg-subtle)' }}>
         {!activeConv ? (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', gap: 12 }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-faint)', gap: 12 }}>
             <span style={{ fontSize: 64 }}>💬</span>
             <p style={{ fontSize: 16, fontWeight: 500, margin: 0 }}>Selecciona una conversación</p>
             <p style={{ fontSize: 14, margin: 0 }}>o inicia una nueva con el botón de arriba</p>
@@ -441,15 +441,15 @@ export default function MensajesPage() {
           <>
             {/* Chat header */}
             <div style={{
-              padding: '12px 20px', background: '#fff', borderBottom: '1px solid #e5e7eb',
+              padding: '12px 20px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)',
               display: 'flex', alignItems: 'center', gap: 12,
             }}>
               <Avatar name={convName(activeConv, user?.id || 0)} size={40} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: '#111827' }}>
+                <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>
                   {convName(activeConv, user?.id || 0)}
                 </p>
-                <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>
+                <p style={{ margin: 0, fontSize: 12, color: 'var(--text-faint)' }}>
                   {TYPE_BADGE[activeConv.type]?.label}
                   {activeConv.contact_email && ` — ${activeConv.contact_email}`}
                 </p>
@@ -463,13 +463,13 @@ export default function MensajesPage() {
 
             {/* Messages area */}
             <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 0 }}>
-              {loadingMsgs && <p style={{ color: '#9ca3af', textAlign: 'center', fontSize: 13 }}>Cargando mensajes...</p>}
+              {loadingMsgs && <p style={{ color: 'var(--text-faint)', textAlign: 'center', fontSize: 13 }}>Cargando mensajes...</p>}
               {errorMsgs && <ErrorState onRetry={() => activeId && loadMessages(activeId)} />}
               {!errorMsgs && groupedMessages.map(group => (
                 <div key={group.date}>
                   {/* Date separator */}
                   <div style={{ textAlign: 'center', margin: '12px 0' }}>
-                    <span style={{ fontSize: 11, color: '#9ca3af', background: '#f3f4f6', padding: '3px 12px', borderRadius: 20 }}>
+                    <span style={{ fontSize: 11, color: 'var(--text-faint)', background: 'var(--bg-subtle-2)', padding: '3px 12px', borderRadius: 20 }}>
                       {group.date}
                     </span>
                   </div>
@@ -489,14 +489,14 @@ export default function MensajesPage() {
                         )}
                         <div style={{ maxWidth: '68%' }}>
                           {!isMine && showAvatar && (
-                            <p style={{ margin: '0 0 2px 2px', fontSize: 11, color: '#9ca3af', fontWeight: 600 }}>{senderName}</p>
+                            <p style={{ margin: '0 0 2px 2px', fontSize: 11, color: 'var(--text-faint)', fontWeight: 600 }}>{senderName}</p>
                           )}
                           <div style={{
                             padding: m.message_type === 'text' ? '9px 13px' : '8px 10px',
                             borderRadius: isMine ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
-                            background: isMine ? '#dcfce7' : '#fff',
-                            border: isMine ? '1px solid #bbf7d0' : '1px solid #e5e7eb',
-                            fontSize: 14, color: '#111827', lineHeight: 1.5,
+                            background: isMine ? '#dcfce7' : 'var(--bg-surface)',
+                            border: isMine ? '1px solid #bbf7d0' : '1px solid var(--border)',
+                            fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.5,
                             wordBreak: 'break-word',
                           }}>
                             {m.message_type === 'file' && m.file_url ? (
@@ -509,7 +509,7 @@ export default function MensajesPage() {
                               m.content
                             )}
                           </div>
-                          <p style={{ margin: '2px 4px 8px', fontSize: 10, color: '#9ca3af', textAlign: isMine ? 'right' : 'left' }}>
+                          <p style={{ margin: '2px 4px 8px', fontSize: 10, color: 'var(--text-faint)', textAlign: isMine ? 'right' : 'left' }}>
                             {new Date(m.created_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
                             {isMine && ' ✓✓'}
                           </p>
@@ -524,18 +524,18 @@ export default function MensajesPage() {
 
             {/* Input area */}
             <div style={{
-              padding: '12px 16px', background: '#fff', borderTop: '1px solid #e5e7eb',
+              padding: '12px 16px', background: 'var(--bg-surface)', borderTop: '1px solid var(--border)',
               display: 'flex', gap: 10, alignItems: 'flex-end',
             }}>
               <button onClick={() => setShowEmoji(!showEmoji)} style={{
-                background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, padding: '0 4px', color: '#9ca3af',
+                background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, padding: '0 4px', color: 'var(--text-faint)',
                 flexShrink: 0, alignSelf: 'flex-end', marginBottom: 4,
               }}>😊</button>
               <div style={{ flex: 1, position: 'relative' }}>
                 {showEmoji && (
                   <div style={{
-                    position: 'absolute', bottom: '110%', left: 0, background: '#fff',
-                    border: '1px solid #e5e7eb', borderRadius: 12, padding: 8, display: 'flex', flexWrap: 'wrap', gap: 4,
+                    position: 'absolute', bottom: '110%', left: 0, background: 'var(--bg-surface)',
+                    border: '1px solid var(--border)', borderRadius: 12, padding: 8, display: 'flex', flexWrap: 'wrap', gap: 4,
                     boxShadow: '0 4px 16px rgba(0,0,0,.1)', zIndex: 10, width: 220,
                   }}>
                     {EMOJIS.map(e => (
@@ -551,7 +551,7 @@ export default function MensajesPage() {
                   rows={1}
                   style={{
                     width: '100%', padding: '10px 12px', borderRadius: 12,
-                    border: '1.5px solid #e5e7eb', fontSize: 14, resize: 'none',
+                    border: '1.5px solid var(--border)', fontSize: 14, resize: 'none',
                     fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box',
                     lineHeight: 1.5, minHeight: 42, maxHeight: 120, overflowY: 'auto',
                   }}
@@ -559,7 +559,7 @@ export default function MensajesPage() {
               </div>
               <button onClick={sendMessage} disabled={!msgInput.trim()} style={{
                 width: 42, height: 42, borderRadius: '50%',
-                background: msgInput.trim() ? '#16a34a' : '#e5e7eb',
+                background: msgInput.trim() ? '#16a34a' : 'var(--bg-subtle-2)',
                 border: 'none', cursor: msgInput.trim() ? 'pointer' : 'not-allowed',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 18, flexShrink: 0, transition: 'background .15s',

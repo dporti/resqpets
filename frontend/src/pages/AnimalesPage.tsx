@@ -73,7 +73,7 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
   const totalPages = Math.ceil(total / LIMIT);
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-subtle)', minHeight: '100vh' }}>
       <TopBar
         titulo="Animales"
         subtitulo={`${total} registrados`}
@@ -84,15 +84,15 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
       {/* Filters bar */}
       <div style={{ padding: '16px 24px 0', display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: '1 1 220px', maxWidth: 300 }}>
-          <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', pointerEvents: 'none' }}>🔍</span>
+          <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-faint)', pointerEvents: 'none' }}>🔍</span>
           <input
             value={searchInput}
             onChange={e => setSearchInput(e.target.value)}
             placeholder="Buscar por nombre, raza o ID..."
             style={{
-              width: '100%', padding: '8px 12px 8px 34px', border: '1px solid #e5e7eb',
-              borderRadius: 8, fontSize: 13.5, background: '#fff', outline: 'none',
-              fontFamily: "'Inter', sans-serif", color: '#111', boxSizing: 'border-box',
+              width: '100%', padding: '8px 12px 8px 34px', border: '1px solid var(--border)',
+              borderRadius: 8, fontSize: 13.5, background: 'var(--bg-surface)', outline: 'none',
+              fontFamily: "'Inter', sans-serif", color: 'var(--text-primary)', boxSizing: 'border-box',
             }}
           />
         </div>
@@ -100,9 +100,9 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
           value={especie}
           onChange={e => { setEspecie(e.target.value); setPage(1); }}
           style={{
-            padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8,
-            fontSize: 13.5, background: '#fff', cursor: 'pointer', outline: 'none',
-            fontFamily: "'Inter', sans-serif", color: '#374151',
+            padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8,
+            fontSize: 13.5, background: 'var(--bg-surface)', cursor: 'pointer', outline: 'none',
+            fontFamily: "'Inter', sans-serif", color: 'var(--text-secondary)',
           }}
         >
           <option value="">Todas las especies</option>
@@ -119,11 +119,11 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
           return (
             <button key={e.val} onClick={() => handleEstado(e.val)} style={{
               padding: '7px 14px', borderRadius: 20, border: '1px solid',
-              borderColor: active ? '#16a34a' : '#e5e7eb',
+              borderColor: active ? '#16a34a' : 'var(--border)',
               fontSize: 12.5, fontWeight: active ? 600 : 400, cursor: 'pointer',
               fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap',
-              background: active ? '#16a34a' : '#fff',
-              color: active ? '#fff' : '#6b7280',
+              background: active ? '#16a34a' : 'var(--bg-surface)',
+              color: active ? '#fff' : 'var(--text-muted)',
               transition: 'all 0.15s',
             }}>{e.label}</button>
           );
@@ -139,14 +139,14 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
         ) : animales.length === 0 ? (
           <EmptyState icon="🐾" title="No hay animales con estos filtros" subtitle="Prueba otros filtros o registra un nuevo animal" />
         ) : (
-          <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--bg-surface)', borderRadius: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ background: '#f9fafb' }}>
+                <tr style={{ background: 'var(--bg-subtle)' }}>
                   {['Animal', 'Estado', 'Especie / Raza', 'Ubicación', 'Salud', 'Actualizado', ''].map((h, i) => (
                     <th key={i} style={{
                       padding: '10px 16px', textAlign: 'left', fontSize: 12,
-                      color: '#6b7280', fontWeight: 600, borderBottom: '1px solid #f3f4f6',
+                      color: 'var(--text-muted)', fontWeight: 600, borderBottom: '1px solid var(--border-subtle)',
                       whiteSpace: 'nowrap',
                     }}>{h}</th>
                   ))}
@@ -159,24 +159,24 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
                     <tr key={a.id}
                       onClick={() => onVerAnimal(a)}
                       style={{ borderBottom: '1px solid #f9fafb', cursor: 'pointer' }}
-                      onMouseEnter={e => (e.currentTarget.style.background = '#f0fdf4')}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
                       onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                     >
                       <td style={{ padding: '12px 16px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <AnimalAvatar especie={a.especie} id={a.id} size={38} />
                           <div>
-                            <div style={{ fontWeight: 600, fontSize: 13.5, color: '#111' }}>{a.nombre}</div>
-                            <div style={{ fontSize: 11.5, color: '#9ca3af' }}>{raw.id_interno || '—'}</div>
+                            <div style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--text-primary)' }}>{a.nombre}</div>
+                            <div style={{ fontSize: 11.5, color: 'var(--text-faint)' }}>{raw.id_interno || '—'}</div>
                           </div>
                         </div>
                       </td>
                       <td style={{ padding: '12px 16px' }}><Badge estado={a.estado} /></td>
                       <td style={{ padding: '12px 16px' }}>
-                        <div style={{ fontSize: 13, color: '#374151', textTransform: 'capitalize' }}>{a.especie}</div>
-                        <div style={{ fontSize: 12, color: '#9ca3af' }}>{a.raza || '—'}</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-secondary)', textTransform: 'capitalize' }}>{a.especie}</div>
+                        <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>{a.raza || '—'}</div>
                       </td>
-                      <td style={{ padding: '12px 16px', fontSize: 13, color: '#374151' }}>
+                      <td style={{ padding: '12px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>
                         {(a as Animal & { ubicacion_texto?: string }).ubicacion_texto || '—'}
                       </td>
                       <td style={{ padding: '12px 16px' }}>
@@ -184,10 +184,10 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
                           {a.vacunado && <span style={{ background: '#dcfce7', color: '#16a34a', padding: '2px 6px', borderRadius: 4, fontSize: 11, fontWeight: 500 }}>Vac</span>}
                           {a.esterilizado && <span style={{ background: '#dbeafe', color: '#2563eb', padding: '2px 6px', borderRadius: 4, fontSize: 11, fontWeight: 500 }}>Est</span>}
                           {a.microchip && <span style={{ background: '#f3e8ff', color: '#9333ea', padding: '2px 6px', borderRadius: 4, fontSize: 11, fontWeight: 500 }}>Chip</span>}
-                          {!a.vacunado && !a.esterilizado && !a.microchip && <span style={{ color: '#d1d5db', fontSize: 12 }}>—</span>}
+                          {!a.vacunado && !a.esterilizado && !a.microchip && <span style={{ color: 'var(--text-faint)', fontSize: 12 }}>—</span>}
                         </div>
                       </td>
-                      <td style={{ padding: '12px 16px', fontSize: 12.5, color: '#9ca3af', whiteSpace: 'nowrap' }}>
+                      <td style={{ padding: '12px 16px', fontSize: 12.5, color: 'var(--text-faint)', whiteSpace: 'nowrap' }}>
                         {formatDateTime(raw.updated_at)}
                       </td>
                       <td style={{ padding: '12px 16px' }}>
@@ -195,8 +195,8 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
                           <button
                             onClick={e => handleEditar(a, e)}
                             style={{
-                              background: '#fff', border: '1px solid #e5e7eb', borderRadius: 6,
-                              padding: '5px 10px', fontSize: 12, cursor: 'pointer', color: '#374151',
+                              background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 6,
+                              padding: '5px 10px', fontSize: 12, cursor: 'pointer', color: 'var(--text-secondary)',
                               fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap',
                             }}
                           >Editar</button>
@@ -211,25 +211,25 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
             {/* Pagination */}
             {totalPages > 1 && (
               <div style={{
-                padding: '12px 20px', borderTop: '1px solid #f3f4f6',
+                padding: '12px 20px', borderTop: '1px solid var(--border-subtle)',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                fontSize: 13, color: '#6b7280',
+                fontSize: 13, color: 'var(--text-muted)',
               }}>
                 <span>
                   Mostrando {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, total)} de {total}
                 </span>
                 <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                   <button onClick={() => setPage(p => p - 1)} disabled={page === 1} style={{
-                    padding: '5px 12px', border: '1px solid #e5e7eb', borderRadius: 6,
-                    background: '#fff', cursor: page === 1 ? 'not-allowed' : 'pointer',
+                    padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 6,
+                    background: 'var(--bg-surface)', cursor: page === 1 ? 'not-allowed' : 'pointer',
                     opacity: page === 1 ? 0.4 : 1, fontFamily: "'Inter', sans-serif",
                   }}>← Anterior</button>
                   <span style={{ padding: '5px 12px', background: '#f0fdf4', borderRadius: 6, color: '#16a34a', fontWeight: 600 }}>
                     {page} / {totalPages}
                   </span>
                   <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} style={{
-                    padding: '5px 12px', border: '1px solid #e5e7eb', borderRadius: 6,
-                    background: '#fff', cursor: page === totalPages ? 'not-allowed' : 'pointer',
+                    padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 6,
+                    background: 'var(--bg-surface)', cursor: page === totalPages ? 'not-allowed' : 'pointer',
                     opacity: page === totalPages ? 0.4 : 1, fontFamily: "'Inter', sans-serif",
                   }}>Siguiente →</button>
                 </div>

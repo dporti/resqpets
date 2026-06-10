@@ -87,11 +87,11 @@ export function ResumenTab() {
 
       {/* Objetivo mensual */}
       {data.goal > 0 && (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '20px 24px' }}>
+        <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
             <div>
-              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#111827' }}>Objetivo de este mes</h3>
-              <p style={{ margin: '3px 0 0', fontSize: 13, color: '#6b7280' }}>
+              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Objetivo de este mes</h3>
+              <p style={{ margin: '3px 0 0', fontSize: 13, color: 'var(--text-muted)' }}>
                 {fmt(data.this_month.total)} de {fmt(data.goal)} · {daysLeft} días restantes
               </p>
             </div>
@@ -100,7 +100,7 @@ export function ResumenTab() {
               color: p < 30 ? '#ef4444' : p < 70 ? '#f59e0b' : '#16a34a',
             }}>{p}%</span>
           </div>
-          <div style={{ height: 16, background: '#f3f4f6', borderRadius: 8, overflow: 'hidden' }}>
+          <div style={{ height: 16, background: 'var(--bg-subtle-2)', borderRadius: 8, overflow: 'hidden' }}>
             <div style={{
               width: `${p}%`, height: '100%', borderRadius: 8, transition: 'width .8s',
               background: p < 30 ? 'linear-gradient(90deg,#ef4444,#f87171)'
@@ -109,7 +109,7 @@ export function ResumenTab() {
             }} />
           </div>
           {p < 100 && (
-            <p style={{ margin: '8px 0 0', fontSize: 13, color: '#6b7280' }}>
+            <p style={{ margin: '8px 0 0', fontSize: 13, color: 'var(--text-muted)' }}>
               Faltan <strong>{fmt(data.goal - data.this_month.total)}</strong> para alcanzar el objetivo
             </p>
           )}
@@ -120,8 +120,8 @@ export function ResumenTab() {
       )}
 
       {/* Evolución 12 meses */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '20px 24px' }}>
-        <h3 style={{ margin: '0 0 20px', fontSize: 15, fontWeight: 700, color: '#374151' }}>Evolución mensual (12 meses)</h3>
+      <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 24px' }}>
+        <h3 style={{ margin: '0 0 20px', fontSize: 15, fontWeight: 700, color: 'var(--text-secondary)' }}>Evolución mensual (12 meses)</h3>
         <ResponsiveContainer width="100%" height={240}>
           <BarChart data={data.evolution} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
@@ -138,9 +138,9 @@ export function ResumenTab() {
 
       {/* Donuts */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '20px 24px' }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#374151' }}>Por canal (este año)</h3>
-          {data.by_channel.length === 0 ? <p style={{ color: '#9ca3af', fontSize: 13 }}>Sin datos</p> : (
+        <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 24px' }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)' }}>Por canal (este año)</h3>
+          {data.by_channel.length === 0 ? <p style={{ color: 'var(--text-faint)', fontSize: 13 }}>Sin datos</p> : (
             <ResponsiveContainer width="100%" height={180}>
               <PieChart>
                 <Pie data={data.by_channel} dataKey="total" nameKey="channel" cx="50%" cy="50%" innerRadius={45} outerRadius={72} paddingAngle={3}>
@@ -152,9 +152,9 @@ export function ResumenTab() {
             </ResponsiveContainer>
           )}
         </div>
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '20px 24px' }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#374151' }}>Por tipo (este año)</h3>
-          {data.by_type.length === 0 ? <p style={{ color: '#9ca3af', fontSize: 13 }}>Sin datos</p> : (
+        <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 24px' }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)' }}>Por tipo (este año)</h3>
+          {data.by_type.length === 0 ? <p style={{ color: 'var(--text-faint)', fontSize: 13 }}>Sin datos</p> : (
             <ResponsiveContainer width="100%" height={180}>
               <PieChart>
                 <Pie data={data.by_type} dataKey="total" nameKey="type" cx="50%" cy="50%" innerRadius={45} outerRadius={72} paddingAngle={3}>
@@ -170,30 +170,30 @@ export function ResumenTab() {
 
       {/* Últimas + Top donantes */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '20px 24px' }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#374151' }}>Últimas donaciones</h3>
+        <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 24px' }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)' }}>Últimas donaciones</h3>
           {data.latest.map(d => (
-            <div key={d.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
+            <div key={d.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--border-subtle)' }}>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#16a34a' }}>
                   {(d.donor_name || 'A')[0]}
                 </div>
                 <div>
-                  <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#111827' }}>{d.donor_name || 'Anónimo'}</p>
-                  <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>{relTime(d.created_at)} · {CHANNEL_LABEL[d.channel] || d.channel}</p>
+                  <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{d.donor_name || 'Anónimo'}</p>
+                  <p style={{ margin: 0, fontSize: 11, color: 'var(--text-faint)' }}>{relTime(d.created_at)} · {CHANNEL_LABEL[d.channel] || d.channel}</p>
                 </div>
               </div>
               <span style={{ fontWeight: 800, color: '#16a34a', fontSize: 15 }}>{fmt(d.amount)}</span>
             </div>
           ))}
         </div>
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '20px 24px' }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#374151' }}>Top donantes este mes</h3>
-          {data.top_donors.length === 0 ? <p style={{ color: '#9ca3af', fontSize: 13 }}>Sin donantes este mes</p> : data.top_donors.map((d, i) => (
-            <div key={d.name} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
+        <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 24px' }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)' }}>Top donantes este mes</h3>
+          {data.top_donors.length === 0 ? <p style={{ color: 'var(--text-faint)', fontSize: 13 }}>Sin donantes este mes</p> : data.top_donors.map((d, i) => (
+            <div key={d.name} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--border-subtle)' }}>
               <span style={{ fontSize: i === 0 ? 22 : 16, width: 28, textAlign: 'center' }}>{['🥇','🥈','🥉','4️⃣','5️⃣'][i]}</span>
               <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#111827' }}>{d.name || 'Anónimo'}</p>
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{d.name || 'Anónimo'}</p>
               </div>
               <span style={{ fontWeight: 800, color: '#16a34a' }}>{fmt(parseFloat(d.total))}</span>
             </div>
@@ -210,23 +210,23 @@ function KPICard({ label, value, sub, trend, color, progress }: {
 }) {
   const p = progress ? pct(progress.current, progress.goal) : null;
   return (
-    <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '18px 20px' }}>
+    <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '18px 20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-        <p style={{ margin: 0, fontSize: 12, color: '#9ca3af', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '.4px' }}>{label}</p>
+        <p style={{ margin: 0, fontSize: 12, color: 'var(--text-faint)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '.4px' }}>{label}</p>
         {trend !== null && trend !== undefined && (
           <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 12, background: trend >= 0 ? '#f0fdf4' : '#fef2f2', color: trend >= 0 ? '#16a34a' : '#ef4444' }}>
             {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}%
           </span>
         )}
       </div>
-      <p style={{ margin: '0 0 4px', fontSize: 26, fontWeight: 800, color: color || '#111827' }}>{value}</p>
-      {sub && <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>{sub}</p>}
+      <p style={{ margin: '0 0 4px', fontSize: 26, fontWeight: 800, color: color || 'var(--text-primary)' }}>{value}</p>
+      {sub && <p style={{ margin: 0, fontSize: 12, color: 'var(--text-faint)' }}>{sub}</p>}
       {p !== null && (
         <div style={{ marginTop: 8 }}>
-          <div style={{ height: 5, background: '#f3f4f6', borderRadius: 3 }}>
+          <div style={{ height: 5, background: 'var(--bg-subtle-2)', borderRadius: 3 }}>
             <div style={{ width: `${p}%`, height: '100%', background: color || '#16a34a', borderRadius: 3, transition: 'width .5s' }} />
           </div>
-          <p style={{ margin: '3px 0 0', fontSize: 10, color: '#9ca3af' }}>{p}% del objetivo</p>
+          <p style={{ margin: '3px 0 0', fontSize: 10, color: 'var(--text-faint)' }}>{p}% del objetivo</p>
         </div>
       )}
     </div>
@@ -243,4 +243,4 @@ function LoadSkel() {
     </div>
   );
 }
-const sk = { background:'linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%)', backgroundSize:'200% 100%', animation:'shimmer 1.4s infinite' };
+const sk = { background:'linear-gradient(90deg,var(--bg-subtle-2) 25%,var(--bg-subtle-2) 50%,var(--bg-subtle-2) 75%)', backgroundSize:'200% 100%', animation:'shimmer 1.4s infinite' };

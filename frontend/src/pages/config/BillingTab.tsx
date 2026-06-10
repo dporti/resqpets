@@ -75,7 +75,7 @@ const REPORT_LABEL: Record<string, string>  = { basic: 'Básico', advanced: 'Ava
 function renderCell(plan: typeof PLANS[PlanId], rowKey: string, type: 'bool' | 'limit' | 'limit_gb' | 'value') {
   if (type === 'limit' || type === 'limit_gb') {
     const raw = (plan.limits as Record<string, number>)[rowKey];
-    if (raw === undefined) return <span style={{ color: '#9ca3af' }}>—</span>;
+    if (raw === undefined) return <span style={{ color: 'var(--text-faint)' }}>—</span>;
     if (raw === -1) return <span style={{ color: '#16a34a', fontWeight: 700 }}>∞</span>;
     return <span style={{ fontWeight: 600 }}>{raw}{type === 'limit_gb' ? ' GB' : ''}</span>;
   }
@@ -83,7 +83,7 @@ function renderCell(plan: typeof PLANS[PlanId], rowKey: string, type: 'bool' | '
   if (type === 'bool') {
     return val === true
       ? <span style={{ color: '#16a34a', fontSize: 18 }}>✓</span>
-      : <span style={{ color: '#d1d5db', fontSize: 18 }}>—</span>;
+      : <span style={{ color: 'var(--text-faint)', fontSize: 18 }}>—</span>;
   }
   // value
   if (rowKey === 'support') return <span style={{ fontSize: 12 }}>{SUPPORT_LABEL[val as string] || String(val)}</span>;
@@ -108,13 +108,13 @@ function PlanChangeModal({
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
     }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div style={{
-        background: '#fff', borderRadius: 16, padding: 28, maxWidth: 480, width: '100%',
+        background: 'var(--bg-surface)', borderRadius: 16, padding: 28, maxWidth: 480, width: '100%',
         boxShadow: '0 20px 50px rgba(0,0,0,.25)',
       }}>
         <h3 style={{ margin: '0 0 6px', fontSize: 18, fontWeight: 700 }}>
           {isUpgrade ? '🚀 Confirmar upgrade' : '⬇️ Confirmar cambio de plan'}
         </h3>
-        <p style={{ margin: '0 0 20px', fontSize: 14, color: '#6b7280' }}>
+        <p style={{ margin: '0 0 20px', fontSize: 14, color: 'var(--text-muted)' }}>
           Pasas de <strong>{fromPlan.name}</strong> ({fromPlan.price === 0 ? 'Gratuito' : `${fromPlan.price.toFixed(2).replace('.', ',')}€/mes`}) a{' '}
           <strong>{toPlan.name}</strong> ({toPlan.price === 0 ? 'Gratuito' : `${toPlan.price.toFixed(2).replace('.', ',')}€/mes`})
         </p>
@@ -128,11 +128,11 @@ function PlanChangeModal({
             <p style={{ margin: '0 0 8px', fontWeight: 600, fontSize: 13, color: isUpgrade ? '#16a34a' : '#ef4444' }}>
               {isUpgrade ? '✓ Funciones que se activan:' : '⚠️ Funciones que perderás:'}
             </p>
-            <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: '#374151' }}>
+            <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: 'var(--text-secondary)' }}>
               {diff.slice(0, 8).map(f => (
                 <li key={f} style={{ marginBottom: 2 }}>{FEATURE_LABELS[f as keyof typeof FEATURE_LABELS] || f}</li>
               ))}
-              {diff.length > 8 && <li style={{ color: '#9ca3af' }}>...y {diff.length - 8} más</li>}
+              {diff.length > 8 && <li style={{ color: 'var(--text-faint)' }}>...y {diff.length - 8} más</li>}
             </ul>
           </div>
         )}
@@ -145,13 +145,13 @@ function PlanChangeModal({
           </div>
         )}
 
-        <p style={{ margin: '0 0 20px', fontSize: 11, color: '#9ca3af', fontStyle: 'italic' }}>
+        <p style={{ margin: '0 0 20px', fontSize: 11, color: 'var(--text-faint)', fontStyle: 'italic' }}>
           TODO: Integrar Stripe Checkout para pago real. Por ahora el cambio es inmediato (modo demo).
         </p>
 
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={onClose} style={{
-            flex: 1, padding: '11px', background: '#f3f4f6', border: 'none',
+            flex: 1, padding: '11px', background: 'var(--bg-subtle-2)', border: 'none',
             borderRadius: 8, cursor: 'pointer', fontSize: 13,
           }}>Cancelar</button>
           <button onClick={onConfirm} disabled={saving} style={{
@@ -194,25 +194,25 @@ export function BillingTab() {
     <div>
       {/* Current plan card */}
       <div style={{
-        background: '#fff', border: `2px solid ${plan.color}40`,
+        background: 'var(--bg-surface)', border: `2px solid ${plan.color}40`,
         borderRadius: 16, padding: '24px', marginBottom: 28,
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
           <div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 4 }}>
-              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#111827' }}>Plan {plan.name}</h2>
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: 'var(--text-primary)' }}>Plan {plan.name}</h2>
               <span style={{ background: plan.color + '20', color: plan.color, padding: '3px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>
                 Activo
               </span>
             </div>
-            <p style={{ margin: 0, fontSize: 14, color: '#6b7280' }}>
+            <p style={{ margin: 0, fontSize: 14, color: 'var(--text-muted)' }}>
               {plan.price === 0 ? 'Gratuito' : `${plan.price.toFixed(2).replace('.', ',')}€/mes`}
               {planExpiresAt && ` · Renueva el ${new Date(planExpiresAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}`}
             </p>
           </div>
           <button style={{
-            padding: '9px 20px', border: '1.5px solid #e5e7eb', borderRadius: 9,
-            background: '#fff', cursor: 'pointer', fontSize: 13, fontWeight: 500, color: '#374151',
+            padding: '9px 20px', border: '1.5px solid var(--border)', borderRadius: 9,
+            background: 'var(--bg-surface)', cursor: 'pointer', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)',
           }}>
             Gestionar facturación {/* TODO: Stripe portal */}
           </button>
@@ -230,13 +230,13 @@ export function BillingTab() {
             return (
               <div key={item.label}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 5 }}>
-                  <span style={{ color: '#6b7280', fontWeight: 500 }}>{item.label}</span>
-                  <span style={{ fontWeight: 700, color: '#111827' }}>
+                  <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>{item.label}</span>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
                     {item.current}{item.unit} {(item.max as number) === -1 ? '/ ∞' : `/ ${item.max}${item.unit}`}
                     {(item.max as number) !== -1 && <span style={{ color, marginLeft: 4 }}>({pct}%)</span>}
                   </span>
                 </div>
-                <div style={{ height: 7, background: '#f3f4f6', borderRadius: 4, overflow: 'hidden' }}>
+                <div style={{ height: 7, background: 'var(--bg-subtle-2)', borderRadius: 4, overflow: 'hidden' }}>
                   <div style={{ width: `${(item.max as number) === -1 ? 5 : pct}%`, height: '100%', background: color, borderRadius: 4, transition: 'width .5s' }} />
                 </div>
               </div>
@@ -247,18 +247,18 @@ export function BillingTab() {
 
       {/* Toggle anual/mensual */}
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24, gap: 12, alignItems: 'center' }}>
-        <span style={{ fontSize: 14, color: annual ? '#9ca3af' : '#111827', fontWeight: annual ? 400 : 700 }}>Mensual</span>
+        <span style={{ fontSize: 14, color: annual ? 'var(--text-faint)' : 'var(--text-primary)', fontWeight: annual ? 400 : 700 }}>Mensual</span>
         <div onClick={() => setAnnual(!annual)} style={{
-          width: 48, height: 26, borderRadius: 13, background: annual ? '#16a34a' : '#e5e7eb',
+          width: 48, height: 26, borderRadius: 13, background: annual ? '#16a34a' : 'var(--border)',
           position: 'relative', cursor: 'pointer', transition: 'background .2s',
         }}>
           <div style={{
-            width: 20, height: 20, borderRadius: '50%', background: '#fff',
+            width: 20, height: 20, borderRadius: '50%', background: 'var(--bg-surface)',
             position: 'absolute', top: 3, left: annual ? 25 : 3, transition: 'left .2s',
             boxShadow: '0 1px 3px rgba(0,0,0,.3)',
           }} />
         </div>
-        <span style={{ fontSize: 14, color: annual ? '#111827' : '#9ca3af', fontWeight: annual ? 700 : 400 }}>
+        <span style={{ fontSize: 14, color: annual ? 'var(--text-primary)' : 'var(--text-faint)', fontWeight: annual ? 700 : 400 }}>
           Anual <span style={{ background: '#f0fdf4', color: '#16a34a', padding: '1px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>2 meses gratis</span>
         </span>
       </div>
@@ -272,9 +272,9 @@ export function BillingTab() {
           const price = annual ? +(p.price * 10).toFixed(2) : p.price;
           return (
             <div key={pid} style={{
-              border: `2px solid ${isCurrent ? p.color : '#e5e7eb'}`,
+              border: `2px solid ${isCurrent ? p.color : 'var(--border)'}`,
               borderRadius: 14, padding: '20px 16px', textAlign: 'center',
-              background: isCurrent ? p.color + '06' : '#fff',
+              background: isCurrent ? p.color + '06' : 'var(--bg-surface)',
               position: 'relative',
             }}>
               {pid === 'pro' && !isCurrent && (
@@ -292,21 +292,21 @@ export function BillingTab() {
                 }}>Tu plan actual</div>
               )}
               <p style={{ margin: '0 0 4px', fontWeight: 800, fontSize: 16, color: p.color }}>{p.name}</p>
-              <p style={{ margin: '0 0 4px', fontSize: 24, fontWeight: 900, color: '#111827' }}>
+              <p style={{ margin: '0 0 4px', fontSize: 24, fontWeight: 900, color: 'var(--text-primary)' }}>
                 {price === 0 ? 'Gratis' : `${price.toString().replace('.', ',')}€`}
               </p>
               {price > 0 && (
-                <p style={{ margin: '0 0 12px', fontSize: 11, color: '#9ca3af' }}>/{annual ? 'año' : 'mes'}</p>
+                <p style={{ margin: '0 0 12px', fontSize: 11, color: 'var(--text-faint)' }}>/{annual ? 'año' : 'mes'}</p>
               )}
-              <p style={{ margin: '0 0 16px', fontSize: 11, color: '#6b7280', lineHeight: 1.4 }}>{p.description}</p>
+              <p style={{ margin: '0 0 16px', fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.4 }}>{p.description}</p>
               <button
                 disabled={isCurrent}
                 onClick={() => !isCurrent && setModal({ to: pid })}
                 style={{
                   width: '100%', padding: '9px 0', borderRadius: 9, cursor: isCurrent ? 'not-allowed' : 'pointer',
                   fontWeight: 600, fontSize: 13,
-                  background: isCurrent ? '#e5e7eb' : isHigher ? p.color : '#fff',
-                  color: isCurrent ? '#9ca3af' : isHigher ? '#fff' : '#ef4444',
+                  background: isCurrent ? 'var(--bg-subtle-2)' : isHigher ? p.color : 'var(--bg-surface)',
+                  color: isCurrent ? 'var(--text-faint)' : isHigher ? '#fff' : '#ef4444',
                   border: (isCurrent || isHigher) ? 'none' : '1.5px solid #fecaca',
                 }}
               >
@@ -318,19 +318,19 @@ export function BillingTab() {
       </div>
 
       {/* Feature comparison table */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
             <tr>
-              <th style={{ padding: '12px 16px', textAlign: 'left', background: '#f9fafb', borderBottom: '2px solid #e5e7eb', width: '32%', fontWeight: 700, color: '#374151' }}>
+              <th style={{ padding: '12px 16px', textAlign: 'left', background: 'var(--bg-subtle)', borderBottom: '2px solid var(--border)', width: '32%', fontWeight: 700, color: 'var(--text-secondary)' }}>
                 Característica
               </th>
               {PLAN_ORDER.map(pid => (
                 <th key={pid} style={{
                   padding: '12px 8px', textAlign: 'center', fontWeight: 700,
-                  background: pid === planId ? PLANS[pid].color + '10' : '#f9fafb',
-                  borderBottom: `2px solid ${pid === planId ? PLANS[pid].color : '#e5e7eb'}`,
-                  color: pid === planId ? PLANS[pid].color : '#374151',
+                  background: pid === planId ? PLANS[pid].color + '10' : 'var(--bg-subtle)',
+                  borderBottom: `2px solid ${pid === planId ? PLANS[pid].color : 'var(--border)'}`,
+                  color: pid === planId ? PLANS[pid].color : 'var(--text-secondary)',
                   fontSize: 13,
                 }}>
                   {PLANS[pid].name}
@@ -343,8 +343,8 @@ export function BillingTab() {
               <>
                 <tr key={group.label}>
                   <td colSpan={5} style={{
-                    padding: '8px 16px', background: '#f3f4f6',
-                    fontWeight: 700, fontSize: 11, color: '#6b7280',
+                    padding: '8px 16px', background: 'var(--bg-subtle-2)',
+                    fontWeight: 700, fontSize: 11, color: 'var(--text-muted)',
                     textTransform: 'uppercase', letterSpacing: '.5px',
                   }}>
                     {group.label}
@@ -352,13 +352,13 @@ export function BillingTab() {
                 </tr>
                 {group.rows.map(row => (
                   <tr key={row.key}>
-                    <td style={{ padding: '10px 16px', borderBottom: '1px solid #f3f4f6', color: '#374151' }}>
+                    <td style={{ padding: '10px 16px', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}>
                       {row.label}
                     </td>
                     {PLAN_ORDER.map(pid => (
                       <td key={pid} style={{
                         padding: '10px 8px', textAlign: 'center',
-                        borderBottom: '1px solid #f3f4f6',
+                        borderBottom: '1px solid var(--border-subtle)',
                         background: pid === planId ? PLANS[pid].color + '06' : 'transparent',
                       }}>
                         {renderCell(PLANS[pid], row.key, row.type)}

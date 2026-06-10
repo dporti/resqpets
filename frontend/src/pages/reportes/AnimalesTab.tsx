@@ -124,7 +124,7 @@ export function AnimalesTab({ period }: { period: Period }) {
                       <td style={tdStyle}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <div style={{
-                            width: 36, height: 36, borderRadius: 8, background: '#f3f4f6',
+                            width: 36, height: 36, borderRadius: 8, background: 'var(--bg-subtle-2)',
                             overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
                           }}>
                             {a.foto
@@ -154,7 +154,7 @@ export function AnimalesTab({ period }: { period: Period }) {
                       </td>
                       <td style={tdStyle}>
                         <button style={{
-                          background: 'none', border: '1px solid #e5e7eb', borderRadius: 6,
+                          background: 'none', border: '1px solid var(--border)', borderRadius: 6,
                           padding: '4px 10px', cursor: 'pointer', fontSize: 12, color: C.green, fontWeight: 500,
                         }}>
                           Ver ficha →

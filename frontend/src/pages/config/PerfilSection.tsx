@@ -86,29 +86,29 @@ export function PerfilSection({ refugio, onSave, loading }: Props) {
         {/* Logo + Cover */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 20, marginBottom: 16 }}>
           <div>
-            <p style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 600, color: '#374151' }}>Logo circular</p>
+            <p style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Logo circular</p>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
               <div style={{
                 width: 72, height: 72, borderRadius: '50%', background: '#f0fdf4',
-                border: '2px solid #e5e7eb', overflow: 'hidden',
+                border: '2px solid var(--border)', overflow: 'hidden',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0,
               }}>
                 {form.logo_url ? <img src={form.logo_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : '🏠'}
               </div>
-              <label style={{ cursor: 'pointer', padding: '7px 14px', border: '1.5px solid #e5e7eb', borderRadius: 8, fontSize: 12, background: '#fff', color: '#374151' }}>
+              <label style={{ cursor: 'pointer', padding: '7px 14px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 12, background: 'var(--bg-surface)', color: 'var(--text-secondary)' }}>
                 {logoUploading ? 'Subiendo...' : 'Cambiar logo'}
                 <input type="file" accept="image/*" hidden onChange={handleLogoChange} disabled={logoUploading} />
               </label>
             </div>
           </div>
           <div>
-            <p style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 600, color: '#374151' }}>Imagen de portada (16:9)</p>
+            <p style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Imagen de portada (16:9)</p>
             <div style={{
               height: 72, borderRadius: 10, background: form.cover_url ? `url(${form.cover_url}) center/cover` : '#f0fdf4',
-              border: '2px solid #e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: '2px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', overflow: 'hidden',
             }}>
-              <label style={{ cursor: 'pointer', padding: '7px 14px', border: '1.5px solid #e5e7eb', borderRadius: 8, fontSize: 12, background: 'rgba(255,255,255,.9)' }}>
+              <label style={{ cursor: 'pointer', padding: '7px 14px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 12, background: 'rgba(255,255,255,.9)' }}>
                 {coverUploading ? 'Subiendo...' : '📷 Cambiar portada'}
                 <input type="file" accept="image/*" hidden onChange={handleCoverChange} disabled={coverUploading} />
               </label>
@@ -133,8 +133,8 @@ export function PerfilSection({ refugio, onSave, loading }: Props) {
           </Field>
         </div>
         <button onClick={geocode} disabled={geocoding} style={{
-          padding: '7px 16px', border: '1.5px solid #e5e7eb', borderRadius: 8, background: '#fff',
-          cursor: 'pointer', fontSize: 12, color: '#374151', marginBottom: 4,
+          padding: '7px 16px', border: '1.5px solid var(--border)', borderRadius: 8, background: 'var(--bg-surface)',
+          cursor: 'pointer', fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4,
         }}>
           {geocoding ? '🔍 Buscando...' : '🗺️ Obtener coordenadas GPS de la dirección'}
         </button>
@@ -157,22 +157,22 @@ export function PerfilSection({ refugio, onSave, loading }: Props) {
       {/* Preview tarjeta portal */}
       <SectionCard title="Preview tarjeta portal público">
         <div style={{
-          border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden',
+          border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden',
           maxWidth: 320, boxShadow: '0 2px 8px rgba(0,0,0,.06)',
         }}>
           <div style={{ height: 70, background: form.cover_url ? `url(${form.cover_url}) center/cover` : 'linear-gradient(135deg,#064e3b,#059669)', position: 'relative' }}>
             <div style={{
               position: 'absolute', bottom: -18, left: 16, width: 40, height: 40,
-              borderRadius: 10, background: '#fff', border: '2px solid #fff',
+              borderRadius: 10, background: 'var(--bg-surface)', border: '2px solid #fff',
               overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
             }}>
               {form.logo_url ? <img src={form.logo_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : '🏠'}
             </div>
           </div>
           <div style={{ padding: '26px 16px 16px' }}>
-            <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: '#111827' }}>{form.nombre || 'Nombre de la protectora'}</p>
-            {form.ciudad && <p style={{ margin: '2px 0 6px', fontSize: 12, color: '#6b7280' }}>📍 {form.ciudad}</p>}
-            {form.description_public && <p style={{ margin: 0, fontSize: 11, color: '#6b7280', lineHeight: 1.4 }}>{form.description_public.slice(0, 80)}...</p>}
+            <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: 'var(--text-primary)' }}>{form.nombre || 'Nombre de la protectora'}</p>
+            {form.ciudad && <p style={{ margin: '2px 0 6px', fontSize: 12, color: 'var(--text-muted)' }}>📍 {form.ciudad}</p>}
+            {form.description_public && <p style={{ margin: 0, fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.4 }}>{form.description_public.slice(0, 80)}...</p>}
           </div>
         </div>
       </SectionCard>

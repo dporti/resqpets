@@ -17,12 +17,12 @@ export default function DonacionesPage() {
 
   if (!can('donaciones:read')) {
     return (
-      <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }}>
+      <div style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-subtle)', minHeight: '100vh' }}>
         <TopBar titulo="Donaciones" showNew={false} />
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 'calc(100vh - 60px)', color: '#6b7280' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 'calc(100vh - 60px)', color: 'var(--text-muted)' }}>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: 48 }}>🔒</p>
-            <h2 style={{ color: '#374151' }}>Sin acceso</h2>
+            <h2 style={{ color: 'var(--text-secondary)' }}>Sin acceso</h2>
             <p>No tienes permisos para ver las donaciones.</p>
           </div>
         </div>
@@ -31,17 +31,17 @@ export default function DonacionesPage() {
   }
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-subtle)', minHeight: '100vh' }}>
       <TopBar titulo="Donaciones" showNew={false} />
 
       {/* Tabs */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e5e7eb', padding: '0 28px' }}>
+      <div style={{ background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)', padding: '0 28px' }}>
         <div style={{ display: 'flex', gap: 0 }}>
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{
               padding: '14px 20px', background: 'none', border: 'none', cursor: 'pointer',
               fontSize: 14, fontWeight: tab === t.id ? 700 : 400,
-              color: tab === t.id ? '#16a34a' : '#6b7280',
+              color: tab === t.id ? '#16a34a' : 'var(--text-muted)',
               borderBottom: tab === t.id ? '2.5px solid #16a34a' : '2.5px solid transparent',
               transition: 'all .15s', whiteSpace: 'nowrap',
             }}>{t.label}</button>

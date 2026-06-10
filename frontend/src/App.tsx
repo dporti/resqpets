@@ -40,7 +40,7 @@ import { Animal } from './types';
 
 function PlaceholderPage({ titulo, icon }: { titulo: string; icon: string }) {
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-page)', minHeight: '100vh' }}>
       <TopBar titulo={titulo} showNew={false} />
       <EmptyState icon={icon} title="Sección en desarrollo" subtitle="Próximamente disponible" />
     </div>
@@ -153,7 +153,7 @@ function AppShell() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
       <Sidebar vista={vista} setVista={setVista} unreadMsgs={unreadMsgs} />
-      <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', background: '#f9fafb' }}>
+      <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', background: 'var(--bg-page)' }}>
         {renderContent()}
       </div>
       <AssistantFull onNavigate={(v) => setVista(v)} />
