@@ -246,10 +246,17 @@ export async function deleteAnimal(req: AuthRequest, res: Response): Promise<voi
 export async function addNota(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;
+    const refugioId = req.user!.refugioId;
     const { texto, pinned = false } = req.body;
 
     if (!texto) {
       res.status(400).json({ error: 'El texto de la nota es requerido' });
+      return;
+    }
+
+    const animalCheck = await query('SELECT id FROM animales WHERE id=$1 AND refugio_id=$2', [id, refugioId]);
+    if (animalCheck.rows.length === 0) {
+      res.status(404).json({ error: 'Animal no encontrado' });
       return;
     }
 

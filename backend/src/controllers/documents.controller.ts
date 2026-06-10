@@ -26,6 +26,9 @@ export async function createDocument(req: AuthRequest, res: Response): Promise<v
   const { tipo = 'otro', nombre, file_url } = req.body;
   if (!nombre || !file_url) { res.status(400).json({ error: 'nombre y file_url son requeridos' }); return; }
   try {
+    const animalCheck = await query('SELECT id FROM animales WHERE id=$1 AND refugio_id=$2', [id, refugioId]);
+    if (animalCheck.rows.length === 0) { res.status(404).json({ error: 'Animal no encontrado' }); return; }
+
     const result = await query(
       `INSERT INTO animal_documents (animal_id, refugio_id, tipo, nombre, file_url, subido_por)
        VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,

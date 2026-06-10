@@ -167,8 +167,8 @@ export async function createDonation(req: AuthRequest, res: Response) {
 
     // Update campaign raised_amount
     if (campaign_id && status === 'confirmed') {
-      await query('UPDATE donation_campaigns SET raised_amount=raised_amount+$1, updated_at=NOW() WHERE id=$2',
-        [parseFloat(amount), campaign_id]).catch(() => {});
+      await query('UPDATE donation_campaigns SET raised_amount=raised_amount+$1, updated_at=NOW() WHERE id=$2 AND shelter_id=$3',
+        [parseFloat(amount), campaign_id, rid]).catch(() => {});
     }
 
     // Upsert donor

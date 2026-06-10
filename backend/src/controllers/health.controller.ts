@@ -26,6 +26,9 @@ export async function createHealthEvent(req: AuthRequest, res: Response): Promis
   const { tipo = 'otro', fecha, titulo, descripcion } = req.body;
   if (!titulo || !fecha) { res.status(400).json({ error: 'tipo, fecha y titulo son requeridos' }); return; }
   try {
+    const animalCheck = await query('SELECT id FROM animales WHERE id=$1 AND refugio_id=$2', [id, refugioId]);
+    if (animalCheck.rows.length === 0) { res.status(404).json({ error: 'Animal no encontrado' }); return; }
+
     const result = await query(
       `INSERT INTO health_events (animal_id, refugio_id, tipo, fecha, titulo, descripcion, created_by)
        VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,

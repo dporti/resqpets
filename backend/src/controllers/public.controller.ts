@@ -374,7 +374,7 @@ export async function trackAnimalShare(req: Request, res: Response) {
   try {
     const { id } = req.params;
     await query(
-      `UPDATE animales SET veces_compartido = veces_compartido + 1 WHERE id = $1`,
+      `UPDATE animales SET veces_compartido = veces_compartido + 1 WHERE id = $1 AND web_publicado = true`,
       [id],
     );
     await query(

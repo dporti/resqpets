@@ -164,7 +164,7 @@ export async function convertirARescate(req: AuthRequest, res: Response): Promis
   const { id } = req.params;
   const refugioId = req.user!.refugioId;
   try {
-    const alertRes = await query(`SELECT * FROM sos_alerts WHERE id=$1`, [id]);
+    const alertRes = await query(`SELECT * FROM sos_alerts WHERE id=$1 AND (refugio_id=$2 OR refugio_id IS NULL)`, [id, refugioId]);
     if (alertRes.rows.length === 0) { res.status(404).json({ error: 'Aviso no encontrado' }); return; }
     const a = alertRes.rows[0];
 

@@ -482,6 +482,29 @@ Feature gates por plan (`src/lib/billing/plans.ts`):
 
 ---
 
+## Multi-tenancy — Estado de seguridad
+
+Arquitectura: JWT propio (no Supabase Auth) → aislamiento por `refugio_id`/`shelter_id` a nivel de controller, NO RLS de Supabase (RLS queda como fase 2, pendiente de migrar a Supabase Auth).
+
+Auditoría 2026-06: revisados los 21 controllers de `backend/src/controllers/`. Hallazgos corregidos:
+
+- ✅ `sos.controller.ts` (`convertirARescate`): el aviso SOS ahora se valida contra `refugio_id` (o `NULL`) antes de convertirlo a ficha de animal — antes permitía operar sobre avisos de cualquier refugio.
+- ✅ `behavior.controller.ts` (`createBehaviorEvaluation`): valida que el animal pertenezca al refugio antes del INSERT, y el `UPDATE animales SET ...` resultante ahora incluye `AND refugio_id=$N` — antes podía sobrescribir datos de comportamiento de animales de otro refugio.
+- ✅ `animales.controller.ts` (`addNota`), `health.controller.ts` (`createHealthEvent`), `documents.controller.ts` (`createDocument`): ahora verifican `SELECT id FROM animales WHERE id=$1 AND refugio_id=$2` antes de insertar el recurso hijo (mismo patrón ya usado en `fotos.controller.ts`).
+- ✅ `donaciones.controller.ts` (`createDonation`): el `UPDATE donation_campaigns SET raised_amount=...` ahora incluye `AND shelter_id=$N`.
+- ✅ `mensajes.controller.ts`: `getMessages`, `sendMessage` y `markRead` verifican `shelter_id` de la conversación además de la participación del usuario; `createConversation` filtra `participant_ids` para que solo se añadan usuarios del mismo refugio.
+- ✅ `public.controller.ts` (`trackAnimalShare`): solo incrementa el contador de compartidos si `web_publicado=true`.
+
+Nuevo helper: `backend/src/lib/tenant.ts` con `getRefugioId(req)` y `assertRefugioOwnership(table, id, refugioId)` para futuros endpoints.
+
+Pendiente / fuera de alcance:
+- `usuarios.refugio_id` no tiene `NOT NULL` en el schema — bajo riesgo (las queries comparan `=$1` y NULL nunca matchea), pero conviene endurecerlo en una futura migración.
+- RLS de Supabase: diferido a fase 2 (migración a Supabase Auth).
+
+Seed de prueba multi-tenant: `scripts/seed-multitenancy.js` crea un segundo refugio ("Patitas Felices", Barcelona, plan `pro`) con 1 coordinador y 3 animales, para verificar manualmente que ambos refugios están aislados entre sí.
+
+---
+
 ## Skills instaladas (Claude Code)
 
 | Skill | Uso |

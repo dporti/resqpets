@@ -74,12 +74,15 @@ export async function getConversations(req: AuthRequest, res: Response) {
 export async function getMessages(req: AuthRequest, res: Response) {
   try {
     const userId = req.user!.userId;
+    const refugioId = req.user!.refugioId;
     const { id } = req.params;
 
-    // Verify participant
+    // Verify participant and shelter
     const part = await query(
-      'SELECT id FROM conversation_participants WHERE conversation_id=$1 AND user_id=$2',
-      [id, userId],
+      `SELECT cp.id FROM conversation_participants cp
+       JOIN conversations c ON c.id = cp.conversation_id
+       WHERE cp.conversation_id=$1 AND cp.user_id=$2 AND c.shelter_id=$3`,
+      [id, userId, refugioId],
     );
     if (!part.rows.length) return res.status(403).json({ error: 'Sin acceso' });
 
@@ -108,15 +111,18 @@ export async function getMessages(req: AuthRequest, res: Response) {
 export async function sendMessage(req: AuthRequest, res: Response) {
   try {
     const userId = req.user!.userId;
+    const refugioId = req.user!.refugioId;
     const { id } = req.params;
     const { content, message_type = 'text', file_url, file_name, file_size } = req.body;
 
     if (!content && !file_url) return res.status(400).json({ error: 'Contenido requerido' });
 
-    // Verify participant
+    // Verify participant and shelter
     const part = await query(
-      'SELECT id FROM conversation_participants WHERE conversation_id=$1 AND user_id=$2',
-      [id, userId],
+      `SELECT cp.id FROM conversation_participants cp
+       JOIN conversations c ON c.id = cp.conversation_id
+       WHERE cp.conversation_id=$1 AND cp.user_id=$2 AND c.shelter_id=$3`,
+      [id, userId, refugioId],
     );
     if (!part.rows.length) return res.status(403).json({ error: 'Sin acceso' });
 
@@ -168,8 +174,18 @@ export async function createConversation(req: AuthRequest, res: Response) {
 
     const convId = convRes.rows[0].id;
 
+    // Validate participant_ids belong to this shelter
+    let validParticipantIds: number[] = [];
+    if (participant_ids.length > 0) {
+      const validRes = await query(
+        'SELECT id FROM usuarios WHERE id = ANY($1) AND refugio_id=$2',
+        [participant_ids, refugioId],
+      );
+      validParticipantIds = validRes.rows.map((r: { id: number }) => r.id);
+    }
+
     // Add creator as participant
-    const allParticipants = [...new Set([userId, ...participant_ids])];
+    const allParticipants = [...new Set([userId, ...validParticipantIds])];
     for (const pid of allParticipants) {
       await query(
         'INSERT INTO conversation_participants (conversation_id, user_id, is_admin) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING',
@@ -197,10 +213,13 @@ export async function createConversation(req: AuthRequest, res: Response) {
 export async function markRead(req: AuthRequest, res: Response) {
   try {
     const userId = req.user!.userId;
+    const refugioId = req.user!.refugioId;
     const { id } = req.params;
     await query(
-      'UPDATE conversation_participants SET last_read_at=NOW() WHERE conversation_id=$1 AND user_id=$2',
-      [id, userId],
+      `UPDATE conversation_participants cp SET last_read_at=NOW()
+       FROM conversations c
+       WHERE cp.conversation_id=c.id AND cp.conversation_id=$1 AND cp.user_id=$2 AND c.shelter_id=$3`,
+      [id, userId, refugioId],
     );
     res.json({ ok: true });
   } catch (e) {
