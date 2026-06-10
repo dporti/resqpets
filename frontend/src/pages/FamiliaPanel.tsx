@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { FosterFamily, FamilyStatus } from '../types';
 import { api } from '../api/client';
-import { Spinner, formatDate } from '../components/ui';
+import { Spinner, ErrorState, formatDate } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 
 interface Props {
@@ -49,6 +49,7 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
   const { can } = useAuth();
   const [familia, setFamilia] = useState<FosterFamily | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState<Partial<FosterFamily>>({});
   const [saving, setSaving] = useState(false);
@@ -56,10 +57,11 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
   const [motivoPausa, setMotivoPausa] = useState('');
 
   const load = () => {
+    setError(false);
     api.getFamilia(familiaId).then(f => {
       setFamilia(f);
       setEditForm(f);
-    }).finally(() => setLoading(false));
+    }).catch(e => { console.error(e); setError(true); }).finally(() => setLoading(false));
   };
 
   useEffect(() => { load(); }, [familiaId]);
@@ -85,6 +87,14 @@ export default function FamiliaPanel({ familiaId, onClose, onUpdated, onAsignar 
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
       <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Spinner size={36} />
+      </div>
+    </>
+  );
+  if (error) return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <ErrorState onRetry={load} />
       </div>
     </>
   );

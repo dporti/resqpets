@@ -1,7 +1,7 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useCallback, FormEvent } from 'react';
 import { Animal, FosterFamily } from '../types';
 import { api } from '../api/client';
-import { AnimalAvatar, Spinner } from '../components/ui';
+import { AnimalAvatar, Spinner, ErrorState } from '../components/ui';
 
 interface Props {
   familiaId?: number;    // si se abre desde la familia
@@ -40,6 +40,7 @@ export default function AsignarAcogidaModal({ familiaId, animalId: propAnimalId,
   const [selectedFamilia, setSelectedFamilia] = useState<FosterFamily | null>(null);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     iniciada_at: new Date().toISOString().slice(0, 10),
@@ -47,31 +48,31 @@ export default function AsignarAcogidaModal({ familiaId, animalId: propAnimalId,
     notas_coordinador: '',
   });
 
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        if (familiaId) {
-          const [famRes, animRes] = await Promise.all([
-            api.getFamilia(familiaId),
-            api.getAnimales({ limit: '100' }),
-          ]);
-          setSelectedFamilia(famRes);
-          setAnimales(animRes.data.filter(a => a.estado === 'en_residencia' || a.estado === 'en_evaluacion'));
-          setStep(1);
-        } else if (propAnimalId) {
-          const [animalRes, famRes] = await Promise.all([
-            api.getAnimal(propAnimalId),
-            api.getFamilias({ estado: 'available' }),
-          ]);
-          setSelectedAnimal(animalRes);
-          setFamilias(famRes.filter(f => f.animales_actuales < f.max_animales));
-          setStep(2);
-        }
-      } finally { setLoading(false); }
-    };
-    loadData();
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      if (familiaId) {
+        const [famRes, animRes] = await Promise.all([
+          api.getFamilia(familiaId),
+          api.getAnimales({ limit: '100' }),
+        ]);
+        setSelectedFamilia(famRes);
+        setAnimales(animRes.data.filter(a => a.estado === 'en_residencia' || a.estado === 'en_evaluacion'));
+        setStep(1);
+      } else if (propAnimalId) {
+        const [animalRes, famRes] = await Promise.all([
+          api.getAnimal(propAnimalId),
+          api.getFamilias({ estado: 'available' }),
+        ]);
+        setSelectedAnimal(animalRes);
+        setFamilias(famRes.filter(f => f.animales_actuales < f.max_animales));
+        setStep(2);
+      }
+    } catch (e) { console.error(e); setError(true); } finally { setLoading(false); }
   }, [familiaId, propAnimalId]);
+
+  useEffect(() => { loadData(); }, [loadData]);
 
   const handleConfirm = async (e: FormEvent) => {
     e.preventDefault();
@@ -120,6 +121,8 @@ export default function AsignarAcogidaModal({ familiaId, animalId: propAnimalId,
         <div style={{ padding: 22 }}>
           {loading ? (
             <div style={{ display: 'flex', justifyContent: 'center', padding: 40 }}><Spinner size={32} /></div>
+          ) : error ? (
+            <ErrorState onRetry={loadData} />
           ) : step === 1 ? (
             /* ── STEP 1: Seleccionar animal ── */
             <div>

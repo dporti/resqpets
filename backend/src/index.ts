@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
 import routes from './routes';
 
 dotenv.config();
@@ -27,6 +28,25 @@ if (process.env.NODE_ENV !== 'production') {
     next();
   });
 }
+
+// ── RATE LIMITING ─────────────────────────────────────
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Demasiados intentos, inténtalo de nuevo más tarde' },
+});
+const publicLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Demasiadas peticiones, inténtalo de nuevo más tarde' },
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/public', publicLimiter);
+app.use('/api/sos/public', publicLimiter);
 
 // ── API ROUTES ────────────────────────────────────────
 app.use('/api', routes);

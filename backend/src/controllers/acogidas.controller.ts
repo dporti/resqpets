@@ -179,21 +179,31 @@ export async function getActivas(req: AuthRequest, res: Response): Promise<void>
 
 export async function getHistorial(req: AuthRequest, res: Response): Promise<void> {
   const refugioId = req.user!.refugioId;
-  const { familia_id, animal_id } = req.query;
+  const { familia_id, animal_id, page = '1', limit = '20' } = req.query as Record<string, string>;
   try {
-    let q = `
-      SELECT fa.*, a.nombre as animal_nombre, a.especie as animal_especie,
+    let where = ` WHERE fa.refugio_id=$1 AND fa.estado='completed'`;
+    const params: unknown[] = [refugioId]; let idx = 2;
+    if (familia_id) { where += ` AND fa.familia_id=$${idx++}`; params.push(familia_id); }
+    if (animal_id) { where += ` AND fa.animal_id=$${idx++}`; params.push(animal_id); }
+
+    const pageN = Math.max(1, parseInt(page));
+    const limitN = Math.min(100, Math.max(1, parseInt(limit)));
+    const offset = (pageN - 1) * limitN;
+
+    const countRes = await query(`SELECT COUNT(*) FROM foster_assignments fa${where}`, params);
+    const result = await query(
+      `SELECT fa.*, a.nombre as animal_nombre, a.especie as animal_especie,
              ff.nombre as familia_nombre, ff.zona as familia_zona,
              fa.finalizada_at - fa.iniciada_at as dias_totales
       FROM foster_assignments fa
       LEFT JOIN animales a ON a.id=fa.animal_id
-      LEFT JOIN foster_families ff ON ff.id=fa.familia_id
-      WHERE fa.refugio_id=$1 AND fa.estado='completed'`;
-    const params: unknown[] = [refugioId]; let idx = 2;
-    if (familia_id) { q += ` AND fa.familia_id=$${idx++}`; params.push(familia_id); }
-    if (animal_id) { q += ` AND fa.animal_id=$${idx++}`; params.push(animal_id); }
-    q += ' ORDER BY fa.finalizada_at DESC';
-    res.json((await query(q, params)).rows);
+      LEFT JOIN foster_families ff ON ff.id=fa.familia_id${where}
+      ORDER BY fa.finalizada_at DESC
+      LIMIT $${idx} OFFSET $${idx + 1}`,
+      [...params, limitN, offset]
+    );
+    const total = Number(countRes.rows[0].count);
+    res.json({ data: result.rows, total, page: pageN, limit: limitN, totalPages: Math.ceil(total / limitN) });
   } catch { res.status(500).json({ error: 'Error interno' }); }
 }
 

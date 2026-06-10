@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../../api/client';
+import { ErrorState } from '../../components/ui';
 import { DonacionModal } from './DonacionModal';
 import { generateReceipt } from './ReceiptGenerator';
 
@@ -31,6 +32,7 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
   const [totalAmount, setTotalAmount] = useState(0);
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [filterChannel, setFilterChannel] = useState('');
@@ -45,6 +47,7 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
 
   const load = useCallback(async () => {
     setLoading(true);
+    setError(false);
     try {
       const qs: Record<string, string | number> = { page, limit: 25 };
       if (search) qs.search = search;
@@ -55,7 +58,8 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
       const params = new URLSearchParams(Object.entries(qs).map(([k, v]) => [k, String(v)])).toString();
       const r = await api.get<{ data: Donation[]; total: number; total_amount: number; pages: number }>(`/donations?${params}`);
       setDonations(r.data); setTotal(r.total); setTotalAmount(r.total_amount); setPages(r.pages);
-    } finally { setLoading(false); }
+    } catch (e) { console.error(e); setError(true); }
+    finally { setLoading(false); }
   }, [page, search, filterChannel, filterType, filterStatus, filterCampaign]);
 
   useEffect(() => { load(); }, [load]);
@@ -132,6 +136,11 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
       </div>
 
       {/* Tabla */}
+      {error ? (
+        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12 }}>
+          <ErrorState onRetry={load} />
+        </div>
+      ) : (
       <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, overflow: 'hidden' }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
@@ -186,6 +195,7 @@ export function HistorialTab({ shelterName }: { shelterName: string }) {
           </table>
         </div>
       </div>
+      )}
 
       {/* Paginación */}
       {pages > 1 && (

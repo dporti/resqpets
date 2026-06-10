@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { api } from '../api/client';
 import { DashboardData, Animal } from '../types';
-import { Badge, AnimalAvatar, formatDateTime, Card, CardHeader, Spinner } from '../components/ui';
+import { Badge, AnimalAvatar, formatDateTime, Card, CardHeader, Spinner, ErrorState } from '../components/ui';
 import TopBar from '../components/TopBar';
 import { useAuth } from '../context/AuthContext';
 
@@ -14,13 +14,18 @@ export default function DashboardPage({ onVerAnimal, onNew }: Props) {
   const { user } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
+    setLoading(true);
+    setError(false);
     api.dashboard()
       .then(setData)
-      .catch(console.error)
+      .catch(e => { console.error(e); setError(true); })
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => { load(); }, [load]);
 
   const hora = new Date().getHours();
   const saludo = hora < 12 ? 'Buenos días' : hora < 20 ? 'Buenas tardes' : 'Buenas noches';
@@ -32,6 +37,10 @@ export default function DashboardPage({ onVerAnimal, onNew }: Props) {
         <Spinner size={40} />
       </div>
     );
+  }
+
+  if (error || !data) {
+    return <ErrorState onRetry={load} />;
   }
 
   const s = data?.stats;

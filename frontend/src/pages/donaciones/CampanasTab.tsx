@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../api/client';
+import { ErrorState } from '../../components/ui';
 import { CampanaModal } from './CampanaModal';
 
 interface Campaign {
@@ -22,10 +23,15 @@ function pct(v: number, g: number) { return g > 0 ? Math.min(100, Math.round((v 
 export function CampanasTab() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [modal, setModal] = useState<{ open: boolean; campaign?: Campaign }>({ open: false });
   const [detail, setDetail] = useState<Campaign & { donations?: unknown[]; evolution?: { dia: string; total: number }[] } | null>(null);
 
-  const load = () => api.get<Campaign[]>('/donations/campaigns').then(c => { setCampaigns(c); setLoading(false); }).catch(() => setLoading(false));
+  const load = () => {
+    setLoading(true);
+    setError(false);
+    return api.get<Campaign[]>('/donations/campaigns').then(c => { setCampaigns(c); setLoading(false); }).catch(e => { console.error(e); setError(true); setLoading(false); });
+  };
   useEffect(() => { load(); }, []);
 
   const updateStatus = async (id: number, status: string) => {
@@ -43,6 +49,8 @@ export function CampanasTab() {
       {Array.from({length:3}).map((_,i)=><div key={i} style={{height:260,borderRadius:14,...sk}}/>)}
     </div>
   );
+
+  if (error) return <ErrorState onRetry={load} />;
 
   return (
     <div>

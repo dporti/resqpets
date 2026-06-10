@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { VoluntarioStats } from '../types';
 import { api } from '../api/client';
-import { Spinner, formatDate, formatDateTime } from '../components/ui';
+import { Spinner, ErrorState, formatDate, formatDateTime } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { CAT_CFG, PRIO_CFG } from './TareaForm';
 
@@ -33,16 +33,18 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
   const { can, user } = useAuth();
   const [vol, setVol] = useState<VoluntarioStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState<{ bio: string; especialidades: string; es_disponible: boolean }>({ bio: '', especialidades: '', es_disponible: true });
   const [saving, setSaving] = useState(false);
   const [newEsp, setNewEsp] = useState('');
 
   const load = () => {
+    setError(false);
     api.getVoluntario(voluntarioId).then(v => {
       setVol(v);
       setEditForm({ bio: v.bio || '', especialidades: (v.especialidades || []).join(', '), es_disponible: v.es_disponible ?? true });
-    }).finally(() => setLoading(false));
+    }).catch(e => { console.error(e); setError(true); }).finally(() => setLoading(false));
   };
 
   useEffect(() => { load(); }, [voluntarioId]);
@@ -63,6 +65,14 @@ export default function VoluntarioPanel({ voluntarioId, onClose, onUpdated }: Pr
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
       <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 540, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Spinner size={36} />
+      </div>
+    </>
+  );
+  if (error) return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 540, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <ErrorState onRetry={load} />
       </div>
     </>
   );

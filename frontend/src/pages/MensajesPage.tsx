@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
+import { ErrorState, SkeletonList } from '../components/ui';
 
 // ── TYPES ─────────────────────────────────────────────────────────────
 interface Participant { id: number; nombre: string; avatar_url?: string; rol?: string }
@@ -250,6 +251,8 @@ export default function MensajesPage() {
   const [crmUsers, setCrmUsers] = useState<CRMUser[]>([]);
   const [loadingConvs, setLoadingConvs] = useState(true);
   const [loadingMsgs, setLoadingMsgs] = useState(false);
+  const [errorConvs, setErrorConvs] = useState(false);
+  const [errorMsgs, setErrorMsgs] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const pollRef = useRef<ReturnType<typeof setInterval>>();
@@ -258,11 +261,12 @@ export default function MensajesPage() {
 
   // Load conversations
   const loadConvs = useCallback(async () => {
+    setErrorConvs(false);
     try {
       const qs = filter !== 'all' && filter !== 'unread' ? `?type=${filter}` : filter === 'unread' ? '?type=unread' : '';
       const data = await api.get<Conversation[]>(`/mensajes/conversations${qs}`);
       setConversations(data);
-    } catch { /* ignore */ }
+    } catch (e) { console.error(e); setErrorConvs(true); }
     setLoadingConvs(false);
   }, [filter]);
 
@@ -270,10 +274,11 @@ export default function MensajesPage() {
 
   // Load messages for active conversation + poll every 3s
   const loadMessages = useCallback(async (id: number) => {
+    setErrorMsgs(false);
     try {
       const data = await api.get<Message[]>(`/mensajes/conversations/${id}/messages`);
       setMessages(data);
-    } catch { /* ignore */ }
+    } catch (e) { console.error(e); setErrorMsgs(true); }
   }, []);
 
   useEffect(() => {
@@ -381,8 +386,8 @@ export default function MensajesPage() {
 
         {/* Conversation list */}
         <div style={{ flex: 1, overflowY: 'auto' }}>
-          {loadingConvs && <p style={{ padding: 20, color: '#9ca3af', fontSize: 13 }}>Cargando...</p>}
-          {!loadingConvs && filteredConvs.length === 0 && (
+          {loadingConvs ? <SkeletonList rows={6} /> : errorConvs ? <ErrorState onRetry={loadConvs} /> : <>
+          {filteredConvs.length === 0 && (
             <div style={{ padding: '40px 20px', textAlign: 'center', color: '#9ca3af' }}>
               <p style={{ fontSize: 32 }}>💬</p>
               <p style={{ fontSize: 13 }}>Sin conversaciones</p>
@@ -420,6 +425,7 @@ export default function MensajesPage() {
               </button>
             );
           })}
+          </>}
         </div>
       </div>
 
@@ -458,7 +464,8 @@ export default function MensajesPage() {
             {/* Messages area */}
             <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 0 }}>
               {loadingMsgs && <p style={{ color: '#9ca3af', textAlign: 'center', fontSize: 13 }}>Cargando mensajes...</p>}
-              {groupedMessages.map(group => (
+              {errorMsgs && <ErrorState onRetry={() => activeId && loadMessages(activeId)} />}
+              {!errorMsgs && groupedMessages.map(group => (
                 <div key={group.date}>
                   {/* Date separator */}
                   <div style={{ textAlign: 'center', margin: '12px 0' }}>

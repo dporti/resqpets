@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, FormEvent } from 'react';
 import { FosterFamily, FosterAssignment, FamilyStatus } from '../types';
 import { api } from '../api/client';
-import { Spinner, EmptyState, formatDate } from '../components/ui';
+import { EmptyState, ErrorState, SkeletonList, formatDate } from '../components/ui';
 import TopBar from '../components/TopBar';
 import { useAuth } from '../context/AuthContext';
 import FamiliaPanel from './FamiliaPanel';
@@ -109,9 +109,14 @@ export default function AcogidasPage() {
   const [activas, setActivas] = useState<FosterAssignment[]>([]);
   const [historial, setHistorial] = useState<FosterAssignment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [filtroEstado, setFiltroEstado] = useState<string>('all');
   const [filtroEspecie, setFiltroEspecie] = useState<string>('');
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const LIMIT = 20;
 
   const [selectedFamiliaId, setSelectedFamiliaId] = useState<number | null>(null);
   const [asignarFamiliaId, setAsignarFamiliaId] = useState<number | null>(null);
@@ -120,32 +125,43 @@ export default function AcogidasPage() {
   const [finalizarData, setFinalizarData] = useState<{ assignmentId: number; animalNombre: string; familiaNombre: string } | null>(null);
 
   const loadFamilias = useCallback(async () => {
-    setLoading(true);
+    setLoading(true); setError(false);
     try {
       const params: Record<string, string> = {};
       if (filtroEstado !== 'all') params.estado = filtroEstado;
       if (filtroEspecie) params.especie = filtroEspecie;
       setFamilias(await api.getFamilias(params));
-    } finally { setLoading(false); }
+    } catch (e) { console.error(e); setError(true); }
+    finally { setLoading(false); }
   }, [filtroEstado, filtroEspecie]);
 
   const loadActivas = useCallback(async () => {
-    setLoading(true);
+    setLoading(true); setError(false);
     try { setActivas(await api.getActivas()); }
+    catch (e) { console.error(e); setError(true); }
     finally { setLoading(false); }
   }, []);
 
   const loadHistorial = useCallback(async () => {
-    setLoading(true);
-    try { setHistorial(await api.getHistorial()); }
+    setLoading(true); setError(false);
+    try {
+      const r = await api.getHistorial({ limit: LIMIT, page });
+      setHistorial(r.data);
+      setTotal(r.total);
+      setTotalPages(r.totalPages);
+    }
+    catch (e) { console.error(e); setError(true); }
     finally { setLoading(false); }
-  }, []);
+  }, [page]);
 
-  useEffect(() => {
+  const reload = useCallback(() => {
     if (vista === 'familias') loadFamilias();
     else if (vista === 'activas') loadActivas();
     else loadHistorial();
   }, [vista, loadFamilias, loadActivas, loadHistorial]);
+
+  useEffect(() => { reload(); }, [reload]);
+  useEffect(() => { setPage(1); }, [vista]);
 
   const familiasFiltradas = familias.filter(f =>
     !search || f.nombre.toLowerCase().includes(search.toLowerCase()) ||
@@ -163,7 +179,7 @@ export default function AcogidasPage() {
     <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }}>
       <TopBar
         titulo="Acogidas"
-        subtitulo={vista === 'familias' ? `${familias.length} familias` : vista === 'activas' ? `${activas.length} activas` : `${historial.length} finalizadas`}
+        subtitulo={vista === 'familias' ? `${familias.length} familias` : vista === 'activas' ? `${activas.length} activas` : `${total} finalizadas`}
         showNew={can('animales:update') && vista === 'familias'}
         newLabel="+ Añadir familia"
         onNew={() => setShowNuevaFamilia(true)}
@@ -217,7 +233,9 @@ export default function AcogidasPage() {
 
       <div style={{ padding: '0 24px 24px' }}>
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 64 }}><Spinner size={36} /></div>
+          <SkeletonList rows={6} />
+        ) : error ? (
+          <ErrorState onRetry={reload} />
         ) : vista === 'familias' ? (
           /* ── GRID FAMILIAS ─────────────────────────── */
           familiasFiltradas.length === 0 ? (
@@ -391,6 +409,18 @@ export default function AcogidasPage() {
                   ))}
                 </tbody>
               </table>
+              {totalPages > 1 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', borderTop: '1px solid #f3f4f6' }}>
+                  <span style={{ fontSize: 12.5, color: '#9ca3af' }}>
+                    Mostrando {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, total)} de {total}
+                  </span>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <button onClick={() => setPage(p => p - 1)} disabled={page === 1} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', cursor: page === 1 ? 'not-allowed' : 'pointer', fontSize: 12.5, color: page === 1 ? '#d1d5db' : '#374151', fontFamily: "'Inter', sans-serif" }}>← Anterior</button>
+                    <span style={{ fontSize: 13, color: '#374151' }}>{page} / {totalPages}</span>
+                    <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', cursor: page === totalPages ? 'not-allowed' : 'pointer', fontSize: 12.5, color: page === totalPages ? '#d1d5db' : '#374151', fontFamily: "'Inter', sans-serif" }}>Siguiente →</button>
+                  </div>
+                </div>
+              )}
             </div>
           )
         )}

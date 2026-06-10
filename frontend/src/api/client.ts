@@ -76,9 +76,9 @@ export const api = {
   createSosPublic: (data: object) => request<import('../types').SosAlert>('POST', '/sos/public', data),
 
   // SOS Pet — privado
-  getSosAlertas: (params?: Record<string, string>) => {
-    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request<import('../types').SosAlert[]>('GET', `/sos${qs}`);
+  getSosAlertas: (params?: Record<string, string | number>) => {
+    const qs = params ? '?' + new URLSearchParams(params as Record<string, string>).toString() : '';
+    return request<{ data: import('../types').SosAlert[]; total: number; page: number; limit: number; totalPages: number }>('GET', `/sos${qs}`);
   },
   getSosAlerta: (id: number) => request<import('../types').SosAlert>('GET', `/sos/${id}`),
   updateSosAlerta: (id: number, data: object) => request<import('../types').SosAlert>('PUT', `/sos/${id}`, data),
@@ -106,7 +106,10 @@ export const api = {
   },
 
   // Voluntarios
-  getVoluntarios: () => request<import('../types').VoluntarioStats[]>('GET', '/voluntarios'),
+  getVoluntarios: (params?: Record<string, string | number>) => {
+    const qs = params ? '?' + new URLSearchParams(params as Record<string, string>).toString() : '';
+    return request<{ data: import('../types').VoluntarioStats[]; total: number; page: number; limit: number; totalPages: number }>('GET', `/voluntarios${qs}`);
+  },
   getVoluntario: (id: number) => request<import('../types').VoluntarioStats>('GET', `/voluntarios/${id}`),
   updateVoluntario: (id: number, data: object) => request<import('../types').VoluntarioStats>('PUT', `/voluntarios/${id}`, data),
 
@@ -139,9 +142,9 @@ export const api = {
 
   // Acogidas — Activas / historial
   getActivas: () => request<import('../types').FosterAssignment[]>('GET', '/acogidas/activas'),
-  getHistorial: (params?: Record<string, string>) => {
-    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request<import('../types').FosterAssignment[]>('GET', `/acogidas/historial${qs}`);
+  getHistorial: (params?: Record<string, string | number>) => {
+    const qs = params ? '?' + new URLSearchParams(params as Record<string, string>).toString() : '';
+    return request<{ data: import('../types').FosterAssignment[]; total: number; page: number; limit: number; totalPages: number }>('GET', `/acogidas/historial${qs}`);
   },
   getContactos: (assignmentId: number) =>
     request<import('../types').FosterContact[]>('GET', `/acogidas/assignments/${assignmentId}/contactos`),
@@ -151,9 +154,9 @@ export const api = {
     request<{ ok: boolean }>('POST', `/acogidas/assignments/${assignmentId}/finalizar`, data),
 
   // Adopciones — Solicitudes
-  getSolicitudes: (params?: Record<string, string>) => {
-    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request<import('../types').AdoptionRequest[]>('GET', `/adopciones/solicitudes${qs}`);
+  getSolicitudes: (params?: Record<string, string | number>) => {
+    const qs = params ? '?' + new URLSearchParams(params as Record<string, string>).toString() : '';
+    return request<{ data: import('../types').AdoptionRequest[]; total: number; page: number; limit: number; totalPages: number }>('GET', `/adopciones/solicitudes${qs}`);
   },
   getSolicitud: (id: number) => request<import('../types').AdoptionRequest>('GET', `/adopciones/solicitudes/${id}`),
   createSolicitud: (data: object) => request<import('../types').AdoptionRequest>('POST', '/adopciones/solicitudes', data),

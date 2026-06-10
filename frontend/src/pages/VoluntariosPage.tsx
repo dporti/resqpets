@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { VoluntarioStats, Task, TaskStatus, RankingEntry } from '../types';
 import { api } from '../api/client';
-import { Spinner, EmptyState, formatDate } from '../components/ui';
+import { EmptyState, ErrorState, SkeletonList, formatDate } from '../components/ui';
 import TopBar from '../components/TopBar';
 import { useAuth } from '../context/AuthContext';
 import { DndContext, DragEndEvent, useDraggable, useDroppable } from '@dnd-kit/core';
@@ -187,6 +187,7 @@ export default function VoluntariosPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [rankings, setRankings] = useState<{ voluntarios: RankingEntry[]; familias: RankingEntry[] } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [search, setSearch] = useState('');
   const [filtroRol, setFiltroRol] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('todas');
@@ -196,33 +197,52 @@ export default function VoluntariosPage() {
   const [selectedVolId, setSelectedVolId] = useState<number | null>(null);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const LIMIT = 20;
+  const [showNuevoVol, setShowNuevoVol] = useState(false);
+  const [nuevoVolForm, setNuevoVolForm] = useState({ nombre: '', email: '', password: '', rol: 'voluntario' });
+  const [nuevoVolError, setNuevoVolError] = useState('');
+  const [savingVol, setSavingVol] = useState(false);
 
   const loadVoluntarios = useCallback(async () => {
-    setLoading(true);
-    try { setVoluntarios(await api.getVoluntarios()); }
+    setLoading(true); setError(false);
+    try {
+      const r = await api.getVoluntarios({ limit: LIMIT, page });
+      setVoluntarios(r.data);
+      setTotal(r.total);
+      setTotalPages(r.totalPages);
+    }
+    catch (e) { console.error(e); setError(true); }
     finally { setLoading(false); }
-  }, []);
+  }, [page]);
 
   const loadTasks = useCallback(async () => {
-    setLoading(true);
+    setLoading(true); setError(false);
     try {
       const params: Record<string, string> = {};
       if (filtroEstado !== 'todas') params.estado = filtroEstado;
       setTasks(await api.getTasks(params));
-    } finally { setLoading(false); }
+    } catch (e) { console.error(e); setError(true); }
+    finally { setLoading(false); }
   }, [filtroEstado]);
 
   const loadRankings = useCallback(async () => {
-    setLoading(true);
+    setLoading(true); setError(false);
     try { setRankings(await api.getRankings(rankingPeriodo)); }
+    catch (e) { console.error(e); setError(true); }
     finally { setLoading(false); }
   }, [rankingPeriodo]);
 
-  useEffect(() => {
+  const reload = useCallback(() => {
     if (vista === 'voluntarios') loadVoluntarios();
     else if (vista === 'tareas') loadTasks();
     else loadRankings();
   }, [vista, loadVoluntarios, loadTasks, loadRankings]);
+
+  useEffect(() => { reload(); }, [reload]);
+  useEffect(() => { setPage(1); }, [vista]);
 
   const handleToggleTask = async (task: Task) => {
     await api.completeTask(task.id);
@@ -245,6 +265,26 @@ export default function VoluntariosPage() {
     await api.updateTask(taskId, { estado: newStatus });
   };
 
+  const handleCrearVoluntario = async () => {
+    if (!nuevoVolForm.nombre || !nuevoVolForm.email || !nuevoVolForm.password) {
+      setNuevoVolError('Todos los campos son requeridos');
+      return;
+    }
+    setSavingVol(true);
+    setNuevoVolError('');
+    try {
+      await api.createUsuario(nuevoVolForm);
+      setShowNuevoVol(false);
+      setNuevoVolForm({ nombre: '', email: '', password: '', rol: 'voluntario' });
+      setPage(1);
+      loadVoluntarios();
+    } catch (e) {
+      setNuevoVolError(e instanceof Error ? e.message : 'Error al crear voluntario');
+    } finally {
+      setSavingVol(false);
+    }
+  };
+
   const volsFiltrados = voluntarios.filter(v =>
     (!search || v.nombre.toLowerCase().includes(search.toLowerCase()) || v.email.toLowerCase().includes(search.toLowerCase())) &&
     (!filtroRol || v.rol === filtroRol)
@@ -257,9 +297,10 @@ export default function VoluntariosPage() {
     <div style={{ fontFamily: "'Inter', sans-serif", background: '#f9fafb', minHeight: '100vh' }}>
       <TopBar
         titulo="Voluntarios"
-        subtitulo={vista === 'voluntarios' ? `${voluntarios.filter(v => v.activo).length} activos` : vista === 'tareas' ? `${tasks.length} tareas` : 'Rankings'}
+        subtitulo={vista === 'voluntarios' ? `${total} voluntarios` : vista === 'tareas' ? `${tasks.length} tareas` : 'Rankings'}
         showNew={can('usuarios:manage') && vista === 'voluntarios'}
         newLabel="+ Añadir voluntario"
+        onNew={() => setShowNuevoVol(true)}
       />
 
       {/* Sub-nav */}
@@ -314,8 +355,10 @@ export default function VoluntariosPage() {
           </div>
 
           {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: 64 }}><Spinner size={36} /></div>
-          ) : volsFiltrados.length === 0 ? (
+            <SkeletonList rows={6} />
+          ) : error ? (
+            <ErrorState onRetry={reload} />
+          ) :volsFiltrados.length === 0 ? (
             <EmptyState icon="👥" title="Sin voluntarios" subtitle="Añade el primer voluntario" />
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: 16 }}>
@@ -372,6 +415,19 @@ export default function VoluntariosPage() {
               })}
             </div>
           )}
+
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', marginTop: 12, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12 }}>
+              <span style={{ fontSize: 12.5, color: '#9ca3af' }}>
+                Mostrando {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, total)} de {total}
+              </span>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <button onClick={() => setPage(p => p - 1)} disabled={page === 1} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', cursor: page === 1 ? 'not-allowed' : 'pointer', fontSize: 12.5, color: page === 1 ? '#d1d5db' : '#374151', fontFamily: "'Inter', sans-serif" }}>← Anterior</button>
+                <span style={{ fontSize: 13, color: '#374151' }}>{page} / {totalPages}</span>
+                <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#fff', cursor: page === totalPages ? 'not-allowed' : 'pointer', fontSize: 12.5, color: page === totalPages ? '#d1d5db' : '#374151', fontFamily: "'Inter', sans-serif" }}>Siguiente →</button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -409,8 +465,10 @@ export default function VoluntariosPage() {
           </div>
 
           {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: 64 }}><Spinner size={36} /></div>
-          ) : tasks.length === 0 ? (
+            <SkeletonList rows={6} />
+          ) : error ? (
+            <ErrorState onRetry={reload} />
+          ) :tasks.length === 0 ? (
             <div style={{ padding: '0 24px' }}><EmptyState icon="✅" title="Sin tareas" subtitle="Crea la primera tarea del equipo" /></div>
           ) : taskViewMode === 'lista' ? (
             <div style={{ margin: '0 24px 24px', background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
@@ -466,8 +524,10 @@ export default function VoluntariosPage() {
           </div>
 
           {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: 64 }}><Spinner size={36} /></div>
-          ) : !rankings ? null : (
+            <SkeletonList rows={6} />
+          ) : error ? (
+            <ErrorState onRetry={reload} />
+          ) :!rankings ? null : (
             <>
               {/* Podio */}
               {(() => {
@@ -563,6 +623,62 @@ export default function VoluntariosPage() {
             setTasks(prev => editTask ? prev.map(t => t.id === saved.id ? saved : t) : [saved, ...prev]);
             setShowTaskForm(false); setEditTask(null);
           }} />
+      )}
+
+      {/* Modal nuevo voluntario */}
+      {showNuevoVol && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
+        }} onClick={() => setShowNuevoVol(false)}>
+          <div
+            style={{ background: '#fff', borderRadius: 12, padding: 28, width: 420, boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 20 }}>Añadir voluntario</h2>
+            {(['nombre', 'email', 'password'] as const).map(field => (
+              <div key={field} style={{ marginBottom: 14 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 5 }}>
+                  {field === 'password' ? 'Contraseña' : field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
+                <input
+                  type={field === 'password' ? 'password' : field === 'email' ? 'email' : 'text'}
+                  value={nuevoVolForm[field]}
+                  onChange={e => setNuevoVolForm({ ...nuevoVolForm, [field]: e.target.value })}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 13, fontFamily: "'Inter', sans-serif", boxSizing: 'border-box', outline: 'none' }}
+                />
+              </div>
+            ))}
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 5 }}>Rol</label>
+              <select
+                value={nuevoVolForm.rol}
+                onChange={e => setNuevoVolForm({ ...nuevoVolForm, rol: e.target.value })}
+                style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 13, fontFamily: "'Inter', sans-serif" }}
+              >
+                <option value="voluntario">Voluntario</option>
+                <option value="coordinador">Coordinador</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            {nuevoVolError && (
+              <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 7, padding: '9px 12px', fontSize: 13, color: '#dc2626', marginBottom: 14 }}>
+                {nuevoVolError}
+              </div>
+            )}
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setShowNuevoVol(false)}
+                style={{ padding: '9px 18px', borderRadius: 8, border: '1px solid #e5e7eb', background: '#fff', fontSize: 13, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}
+              >Cancelar</button>
+              <button
+                onClick={handleCrearVoluntario}
+                disabled={savingVol}
+                style={{ padding: '9px 18px', borderRadius: 8, border: 'none', background: '#16a34a', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}
+              >{savingVol ? 'Guardando...' : 'Crear voluntario'}</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

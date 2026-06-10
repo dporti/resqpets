@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import { ShelterConfig, Refugio, Skel } from './config/shared';
+import { ErrorState } from '../components/ui';
 import { PerfilSection } from './config/PerfilSection';
 import { EquipoSection } from './config/EquipoSection';
 import { NotificacionesSection } from './config/NotificacionesSection';
@@ -45,11 +46,13 @@ export default function ConfiguracionPage() {
   const [section, setSection] = useState('perfil');
   const [data, setData] = useState<ConfigData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [saved, setSaved] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const loadConfig = useCallback(async () => {
     setLoading(true);
+    setError(false);
     try {
       const d = await api.get<ConfigData>('/config');
       setData(d);
@@ -57,7 +60,7 @@ export default function ConfiguracionPage() {
       if (d.config?.primary_color) {
         document.documentElement.style.setProperty('--color-primary', d.config.primary_color);
       }
-    } finally { setLoading(false); }
+    } catch (e) { console.error(e); setError(true); } finally { setLoading(false); }
   }, []);
 
   useEffect(() => { loadConfig(); }, [loadConfig]);
@@ -88,6 +91,7 @@ export default function ConfiguracionPage() {
         {Array.from({ length: 4 }).map((_, i) => <Skel key={i} h={80} />)}
       </div>
     );
+    if (error) return <ErrorState onRetry={loadConfig} />;
 
     switch (section) {
       case 'perfil':        return <PerfilSection refugio={refugio} onSave={handleSave} loading={loading} />;

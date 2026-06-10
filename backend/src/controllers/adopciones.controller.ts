@@ -24,22 +24,31 @@ const CHECKLIST_ITEMS = [
 
 export async function getSolicitudes(req: AuthRequest, res: Response): Promise<void> {
   const refugioId = req.user!.refugioId;
-  const { estado, animal_id } = req.query;
+  const { estado, animal_id, page = '1', limit = '20' } = req.query as Record<string, string>;
   try {
-    let q = `
-      SELECT r.*, a.nombre as animal_nombre, a.especie as animal_especie,
+    let where = ' WHERE r.refugio_id = $1';
+    const params: unknown[] = [refugioId];
+    let idx = 2;
+    if (estado) { where += ` AND r.estado = $${idx++}`; params.push(estado); }
+    if (animal_id) { where += ` AND r.animal_id = $${idx++}`; params.push(animal_id); }
+
+    const pageN = Math.max(1, parseInt(page));
+    const limitN = Math.min(100, Math.max(1, parseInt(limit)));
+    const offset = (pageN - 1) * limitN;
+
+    const countRes = await query(`SELECT COUNT(*) FROM adoption_requests r${where}`, params);
+    const result = await query(
+      `SELECT r.*, a.nombre as animal_nombre, a.especie as animal_especie,
              f.url as animal_foto
       FROM adoption_requests r
       LEFT JOIN animales a ON a.id = r.animal_id
-      LEFT JOIN animal_fotos f ON f.animal_id = r.animal_id AND f.es_principal = true
-      WHERE r.refugio_id = $1`;
-    const params: unknown[] = [refugioId];
-    let idx = 2;
-    if (estado) { q += ` AND r.estado = $${idx++}`; params.push(estado); }
-    if (animal_id) { q += ` AND r.animal_id = $${idx++}`; params.push(animal_id); }
-    q += ' ORDER BY r.created_at DESC';
-    const result = await query(q, params);
-    res.json(result.rows);
+      LEFT JOIN animal_fotos f ON f.animal_id = r.animal_id AND f.es_principal = true${where}
+      ORDER BY r.created_at DESC
+      LIMIT $${idx} OFFSET $${idx + 1}`,
+      [...params, limitN, offset]
+    );
+    const total = Number(countRes.rows[0].count);
+    res.json({ data: result.rows, total, page: pageN, limit: limitN, totalPages: Math.ceil(total / limitN) });
   } catch (err) {
     res.status(500).json({ error: 'Error interno' });
   }

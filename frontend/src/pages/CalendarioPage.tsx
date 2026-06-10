@@ -8,6 +8,7 @@ import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import type { DateSelectArg, EventClickArg, EventInput, EventDropArg } from '@fullcalendar/core';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { ErrorState } from '../components/ui';
 
 // ── TYPES ─────────────────────────────────────────────────────────────
 interface CalEvent {
@@ -261,15 +262,18 @@ export default function CalendarioPage() {
   const [users, setUsers] = useState<CRMUser[]>([]);
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const loadEvents = useCallback(async () => {
+    setLoading(true);
+    setError(false);
     try {
       const qs = new URLSearchParams();
       if (mineOnly) qs.set('mine', 'true');
       const data = await api.get<CalEvent[]>(`/calendario/events?${qs}`);
       setEvents(data);
       setLoading(false);
-    } catch { setLoading(false); }
+    } catch (e) { console.error(e); setError(true); setLoading(false); }
   }, [mineOnly]);
 
   useEffect(() => { loadEvents(); }, [loadEvents]);
@@ -466,6 +470,8 @@ export default function CalendarioPage() {
             <div style={{ padding: 24 }}>
               <div style={{ height: 500, background: 'linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.4s infinite', borderRadius: 12 }} />
             </div>
+          ) : error ? (
+            <ErrorState onRetry={loadEvents} />
           ) : (
             <FullCalendar
               ref={calRef}

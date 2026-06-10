@@ -176,8 +176,8 @@ router.post('/sos/:id/update',  authenticate, requirePermiso('animales:update'),
 router.post('/sos/:id/rescatar', authenticate, requirePermiso('animales:create'), convertirARescate);
 
 // ── VOLUNTARIOS + TAREAS ──────────────────────────────
-router.get('/voluntarios',              authenticate, requirePermiso('usuarios:read'), getVoluntarios);
-router.get('/voluntarios/:id',          authenticate, requirePermiso('usuarios:read'), getVoluntario);
+router.get('/voluntarios',              authenticate, requirePermiso('voluntarios:read'), getVoluntarios);
+router.get('/voluntarios/:id',          authenticate, requirePermiso('voluntarios:read'), getVoluntario);
 router.put('/voluntarios/:id',          authenticate, requirePermiso('animales:update'), updateVoluntario);
 router.get('/tareas',                   authenticate, requirePermiso('animales:read'), getTasks);
 router.post('/tareas',                  authenticate, requirePermiso('animales:update'), createTask);

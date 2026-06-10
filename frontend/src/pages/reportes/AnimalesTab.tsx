@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import { api } from '../../api/client';
 import { Period, periodToParams, KPICard, ChartCard, ChartEmpty, Skeleton, C, PIE_COLORS, CustomTooltip, tbStyle, thStyle, tdStyle } from './shared';
+import { ErrorState } from '../../components/ui';
 
 interface AnimalesData {
   kpis: { total: number; media_semana: number; tiempo_medio: number; necesidades_especiales: number; fallecidos: number };
@@ -23,15 +24,19 @@ const ESPECIE_EMOJI: Record<string, string> = { perro: '🐕', gato: '🐈', otr
 export function AnimalesTab({ period }: { period: Period }) {
   const [data, setData] = useState<AnimalesData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     setLoading(true);
+    setError(false);
     const qs = new URLSearchParams(periodToParams(period)).toString();
-    api.get<AnimalesData>(`/reportes/animales?${qs}`).then(d => { setData(d); setLoading(false); }).catch(() => setLoading(false));
+    api.get<AnimalesData>(`/reportes/animales?${qs}`).then(d => { setData(d); setLoading(false); }).catch(e => { console.error(e); setError(true); setLoading(false); });
   }, [period.period, period.date_from, period.date_to]);
 
+  useEffect(() => { load(); }, [load]);
+
   if (loading) return <Skels />;
-  if (!data) return <ChartEmpty text="Error al cargar datos" />;
+  if (error || !data) return <ErrorState onRetry={load} />;
 
   const { kpis } = data;
 

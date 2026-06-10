@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { SosAlert } from '../types';
 import { api } from '../api/client';
-import { Spinner, formatDate, formatDateTime } from '../components/ui';
+import { Spinner, ErrorState, formatDate, formatDateTime } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { generatePoster } from '../utils/PosterGenerator';
 
@@ -31,6 +31,7 @@ export default function SosAlertPanel({ alertId, onClose, onUpdated }: Props) {
   const { can } = useAuth();
   const [alert, setAlert] = useState<SosAlert | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [nuevoEstado, setNuevoEstado] = useState<string>('');
   const [update, setUpdate] = useState('');
   const [saving, setSaving] = useState(false);
@@ -39,7 +40,8 @@ export default function SosAlertPanel({ alertId, onClose, onUpdated }: Props) {
   const [convirtiendo, setConvirtiendo] = useState(false);
 
   const load = () => {
-    api.getSosAlerta(alertId).then(a => { setAlert(a); setNuevoEstado(a.estado); }).finally(() => setLoading(false));
+    setError(false);
+    api.getSosAlerta(alertId).then(a => { setAlert(a); setNuevoEstado(a.estado); }).catch(e => { console.error(e); setError(true); }).finally(() => setLoading(false));
   };
   useEffect(() => { load(); }, [alertId]);
 
@@ -93,6 +95,12 @@ export default function SosAlertPanel({ alertId, onClose, onUpdated }: Props) {
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
       <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spinner size={36} /></div>
+    </>
+  );
+  if (error) return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 560, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><ErrorState onRetry={load} /></div>
     </>
   );
   if (!alert) return null;

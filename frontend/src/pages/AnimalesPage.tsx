@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Animal } from '../types';
 import { api } from '../api/client';
-import { Badge, AnimalAvatar, Spinner, EmptyState, formatDateTime } from '../components/ui';
+import { Badge, AnimalAvatar, EmptyState, ErrorState, SkeletonList, formatDateTime } from '../components/ui';
 import TopBar from '../components/TopBar';
 import { useAuth } from '../context/AuthContext';
 import { useAnimalList } from '../context/AnimalListContext';
@@ -29,6 +29,7 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
   const [animales, setAnimales] = useState<Animal[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [estado, setEstado] = useState('');
@@ -39,6 +40,7 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
 
   const load = useCallback(async () => {
     setLoading(true);
+    setError(false);
     try {
       const params: Record<string, string | number> = { page, limit: LIMIT };
       if (search) params.search = search;
@@ -50,6 +52,7 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
       setList(res.data.map(a => ({ id: a.id, nombre: a.nombre })));
     } catch (e) {
       console.error(e);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -130,9 +133,9 @@ export default function AnimalesPage({ onVerAnimal }: Props) {
       {/* Table */}
       <div style={{ padding: 24 }}>
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 64 }}>
-            <Spinner size={36} />
-          </div>
+          <SkeletonList rows={6} />
+        ) : error ? (
+          <ErrorState onRetry={load} />
         ) : animales.length === 0 ? (
           <EmptyState icon="🐾" title="No hay animales con estos filtros" subtitle="Prueba otros filtros o registra un nuevo animal" />
         ) : (

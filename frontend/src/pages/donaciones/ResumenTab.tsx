@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import canvasConfetti from 'canvas-confetti';
 import { api } from '../../api/client';
+import { ErrorState } from '../../components/ui';
 
 interface Summary {
   this_month: { total: number; count: string; unique_donors: string };
@@ -34,19 +35,24 @@ function relTime(d: string) {
 export function ResumenTab() {
   const [data, setData] = useState<Summary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
+    setLoading(true);
+    setError(false);
     api.get<Summary>('/donations/summary').then(d => {
       setData(d);
       setLoading(false);
       if (d.goal > 0 && d.this_month.total >= d.goal) {
         canvasConfetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
       }
-    }).catch(() => setLoading(false));
+    }).catch(e => { console.error(e); setError(true); setLoading(false); });
   }, []);
 
+  useEffect(() => { load(); }, [load]);
+
   if (loading) return <LoadSkel />;
-  if (!data) return <p style={{ color: '#6b7280', padding: 20 }}>Error al cargar datos</p>;
+  if (error || !data) return <ErrorState onRetry={load} />;
 
   const p = pct(data.this_month.total, data.goal);
   const prevTotal = data.prev_month.total;

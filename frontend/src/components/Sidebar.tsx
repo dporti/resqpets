@@ -16,7 +16,7 @@ const NAV_ITEMS: {
   { id: 'animales',      icon: '🐾', label: 'Animales' },
   { id: 'adopciones',    icon: '❤️', label: 'Adopciones',  permiso: 'adopciones:read' },
   { id: 'acogidas',      icon: '🏡', label: 'Acogidas',    planFeature: 'foster_families' },
-  { id: 'voluntarios',   icon: '👥', label: 'Voluntarios', permiso: 'usuarios:read', planFeature: 'volunteers' },
+  { id: 'voluntarios',   icon: '👥', label: 'Voluntarios', permiso: 'voluntarios:read', planFeature: 'volunteers' },
   { id: 'avisos',        icon: '🔔', label: 'Avisos' },
   { id: 'donaciones',    icon: '💝', label: 'Donaciones',  permiso: 'donaciones:read' },
   { id: 'reportes',      icon: '📊', label: 'Reportes',    permiso: 'reportes:read' },

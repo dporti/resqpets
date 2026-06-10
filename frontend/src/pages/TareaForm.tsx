@@ -46,7 +46,7 @@ export default function TareaForm({ tarea, onClose, onSaved }: Props) {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    api.getVoluntarios().then(v => setVoluntarios(v.filter(u => u.activo)));
+    api.getVoluntarios({ limit: 100 }).then(r => setVoluntarios(r.data.filter(u => u.activo)));
     api.getAnimales({ limit: '100' }).then(r => setAnimales(r.data.map(a => ({ id: a.id, nombre: a.nombre }))));
   }, []);
 

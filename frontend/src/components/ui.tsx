@@ -82,6 +82,43 @@ export function EmptyState({ icon, title, subtitle }: { icon: string; title: str
   );
 }
 
+// ── ERROR STATE ────────────────────────────────────────
+export function ErrorState({ message, onRetry }: { message?: string; onRetry?: () => void }) {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      justifyContent: 'center', padding: 64, color: '#9ca3af', gap: 12,
+    }}>
+      <div style={{ fontSize: 48 }}>⚠️</div>
+      <div style={{ fontSize: 16, fontWeight: 600, color: '#374151' }}>Error al cargar los datos</div>
+      {message && <div style={{ fontSize: 13 }}>{message}</div>}
+      {onRetry && (
+        <button onClick={onRetry} style={{
+          marginTop: 4, padding: '8px 16px', borderRadius: 8, border: '1px solid #e5e7eb',
+          background: '#fff', color: '#374151', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+          fontFamily: "'Inter', sans-serif",
+        }}>Reintentar</button>
+      )}
+    </div>
+  );
+}
+
+// ── SKELETON LIST ──────────────────────────────────────
+export function SkeletonList({ rows = 5 }: { rows?: number }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 16 }}>
+      <style>{`@keyframes resqpet-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
+      {Array.from({ length: rows }, (_, i) => (
+        <div key={i} style={{
+          height: 48, borderRadius: 8, background: '#f3f4f6',
+          animation: 'resqpet-pulse 1.5s ease-in-out infinite',
+          animationDelay: `${i * 0.08}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
 // ── CARD ───────────────────────────────────────────────
 export function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, FormEvent } from 'react';
 import { Animal, HealthEvent, BehaviorEvaluation, AnimalDocument, AnimalFotoFull } from '../types';
 import { api } from '../api/client';
-import { Badge, DotsBar, formatDate, formatDateTime, Spinner } from '../components/ui';
+import { Badge, DotsBar, formatDate, formatDateTime, Spinner, ErrorState } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { useAnimalList } from '../context/AnimalListContext';
 import AnimalForm from './AnimalForm';
@@ -95,6 +95,7 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
   const [animal, setAnimal] = useState<Animal | null>(null);
   const [fotos, setFotos] = useState<AnimalFotoFull[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [tab, setTab] = useState('Información');
   const [photoIdx, setPhotoIdx] = useState(0);
   const [showEdit, setShowEdit] = useState(false);
@@ -142,6 +143,7 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
 
   const loadAnimal = () => {
     setLoading(true);
+    setError(false);
     api.getAnimal(animalId)
       .then(a => {
         setAnimal(a);
@@ -150,7 +152,7 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
         const pi = f.findIndex(x => x.es_principal);
         setPhotoIdx(pi >= 0 ? pi : 0);
       })
-      .catch(console.error)
+      .catch(e => { console.error(e); setError(true); })
       .finally(() => setLoading(false));
   };
 
@@ -268,6 +270,12 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
   if (loading) return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
       <Spinner size={44} />
+    </div>
+  );
+
+  if (error) return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
+      <ErrorState onRetry={loadAnimal} />
     </div>
   );
 

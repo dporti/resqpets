@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { User } from '../types';
 import { api } from '../api/client';
-import { RolBadge, Spinner, EmptyState } from '../components/ui';
+import { RolBadge, EmptyState, ErrorState, SkeletonList } from '../components/ui';
 import TopBar from '../components/TopBar';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,9 +13,12 @@ export default function UsuariosPage() {
   const [form, setForm] = useState({ nombre: '', email: '', password: '', rol: 'voluntario' });
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   const load = () => {
-    api.getUsuarios().then(setUsuarios).catch(console.error).finally(() => setLoading(false));
+    setLoading(true);
+    setLoadError(false);
+    api.getUsuarios().then(setUsuarios).catch(e => { console.error(e); setLoadError(true); }).finally(() => setLoading(false));
   };
 
   useEffect(load, []);
@@ -69,7 +72,11 @@ export default function UsuariosPage() {
 
       <div style={{ padding: '24px' }}>
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 48 }}><Spinner /></div>
+          <SkeletonList rows={5} />
+        ) : loadError ? (
+          <ErrorState onRetry={load} />
+        ) : usuarios.length === 0 ? (
+          <EmptyState icon="👥" title="No hay usuarios" subtitle="Invita a tu equipo para empezar" />
         ) : (
           <div style={{ background: '#fff', borderRadius: 10, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>

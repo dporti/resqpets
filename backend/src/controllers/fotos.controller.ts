@@ -12,6 +12,9 @@ export async function uploadFoto(req: AuthRequest, res: Response): Promise<void>
 
   if (!file) { res.status(400).json({ error: 'No file provided' }); return; }
 
+  const animalCheck = await query('SELECT id FROM animales WHERE id=$1 AND refugio_id=$2', [id, refugioId]);
+  if (animalCheck.rows.length === 0) { res.status(404).json({ error: 'Animal no encontrado' }); return; }
+
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
@@ -77,7 +80,14 @@ export async function deleteFoto(req: AuthRequest, res: Response): Promise<void>
 
 export async function setPrincipal(req: AuthRequest, res: Response): Promise<void> {
   const { id, fotoId } = req.params;
+  const refugioId = req.user!.refugioId;
   try {
+    const animalCheck = await query('SELECT id FROM animales WHERE id=$1 AND refugio_id=$2', [id, refugioId]);
+    if (animalCheck.rows.length === 0) { res.status(404).json({ error: 'Animal no encontrado' }); return; }
+
+    const foto = await query('SELECT id FROM animal_fotos WHERE id=$1 AND animal_id=$2', [fotoId, id]);
+    if (foto.rows.length === 0) { res.status(404).json({ error: 'Foto no encontrada' }); return; }
+
     await query('UPDATE animal_fotos SET es_principal=false WHERE animal_id=$1', [id]);
     await query('UPDATE animal_fotos SET es_principal=true WHERE id=$1', [fotoId]);
     res.json({ ok: true });

@@ -8,7 +8,13 @@ const KARMA_TAREA: Record<string, number> = { alta: 10, media: 5, baja: 2 };
 
 export async function getVoluntarios(req: AuthRequest, res: Response): Promise<void> {
   const refugioId = req.user!.refugioId;
+  const { page = '1', limit = '20' } = req.query as Record<string, string>;
   try {
+    const pageN = Math.max(1, parseInt(page));
+    const limitN = Math.min(100, Math.max(1, parseInt(limit)));
+    const offset = (pageN - 1) * limitN;
+
+    const countRes = await query(`SELECT COUNT(*) FROM usuarios WHERE refugio_id=$1`, [refugioId]);
     const result = await query(`
       SELECT u.id, u.nombre, u.email, u.rol, u.avatar_url, u.activo,
              u.karma_puntos, u.especialidades, u.bio, u.es_disponible,
@@ -23,10 +29,12 @@ export async function getVoluntarios(req: AuthRequest, res: Response): Promise<v
               AND t.estado IN ('pending','in_progress')) as tareas_pendientes
       FROM usuarios u
       WHERE u.refugio_id = $1
-      ORDER BY u.activo DESC, u.ultima_actividad DESC NULLS LAST, u.nombre ASC`,
-      [refugioId]
+      ORDER BY u.activo DESC, u.ultima_actividad DESC NULLS LAST, u.nombre ASC
+      LIMIT $2 OFFSET $3`,
+      [refugioId, limitN, offset]
     );
-    res.json(result.rows);
+    const total = Number(countRes.rows[0].count);
+    res.json({ data: result.rows, total, page: pageN, limit: limitN, totalPages: Math.ceil(total / limitN) });
   } catch { res.status(500).json({ error: 'Error interno' }); }
 }
 

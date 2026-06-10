@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { SosAlert } from '../types';
 import { api } from '../api/client';
-import { Spinner, EmptyState, formatDateTime } from '../components/ui';
+import { EmptyState, ErrorState, SkeletonList, formatDateTime } from '../components/ui';
 import TopBar from '../components/TopBar';
 import { useAuth } from '../context/AuthContext';
 import SosAlertPanel from './SosAlertPanel';
@@ -112,22 +112,37 @@ export default function AvisosPage() {
   const { can } = useAuth();
   const [alertas, setAlertas] = useState<SosAlert[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [vista, setVista] = useState<'mapa' | 'lista'>('mapa');
   const [filtroTipo, setFiltroTipo] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('active');
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const LIMIT = 20;
 
   const load = useCallback(async () => {
     setLoading(true);
+    setError(false);
     try {
-      const params: Record<string, string> = {};
+      const params: Record<string, string | number> = vista === 'mapa'
+        ? { limit: 200, page: 1 }
+        : { limit: LIMIT, page };
       if (filtroTipo) params.tipo = filtroTipo;
       if (filtroEstado !== 'todos') params.estado = filtroEstado;
-      setAlertas(await api.getSosAlertas(params));
+      const r = await api.getSosAlertas(params);
+      setAlertas(r.data);
+      setTotal(r.total);
+      setTotalPages(r.totalPages);
+    } catch (e) {
+      console.error(e);
+      setError(true);
     } finally { setLoading(false); }
-  }, [filtroTipo, filtroEstado]);
+  }, [filtroTipo, filtroEstado, vista, page]);
 
   useEffect(() => { load(); }, [load]);
+  useEffect(() => { setPage(1); }, [filtroTipo, filtroEstado, vista]);
 
   const activos = alertas.filter(a => a.estado === 'active').length;
   const altaUrgencia = alertas.filter(a => a.urgencia === 'high' && a.estado === 'active').length;
@@ -170,7 +185,9 @@ export default function AvisosPage() {
       </div>
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: 64 }}><Spinner size={36} /></div>
+        <SkeletonList rows={6} />
+      ) : error ? (
+        <ErrorState onRetry={load} />
       ) : vista === 'mapa' ? (
         <div style={{ display: 'flex', flex: 1, minHeight: 'calc(100vh - 140px)' }}>
           {/* Mapa */}
@@ -257,6 +274,26 @@ export default function AvisosPage() {
                 })}
               </tbody>
             </table>
+            {totalPages > 1 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', borderTop: '1px solid #f3f4f6' }}>
+                <span style={{ fontSize: 12.5, color: '#9ca3af' }}>
+                  Mostrando {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, total)} de {total}
+                </span>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <button onClick={() => setPage(p => p - 1)} disabled={page === 1} style={{
+                    padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 7,
+                    background: '#fff', cursor: page === 1 ? 'not-allowed' : 'pointer',
+                    opacity: page === 1 ? 0.4 : 1, fontFamily: "'Inter', sans-serif", fontSize: 13,
+                  }}>← Anterior</button>
+                  <span style={{ fontSize: 13, color: '#374151' }}>{page} / {totalPages}</span>
+                  <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} style={{
+                    padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 7,
+                    background: '#fff', cursor: page === totalPages ? 'not-allowed' : 'pointer',
+                    opacity: page === totalPages ? 0.4 : 1, fontFamily: "'Inter', sans-serif", fontSize: 13,
+                  }}>Siguiente →</button>
+                </div>
+              </div>
+            )}
           </div>
         )
       )}

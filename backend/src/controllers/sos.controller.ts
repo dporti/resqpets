@@ -72,18 +72,29 @@ export async function createPublicAlerta(req: Request, res: Response): Promise<v
 // ── PRIVADO (auth) ────────────────────────────────────
 export async function getAlertas(req: AuthRequest, res: Response): Promise<void> {
   const refugioId = req.user!.refugioId;
-  const { tipo, estado, urgencia } = req.query;
+  const { tipo, estado, urgencia, page = '1', limit = '20' } = req.query as Record<string, string>;
   try {
-    let q = `SELECT s.*,
-               (SELECT COUNT(*) FROM sos_updates u WHERE u.sos_alert_id=s.id) as updates_count
-             FROM sos_alerts s
-             WHERE (s.refugio_id=$1 OR s.refugio_id IS NULL)`;
+    let where = ` WHERE (s.refugio_id=$1 OR s.refugio_id IS NULL)`;
     const params: unknown[] = [refugioId]; let idx = 2;
-    if (tipo) { q += ` AND s.tipo=$${idx++}`; params.push(tipo); }
-    if (estado && estado !== 'todos') { q += ` AND s.estado=$${idx++}`; params.push(estado); }
-    if (urgencia) { q += ` AND s.urgencia=$${idx++}`; params.push(urgencia); }
-    q += ` ORDER BY CASE s.urgencia WHEN 'high' THEN 1 WHEN 'medium' THEN 2 ELSE 3 END, s.created_at DESC`;
-    res.json((await query(q, params)).rows);
+    if (tipo) { where += ` AND s.tipo=$${idx++}`; params.push(tipo); }
+    if (estado && estado !== 'todos') { where += ` AND s.estado=$${idx++}`; params.push(estado); }
+    if (urgencia) { where += ` AND s.urgencia=$${idx++}`; params.push(urgencia); }
+
+    const pageN = Math.max(1, parseInt(page));
+    const limitN = Math.min(100, Math.max(1, parseInt(limit)));
+    const offset = (pageN - 1) * limitN;
+
+    const countRes = await query(`SELECT COUNT(*) FROM sos_alerts s${where}`, params);
+    const result = await query(
+      `SELECT s.*,
+               (SELECT COUNT(*) FROM sos_updates u WHERE u.sos_alert_id=s.id) as updates_count
+             FROM sos_alerts s${where}
+             ORDER BY CASE s.urgencia WHEN 'high' THEN 1 WHEN 'medium' THEN 2 ELSE 3 END, s.created_at DESC
+             LIMIT $${idx} OFFSET $${idx + 1}`,
+      [...params, limitN, offset]
+    );
+    const total = Number(countRes.rows[0].count);
+    res.json({ data: result.rows, total, page: pageN, limit: limitN, totalPages: Math.ceil(total / limitN) });
   } catch { res.status(500).json({ error: 'Error interno' }); }
 }
 
@@ -121,6 +132,7 @@ export async function getAlerta(req: AuthRequest, res: Response): Promise<void> 
 
 export async function updateAlerta(req: AuthRequest, res: Response): Promise<void> {
   const { id } = req.params;
+  const refugioId = req.user!.refugioId;
   const { estado, urgencia, es_publico } = req.body;
   try {
     const updates: string[] = []; const vals: unknown[] = []; let idx = 1;
@@ -128,8 +140,9 @@ export async function updateAlerta(req: AuthRequest, res: Response): Promise<voi
     if (urgencia !== undefined) { updates.push(`urgencia=$${idx++}`); vals.push(urgencia); }
     if (es_publico !== undefined) { updates.push(`es_publico=$${idx++}`); vals.push(es_publico); }
     if (updates.length === 0) { res.status(400).json({ error: 'Sin cambios' }); return; }
-    vals.push(id);
-    const r = await query(`UPDATE sos_alerts SET ${updates.join(',')} WHERE id=$${idx} RETURNING *`, vals);
+    vals.push(id); vals.push(refugioId);
+    const r = await query(`UPDATE sos_alerts SET ${updates.join(',')} WHERE id=$${idx++} AND refugio_id=$${idx} RETURNING *`, vals);
+    if (r.rows.length === 0) { res.status(404).json({ error: 'Aviso no encontrado' }); return; }
     res.json(r.rows[0]);
   } catch { res.status(500).json({ error: 'Error interno' }); }
 }

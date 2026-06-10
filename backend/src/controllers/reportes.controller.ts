@@ -98,17 +98,19 @@ export async function getResumen(req: AuthRequest, res: Response) {
       `, [refugioId]),
     ]);
 
+    const ingresos = Number(ingresosR.rows[0].count);
+    const adopciones = Number(adopcionesR.rows[0].count);
     const kpis = {
-      ingresos:        Number(ingresosR.rows[0].count),
+      ingresos,
       prev_ingresos:   Number(prevIngresosR.rows[0].count),
-      adopciones:      Number(adopcionesR.rows[0].count),
+      adopciones,
       prev_adopciones: Number(prevAdopcionesR.rows[0].count),
       tiempo_medio:    tiempoMedioR.rows[0]?.dias ?? 0,
       acogidas_activas: Number(acogidasActivasR.rows[0].count),
       sos_resueltos:   Number(sosResueltoR.rows[0].count),
       prev_sos:        Number(prevSosR.rows[0].count),
+      tasa_adopcion:   ingresos > 0 ? Math.round((adopciones / ingresos) * 100) : 0,
     };
-    kpis.tasa_adopcion = kpis.ingresos > 0 ? Math.round((kpis.adopciones / kpis.ingresos) * 100) : 0;
 
     res.json({
       kpis,

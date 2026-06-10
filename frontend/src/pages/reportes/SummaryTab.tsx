@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import { api } from '../../api/client';
 import { Period, periodToParams, KPICard, ChartCard, ChartEmpty, ActivityHeatmap, Skeleton, C, PIE_COLORS, CustomTooltip } from './shared';
+import { ErrorState } from '../../components/ui';
 
 interface SummaryData {
   kpis: Record<string, number>;
@@ -24,15 +25,19 @@ const ESPECIE_LABEL: Record<string, string> = { perro: 'üêï Perros', gato: 'üê
 export function SummaryTab({ period }: { period: Period }) {
   const [data, setData] = useState<SummaryData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     setLoading(true);
+    setError(false);
     const qs = new URLSearchParams(periodToParams(period)).toString();
-    api.get<SummaryData>(`/reportes/resumen?${qs}`).then(d => { setData(d); setLoading(false); }).catch(() => setLoading(false));
+    api.get<SummaryData>(`/reportes/resumen?${qs}`).then(d => { setData(d); setLoading(false); }).catch(e => { console.error(e); setError(true); setLoading(false); });
   }, [period.period, period.date_from, period.date_to]);
 
+  useEffect(() => { load(); }, [load]);
+
   if (loading) return <LoadingSkeleton />;
-  if (!data) return <ChartEmpty text="Error al cargar datos" />;
+  if (error || !data) return <ErrorState onRetry={load} />;
 
   const { kpis } = data;
 

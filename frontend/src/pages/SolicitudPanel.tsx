@@ -1,7 +1,7 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useCallback, FormEvent } from 'react';
 import { AdoptionRequest, AdoptionEstado } from '../types';
 import { api } from '../api/client';
-import { Badge, Spinner, formatDateTime, formatDate } from '../components/ui';
+import { Badge, Spinner, ErrorState, formatDateTime, formatDate } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 
 interface Props {
@@ -70,6 +70,7 @@ export default function SolicitudPanel({ solicitudId, onClose, onUpdated, onApro
   const { can } = useAuth();
   const [sol, setSol] = useState<AdoptionRequest | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [nuevoEstado, setNuevoEstado] = useState<AdoptionEstado>('pendiente');
   const [motivoRechazo, setMotivoRechazo] = useState('');
   const [cambiandoEstado, setCambiandoEstado] = useState(false);
@@ -81,11 +82,15 @@ export default function SolicitudPanel({ solicitudId, onClose, onUpdated, onApro
   const [entrevistaForm, setEntrevistaForm] = useState({ fecha: '', hora: '10:00', tipo: 'presencial', notas: '' });
   const [aprobando, setAprobando] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
+    setLoading(true);
+    setError(false);
     api.getSolicitud(solicitudId).then(s => {
       setSol(s); setNuevoEstado(s.estado); setNotas(s.notas_internas || '');
-    }).finally(() => setLoading(false));
+    }).catch(e => { console.error(e); setError(true); }).finally(() => setLoading(false));
   }, [solicitudId]);
+
+  useEffect(() => { load(); }, [load]);
 
   const handleCambiarEstado = async () => {
     if (!sol) return;
@@ -129,6 +134,14 @@ export default function SolicitudPanel({ solicitudId, onClose, onUpdated, onApro
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
       <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 580, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Spinner size={36} />
+      </div>
+    </>
+  );
+  if (error) return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 580, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <ErrorState onRetry={load} />
       </div>
     </>
   );

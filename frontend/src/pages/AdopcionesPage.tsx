@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { AdoptionRequest, AdoptionExpedient, AdoptionEstado } from '../types';
 import { api } from '../api/client';
-import { Spinner, EmptyState, formatDate } from '../components/ui';
+import { EmptyState, ErrorState, SkeletonList, formatDate } from '../components/ui';
 import TopBar from '../components/TopBar';
 import { useAuth } from '../context/AuthContext';
 import { DndContext, DragEndEvent, useDraggable, useDroppable } from '@dnd-kit/core';
@@ -179,28 +179,44 @@ export default function AdopcionesPage() {
   const [solicitudes, setSolicitudes] = useState<AdoptionRequest[]>([]);
   const [expedientes, setExpedientes] = useState<AdoptionExpedient[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [estadoFilter, setEstadoFilter] = useState<string>('');
   const [selectedSolicitudId, setSelectedSolicitudId] = useState<number | null>(null);
   const [selectedExpedienteId, setSelectedExpedienteId] = useState<number | null>(null);
   const [showNuevaSolicitud, setShowNuevaSolicitud] = useState(false);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const LIMIT = 20;
 
   const loadSolicitudes = useCallback(async () => {
-    setLoading(true);
+    setLoading(true); setError(false);
     try {
-      const params: Record<string, string> = {};
+      const params: Record<string, string | number> = viewMode === 'kanban'
+        ? { limit: 200, page: 1 }
+        : { limit: LIMIT, page };
       if (estadoFilter) params.estado = estadoFilter;
       const data = await api.getSolicitudes(params);
-      setSolicitudes(data);
-    } finally { setLoading(false); }
-  }, [estadoFilter]);
+      setSolicitudes(data.data);
+      setTotal(data.total);
+      setTotalPages(data.totalPages);
+    } catch (e) { console.error(e); setError(true); }
+    finally { setLoading(false); }
+  }, [estadoFilter, viewMode, page]);
 
   const loadExpedientes = useCallback(async () => {
-    setLoading(true);
+    setLoading(true); setError(false);
     try { const data = await api.getExpedientes(); setExpedientes(data); }
+    catch (e) { console.error(e); setError(true); }
     finally { setLoading(false); }
   }, []);
 
-  useEffect(() => { vista === 'solicitudes' ? loadSolicitudes() : loadExpedientes(); }, [vista, loadSolicitudes, loadExpedientes]);
+  const reload = useCallback(() => {
+    vista === 'solicitudes' ? loadSolicitudes() : loadExpedientes();
+  }, [vista, loadSolicitudes, loadExpedientes]);
+
+  useEffect(() => { reload(); }, [reload]);
+  useEffect(() => { setPage(1); }, [estadoFilter, viewMode, vista]);
 
   const pendientes = solicitudes.filter(s => s.estado === 'pendiente').length;
 
@@ -275,7 +291,9 @@ export default function AdopcionesPage() {
 
       <div style={{ padding: '0 24px 24px' }}>
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 64 }}><Spinner size={36} /></div>
+          <SkeletonList rows={6} />
+        ) : error ? (
+          <ErrorState onRetry={reload} />
         ) : vista === 'solicitudes' ? (
           viewMode === 'tabla' ? (
             /* ── TABLA ────────────────────────────────────── */
@@ -334,6 +352,26 @@ export default function AdopcionesPage() {
                     ))}
                   </tbody>
                 </table>
+                {totalPages > 1 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderTop: '1px solid #f3f4f6' }}>
+                    <span style={{ fontSize: 12.5, color: '#9ca3af' }}>
+                      Mostrando {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, total)} de {total}
+                    </span>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <button onClick={() => setPage(p => p - 1)} disabled={page === 1} style={{
+                        padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 7,
+                        background: '#fff', cursor: page === 1 ? 'not-allowed' : 'pointer',
+                        opacity: page === 1 ? 0.4 : 1, fontFamily: "'Inter', sans-serif", fontSize: 13,
+                      }}>← Anterior</button>
+                      <span style={{ fontSize: 13, color: '#374151' }}>{page} / {totalPages}</span>
+                      <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} style={{
+                        padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 7,
+                        background: '#fff', cursor: page === totalPages ? 'not-allowed' : 'pointer',
+                        opacity: page === totalPages ? 0.4 : 1, fontFamily: "'Inter', sans-serif", fontSize: 13,
+                      }}>Siguiente →</button>
+                    </div>
+                  </div>
+                )}
               </div>
             )
           ) : (

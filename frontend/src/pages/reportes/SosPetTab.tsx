@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   BarChart, Bar, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine,
 } from 'recharts';
 import { api } from '../../api/client';
 import { Period, periodToParams, KPICard, ChartCard, ChartEmpty, Skeleton, C, CustomTooltip, tbStyle, thStyle, tdStyle } from './shared';
+import { ErrorState } from '../../components/ui';
 
 interface SosData {
   kpis: { creados: number; resueltos: number; activos: number; rescates: number; tasa_resolucion: number; tiempo_medio_h: number };
@@ -25,15 +26,19 @@ const URGENCIA_COLOR: Record<string, string> = { high: C.red, medium: C.orange, 
 export function SosPetTab({ period }: { period: Period }) {
   const [data, setData] = useState<SosData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     setLoading(true);
+    setError(false);
     const qs = new URLSearchParams(periodToParams(period)).toString();
-    api.get<SosData>(`/reportes/sos?${qs}`).then(d => { setData(d); setLoading(false); }).catch(() => setLoading(false));
+    api.get<SosData>(`/reportes/sos?${qs}`).then(d => { setData(d); setLoading(false); }).catch(e => { console.error(e); setError(true); setLoading(false); });
   }, [period.period, period.date_from, period.date_to]);
 
+  useEffect(() => { load(); }, [load]);
+
   if (loading) return <Skels />;
-  if (!data) return <ChartEmpty text="Error al cargar datos" />;
+  if (error || !data) return <ErrorState onRetry={load} />;
 
   const { kpis } = data;
 

@@ -20,6 +20,7 @@ export const PERMISOS: Record<string, UserRole[]> = {
   'avisos:read':       ['admin', 'coordinador', 'voluntario'],
   'usuarios:read':     ['admin', 'coordinador'],
   'usuarios:manage':   ['admin'],
+  'voluntarios:read':  ['admin', 'coordinador', 'voluntario'],
   'config:manage':     ['admin'],
 };
 
