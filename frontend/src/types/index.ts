@@ -476,6 +476,34 @@ export interface AnimalDocument {
   usuario_nombre?: string;
 }
 
+export interface AnimalExpense {
+  id: number;
+  shelter_id: number;
+  animal_id: number | null;
+  category: 'veterinario' | 'alimentacion' | 'medicacion' | 'alojamiento' | 'transporte' | 'esterilizacion' | 'otros';
+  description?: string;
+  amount: number | string;
+  expense_date: string;
+  receipt_url?: string;
+  created_by?: number;
+  created_at: string;
+  updated_at: string;
+  animal_nombre?: string;
+}
+
+export interface AnimalFinancials {
+  expenses: AnimalExpense[];
+  total_expenses: number;
+  total_income: number;
+  balance: number;
+}
+
+export interface FinancialSummary {
+  this_month: { expenses: number; income: number; balance: number };
+  by_category: { category: string; total: number; count: string }[];
+  evolution: { label: string; mes_date: string; expenses: number; income: number }[];
+}
+
 export interface AnimalFotoFull {
   id: number;
   animal_id: number;

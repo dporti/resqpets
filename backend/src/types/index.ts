@@ -16,6 +16,7 @@ export const PERMISOS: Record<string, UserRole[]> = {
   'adopciones:read':   ['admin', 'coordinador'],
   'adopciones:manage': ['admin', 'coordinador'],
   'donaciones:read':   ['admin', 'coordinador'],
+  'finanzas:read':     ['admin', 'coordinador'],
   'reportes:read':     ['admin', 'coordinador'],
   'avisos:read':       ['admin', 'coordinador', 'voluntario'],
   'usuarios:read':     ['admin', 'coordinador'],

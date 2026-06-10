@@ -14,6 +14,7 @@ import ReportesPage from './pages/ReportesPage';
 import MensajesPage from './pages/MensajesPage';
 import ConfiguracionPage from './pages/ConfiguracionPage';
 import DonacionesPage from './pages/DonacionesPage';
+import FinanzasPage from './pages/FinanzasPage';
 import { FloatingAssistant, AssistantButton } from './components/assistant/FloatingAssistant';
 import { PlanProvider } from './lib/billing/PlanContext';
 
@@ -121,6 +122,11 @@ function AppShell() {
 
       case 'donaciones':
         return <DonacionesPage />;
+
+      case 'finanzas':
+        return can('finanzas:read')
+          ? <FinanzasPage />
+          : <PlaceholderPage titulo="Sin acceso" icon="🔒" />;
 
       case 'reportes':
         return can('reportes:read')

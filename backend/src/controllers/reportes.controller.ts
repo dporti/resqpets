@@ -477,6 +477,82 @@ export async function getSosReport(req: AuthRequest, res: Response) {
   }
 }
 
+// ── FINANZAS ──────────────────────────────────────────────────────────
+
+export async function getFinanzasReport(req: AuthRequest, res: Response) {
+  try {
+    const refugioId = req.user!.refugioId;
+    const { from, to } = parsePeriod(req.query as Record<string, string>);
+
+    const [kpisR, byCategoryR, evolutionR, topAnimalesR] = await Promise.all([
+      query(`
+        SELECT
+          (SELECT COALESCE(SUM(amount),0) FROM animal_expenses WHERE shelter_id=$1 AND expense_date BETWEEN $2 AND $3) AS total_expenses,
+          (SELECT COALESCE(SUM(amount),0) FROM donations WHERE shelter_id=$1 AND status='confirmed' AND created_at BETWEEN $2 AND $3) AS total_income
+      `, [refugioId, from, to]),
+      query(`
+        SELECT category, COALESCE(SUM(amount),0) AS total, COUNT(*) AS count
+        FROM animal_expenses
+        WHERE shelter_id=$1 AND expense_date BETWEEN $2 AND $3
+        GROUP BY category
+        ORDER BY total DESC
+      `, [refugioId, from, to]),
+      query(`
+        SELECT TO_CHAR(DATE_TRUNC('month', m.mes), 'Mon YY') AS label,
+          COALESCE(exp.total,0) AS expenses,
+          COALESCE(inc.total,0) AS income
+        FROM generate_series(DATE_TRUNC('month',$2::date), DATE_TRUNC('month',$3::date), '1 month') AS m(mes)
+        LEFT JOIN (
+          SELECT DATE_TRUNC('month', expense_date) AS mes, SUM(amount) AS total
+          FROM animal_expenses WHERE shelter_id=$1 GROUP BY mes) exp ON exp.mes = m.mes
+        LEFT JOIN (
+          SELECT DATE_TRUNC('month', created_at) AS mes, SUM(amount) AS total
+          FROM donations WHERE shelter_id=$1 AND status='confirmed' GROUP BY mes) inc ON inc.mes = m.mes
+        ORDER BY m.mes
+      `, [refugioId, from, to]),
+      query(`
+        SELECT a.id, a.nombre, a.especie, fp.url AS foto,
+          COALESCE(e.total_gastos,0) AS total_gastos,
+          COALESCE(d.total_ingresos,0) AS total_ingresos
+        FROM animales a
+        LEFT JOIN animal_fotos fp ON fp.animal_id=a.id AND fp.es_principal=true
+        JOIN (
+          SELECT animal_id, SUM(amount) AS total_gastos
+          FROM animal_expenses
+          WHERE shelter_id=$1 AND expense_date BETWEEN $2 AND $3 AND animal_id IS NOT NULL
+          GROUP BY animal_id
+        ) e ON e.animal_id = a.id
+        LEFT JOIN (
+          SELECT animal_id, SUM(amount) AS total_ingresos
+          FROM donations
+          WHERE shelter_id=$1 AND status='confirmed' AND created_at BETWEEN $2 AND $3 AND animal_id IS NOT NULL
+          GROUP BY animal_id
+        ) d ON d.animal_id = a.id
+        WHERE a.refugio_id=$1
+        ORDER BY e.total_gastos DESC
+        LIMIT 10
+      `, [refugioId, from, to]),
+    ]);
+
+    const totalExpenses = parseFloat(kpisR.rows[0].total_expenses);
+    const totalIncome = parseFloat(kpisR.rows[0].total_income);
+
+    res.json({
+      kpis: {
+        total_expenses: totalExpenses,
+        total_income: totalIncome,
+        balance: totalIncome - totalExpenses,
+      },
+      by_category: byCategoryR.rows.map(r => ({ ...r, total: parseFloat(r.total) })),
+      evolution: evolutionR.rows.map(r => ({ ...r, expenses: parseFloat(r.expenses), income: parseFloat(r.income) })),
+      top_animales: topAnimalesR.rows.map(r => ({ ...r, total_gastos: parseFloat(r.total_gastos), total_ingresos: parseFloat(r.total_ingresos) })),
+    });
+  } catch (e) {
+    console.error('getFinanzasReport error:', e);
+    res.status(500).json({ error: 'Error al cargar datos financieros' });
+  }
+}
+
 // ── EXPORT DATA (CSV) ─────────────────────────────────────────────────
 
 export async function getExportData(req: AuthRequest, res: Response) {

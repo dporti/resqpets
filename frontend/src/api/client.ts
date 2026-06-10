@@ -218,6 +218,24 @@ export const api = {
   generateInstagram: (animalId: number) =>
     request<{ texto: string }>('POST', `/animales/${animalId}/instagram`),
 
+  // Finanzas / gastos por animal
+  getAnimalFinancials: (animalId: number) =>
+    request<import('../types').AnimalFinancials>('GET', `/animales/${animalId}/finanzas`),
+  createGasto: (data: object) =>
+    request<import('../types').AnimalExpense>('POST', '/finanzas/gastos', data),
+  updateGasto: (id: number, data: object) =>
+    request<import('../types').AnimalExpense>('PUT', `/finanzas/gastos/${id}`, data),
+  deleteGasto: (id: number) =>
+    request('DELETE', `/finanzas/gastos/${id}`),
+
+  // Finanzas — global
+  getFinancialSummary: () =>
+    request<import('../types').FinancialSummary>('GET', '/finanzas/summary'),
+  getGastos: (params?: Record<string, string | number>) => {
+    const qs = params ? '?' + new URLSearchParams(params as Record<string, string>).toString() : '';
+    return request<{ data: import('../types').AnimalExpense[]; total: number; total_amount: number; page: number; limit: number; pages: number }>('GET', `/finanzas/gastos${qs}`);
+  },
+
   // Avisos
   getAvisos: () => request<import('../types').Aviso[]>('GET', '/avisos'),
 

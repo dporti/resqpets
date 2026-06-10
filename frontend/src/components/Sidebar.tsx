@@ -19,6 +19,7 @@ const NAV_ITEMS: {
   { id: 'voluntarios',   icon: '👥', label: 'Voluntarios', permiso: 'voluntarios:read', planFeature: 'volunteers' },
   { id: 'avisos',        icon: '🔔', label: 'Avisos' },
   { id: 'donaciones',    icon: '💝', label: 'Donaciones',  permiso: 'donaciones:read' },
+  { id: 'finanzas',      icon: '💰', label: 'Finanzas',    permiso: 'finanzas:read' },
   { id: 'reportes',      icon: '📊', label: 'Reportes',    permiso: 'reportes:read' },
   { id: 'calendario',    icon: '📅', label: 'Calendario',  planFeature: 'calendar' },
   { id: 'mensajes',      icon: '✉️',  label: 'Mensajes' },

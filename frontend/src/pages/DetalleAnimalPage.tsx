@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, FormEvent } from 'react';
-import { Animal, HealthEvent, BehaviorEvaluation, AnimalDocument, AnimalFotoFull } from '../types';
+import { Animal, HealthEvent, BehaviorEvaluation, AnimalDocument, AnimalFotoFull, AnimalExpense, AnimalFinancials } from '../types';
 import { api } from '../api/client';
 import { Badge, DotsBar, formatDate, formatDateTime, Spinner, ErrorState } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
@@ -12,7 +12,17 @@ interface Props {
   onNavigate: (id: number) => void;
 }
 
-const TABS = ['Información', 'Salud', 'Comportamiento', 'Documentos', 'Historia', 'Redes'];
+const TABS = ['Información', 'Salud', 'Comportamiento', 'Documentos', 'Gastos', 'Historia', 'Redes'];
+
+const EXPENSE_CATEGORIES = [
+  { val: 'veterinario', label: 'Veterinario' },
+  { val: 'alimentacion', label: 'Alimentación' },
+  { val: 'medicacion', label: 'Medicación' },
+  { val: 'alojamiento', label: 'Alojamiento' },
+  { val: 'transporte', label: 'Transporte' },
+  { val: 'esterilizacion', label: 'Esterilización' },
+  { val: 'otros', label: 'Otros' },
+];
 
 const HEALTH_TIPOS = [
   { val: 'vacuna', label: 'Vacunación', icon: '💉' },
@@ -130,6 +140,13 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
   const [docForm, setDocForm] = useState({ tipo: 'Otros', nombre: '', file_url: '' });
   const [savingDoc, setSavingDoc] = useState(false);
 
+  // Gastos tab
+  const [financials, setFinancials] = useState<AnimalFinancials | null>(null);
+  const [financialsLoaded, setFinancialsLoaded] = useState(false);
+  const [showGastoModal, setShowGastoModal] = useState(false);
+  const [gastoForm, setGastoForm] = useState({ category: 'otros', description: '', amount: '', expense_date: new Date().toISOString().slice(0,10), receipt_url: '' });
+  const [savingGasto, setSavingGasto] = useState(false);
+
   // Instagram
   const [instaCopy, setInstaCopy] = useState('');
   const [generatingInsta, setGeneratingInsta] = useState(false);
@@ -167,6 +184,9 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
     }
     if (tab === 'Documentos' && !docsLoaded) {
       api.getDocuments(animalId).then(d => { setDocs(d); setDocsLoaded(true); });
+    }
+    if (tab === 'Gastos' && !financialsLoaded) {
+      api.getAnimalFinancials(animalId).then(f => { setFinancials(f); setFinancialsLoaded(true); });
     }
   }, [tab]);
 
@@ -220,6 +240,34 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
       setDocForm({ tipo: 'Otros', nombre: '', file_url: '' });
     } catch (e) { console.error(e); }
     finally { setSavingDoc(false); }
+  };
+
+  const handleGastoSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!gastoForm.amount || isNaN(parseFloat(gastoForm.amount))) return;
+    setSavingGasto(true);
+    try {
+      const gasto = await api.createGasto({ ...gastoForm, animal_id: animalId, amount: parseFloat(gastoForm.amount) });
+      setFinancials(prev => prev ? {
+        ...prev,
+        expenses: [gasto, ...prev.expenses],
+        total_expenses: prev.total_expenses + parseFloat(String(gasto.amount)),
+        balance: prev.balance - parseFloat(String(gasto.amount)),
+      } : prev);
+      setShowGastoModal(false);
+      setGastoForm({ category: 'otros', description: '', amount: '', expense_date: new Date().toISOString().slice(0,10), receipt_url: '' });
+    } catch (e) { console.error(e); }
+    finally { setSavingGasto(false); }
+  };
+
+  const handleDeleteGasto = async (gasto: AnimalExpense) => {
+    await api.deleteGasto(gasto.id);
+    setFinancials(prev => prev ? {
+      ...prev,
+      expenses: prev.expenses.filter(g => g.id !== gasto.id),
+      total_expenses: prev.total_expenses - parseFloat(String(gasto.amount)),
+      balance: prev.balance + parseFloat(String(gasto.amount)),
+    } : prev);
   };
 
   const handleFotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -629,6 +677,60 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
             </div>
           )}
 
+          {/* ── TAB: GASTOS ────────────────────────────────── */}
+          {tab === 'Gastos' && (
+            <div>
+              {can('finanzas:read') && (
+                <button onClick={() => setShowGastoModal(true)} style={{ marginBottom: 18, padding: '8px 16px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13.5, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
+                  + Registrar gasto
+                </button>
+              )}
+              {!financialsLoaded ? <div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}><Spinner /></div> : !financials ? null : (
+                <>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
+                    <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '12px 14px' }}>
+                      <div style={{ fontSize: 11.5, color: '#9ca3af', marginBottom: 4 }}>Gastos totales</div>
+                      <div style={{ fontSize: 18, fontWeight: 700, color: '#dc2626' }}>{financials.total_expenses.toFixed(2).replace('.', ',')}€</div>
+                    </div>
+                    <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 14px' }}>
+                      <div style={{ fontSize: 11.5, color: '#9ca3af', marginBottom: 4 }}>Donaciones recibidas</div>
+                      <div style={{ fontSize: 18, fontWeight: 700, color: '#16a34a' }}>{financials.total_income.toFixed(2).replace('.', ',')}€</div>
+                    </div>
+                    <div style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 14px' }}>
+                      <div style={{ fontSize: 11.5, color: '#9ca3af', marginBottom: 4 }}>Balance</div>
+                      <div style={{ fontSize: 18, fontWeight: 700, color: financials.balance >= 0 ? '#16a34a' : '#dc2626' }}>{financials.balance.toFixed(2).replace('.', ',')}€</div>
+                    </div>
+                  </div>
+
+                  {financials.expenses.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af', fontSize: 13 }}>Sin gastos registrados</div>
+                  ) : (
+                    <div>
+                      {financials.expenses.map(g => (
+                        <div key={g.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 14px', marginBottom: 8 }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>
+                              {EXPENSE_CATEGORIES.find(c => c.val === g.category)?.label || g.category}
+                            </div>
+                            <div style={{ fontSize: 11.5, color: '#9ca3af', marginTop: 2 }}>
+                              {formatDate(g.expense_date)}{g.description ? ` · ${g.description}` : ''}
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <span style={{ fontSize: 14, fontWeight: 700, color: '#dc2626' }}>-{parseFloat(String(g.amount)).toFixed(2).replace('.', ',')}€</span>
+                            {can('finanzas:read') && (
+                              <button onClick={() => handleDeleteGasto(g)} style={{ fontSize: 12, color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: "'Inter', sans-serif" }}>🗑</button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
           {/* ── TAB: HISTORIA ──────────────────────────────── */}
           {tab === 'Historia' && (
             <div>
@@ -908,6 +1010,43 @@ export default function DetalleAnimalPage({ animalId, onVolver, onNavigate }: Pr
               <button type="button" onClick={() => setShowDocModal(false)} style={{ padding: '8px 16px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
               <button type="submit" disabled={savingDoc || !docForm.nombre || !docForm.file_url} style={{ padding: '8px 18px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
                 {savingDoc ? 'Guardando...' : 'Guardar documento'}
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {showGastoModal && (
+        <Modal title="Registrar gasto" onClose={() => setShowGastoModal(false)}>
+          <form onSubmit={handleGastoSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={row2}>
+              <div>
+                <label style={lbl}>Categoría</label>
+                <select style={inp} value={gastoForm.category} onChange={e => setGastoForm(f => ({ ...f, category: e.target.value }))}>
+                  {EXPENSE_CATEGORIES.map(c => <option key={c.val} value={c.val}>{c.label}</option>)}
+                </select>
+              </div>
+              <div>
+                <label style={lbl}>Importe (€) *</label>
+                <input type="number" step="0.01" min="0" style={inp} value={gastoForm.amount} onChange={e => setGastoForm(f => ({ ...f, amount: e.target.value }))} placeholder="0.00" />
+              </div>
+            </div>
+            <div>
+              <label style={lbl}>Fecha</label>
+              <input type="date" style={inp} value={gastoForm.expense_date} onChange={e => setGastoForm(f => ({ ...f, expense_date: e.target.value }))} />
+            </div>
+            <div>
+              <label style={lbl}>Descripción</label>
+              <input style={inp} value={gastoForm.description} onChange={e => setGastoForm(f => ({ ...f, description: e.target.value }))} placeholder="ej: Revisión veterinaria mensual" />
+            </div>
+            <div>
+              <label style={lbl}>URL de la factura/recibo</label>
+              <input type="url" style={inp} value={gastoForm.receipt_url} onChange={e => setGastoForm(f => ({ ...f, receipt_url: e.target.value }))} placeholder="https://..." />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
+              <button type="button" onClick={() => setShowGastoModal(false)} style={{ padding: '8px 16px', border: '1px solid #e5e7eb', borderRadius: 7, background: '#fff', cursor: 'pointer', fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}>Cancelar</button>
+              <button type="submit" disabled={savingGasto || !gastoForm.amount} style={{ padding: '8px 18px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+                {savingGasto ? 'Guardando...' : 'Guardar gasto'}
               </button>
             </div>
           </form>

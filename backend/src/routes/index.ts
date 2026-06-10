@@ -33,6 +33,10 @@ import {
   getDonors, getDonorHistory,
 } from '../controllers/donaciones.controller';
 import {
+  getExpenses, createExpense, updateExpense, deleteExpense,
+  getFinancialSummary, getAnimalFinancials,
+} from '../controllers/gastos.controller';
+import {
   getConfig, updateConfig, getTeam, updateMemberRole, toggleMemberStatus,
   removeMember, getInvitations, createInvitation, cancelInvitation,
   getAuditLog, uploadAsset, uploadAssetMiddleware, geocodeAddress,
@@ -46,7 +50,7 @@ import {
 } from '../controllers/calendario.controller';
 import {
   getResumen, getAnimalesReport, getAdopcionesReport,
-  getAcogidasReport, getSosReport, getExportData, getAiSummary,
+  getAcogidasReport, getSosReport, getFinanzasReport, getExportData, getAiSummary,
 } from '../controllers/reportes.controller';
 import {
   getPublicAnimals, getPublicAnimalById,
@@ -76,6 +80,14 @@ router.get('/donations/campaigns/:id', authenticate, requirePermiso('donaciones:
 router.put('/donations/campaigns/:id', authenticate, requirePermiso('donaciones:read'), updateCampaign);
 router.get('/donations/donors',        authenticate, requirePermiso('donaciones:read'), getDonors);
 router.get('/donations/donors/:id',    authenticate, requirePermiso('donaciones:read'), getDonorHistory);
+
+// ── GASTOS / FINANZAS ─────────────────────────────────────────────────
+router.get('/finanzas/summary',          authenticate, requirePermiso('finanzas:read'), getFinancialSummary);
+router.get('/finanzas/gastos',           authenticate, requirePermiso('finanzas:read'), getExpenses);
+router.post('/finanzas/gastos',          authenticate, requirePermiso('finanzas:read'), createExpense);
+router.put('/finanzas/gastos/:id',       authenticate, requirePermiso('finanzas:read'), updateExpense);
+router.delete('/finanzas/gastos/:id',    authenticate, requirePermiso('finanzas:read'), deleteExpense);
+router.get('/animales/:id/finanzas',     authenticate, requirePermiso('finanzas:read'), getAnimalFinancials);
 
 // ── CONFIGURACIÓN ─────────────────────────────────────
 router.get('/config',                           authenticate, requirePermiso('config:manage'), getConfig);
@@ -113,6 +125,7 @@ router.get('/reportes/animales',    authenticate, requirePermiso('reportes:read'
 router.get('/reportes/adopciones',  authenticate, requirePermiso('reportes:read'), getAdopcionesReport);
 router.get('/reportes/acogidas',    authenticate, requirePermiso('reportes:read'), getAcogidasReport);
 router.get('/reportes/sos',         authenticate, requirePermiso('reportes:read'), getSosReport);
+router.get('/reportes/finanzas',    authenticate, requirePermiso('finanzas:read'), getFinanzasReport);
 router.get('/reportes/export',      authenticate, requirePermiso('reportes:read'), getExportData);
 router.post('/reportes/ai-summary', authenticate, requirePermiso('reportes:read'), getAiSummary);
 

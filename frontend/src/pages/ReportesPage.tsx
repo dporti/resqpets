@@ -6,19 +6,22 @@ import { AnimalesTab } from './reportes/AnimalesTab';
 import { AdopcionesTab } from './reportes/AdopcionesTab';
 import { AcogidasTab } from './reportes/AcogidasTab';
 import { SosPetTab } from './reportes/SosPetTab';
+import { FinanzasTab } from './reportes/FinanzasTab';
 import { ExportModal } from './reportes/ExportModal';
 import { PERIODS, Period } from './reportes/shared';
 
-const TABS = [
+const ALL_TABS = [
   { id: 'resumen',    label: '📊 Resumen',    component: SummaryTab },
   { id: 'animales',   label: '🐾 Animales',   component: AnimalesTab },
   { id: 'adopciones', label: '🏠 Adopciones', component: AdopcionesTab },
   { id: 'acogidas',   label: '❤️ Acogidas',   component: AcogidasTab },
   { id: 'sos',        label: '🚨 SOS Pet',    component: SosPetTab },
+  { id: 'finanzas',   label: '💰 Finanzas',   component: FinanzasTab, permiso: 'finanzas:read' },
 ];
 
 export default function ReportesPage() {
-  const { user } = useAuth();
+  const { user, can } = useAuth();
+  const TABS = ALL_TABS.filter(t => !t.permiso || can(t.permiso));
   const [tab, setTab] = useState('resumen');
   const [period, setPeriod] = useState<Period>(PERIODS[0]);
   const [customFrom, setCustomFrom] = useState('');
