@@ -88,6 +88,10 @@ export async function createSolicitud(req: AuthRequest, res: Response): Promise<
   } = req.body;
   if (!nombre) { res.status(400).json({ error: 'nombre es requerido' }); return; }
   try {
+    if (animal_id) {
+      const animalCheck = await query('SELECT id FROM animales WHERE id=$1 AND refugio_id=$2', [animal_id, refugioId]);
+      if (animalCheck.rows.length === 0) { res.status(404).json({ error: 'Animal no encontrado' }); return; }
+    }
     const result = await query(
       `INSERT INTO adoption_requests (refugio_id, animal_id, nombre, email, telefono,
        tipo_vivienda, tiene_terraza, horas_solo, experiencia_previa, otros_animales,
@@ -211,7 +215,7 @@ export async function aprobarSolicitud(req: AuthRequest, res: Response): Promise
     );
 
     if (solicitud.animal_id) {
-      await query(`UPDATE animales SET estado='en_proceso' WHERE id=$1`, [solicitud.animal_id]);
+      await query(`UPDATE animales SET estado='en_proceso' WHERE id=$1 AND refugio_id=$2`, [solicitud.animal_id, refugioId]);
     }
 
     res.json({ ok: true, expedient_id: expId });
@@ -325,8 +329,8 @@ export async function cerrarExpediente(req: AuthRequest, res: Response): Promise
 
     if (exp.animal_id) {
       await query(
-        `UPDATE animales SET estado='fallecido', web_publicado=false WHERE id=$1`,
-        [exp.animal_id]
+        `UPDATE animales SET estado='fallecido', web_publicado=false WHERE id=$1 AND refugio_id=$2`,
+        [exp.animal_id, refugioId]
       );
       // Actually use a different status — mark as adopted via estado field
       // The enum doesn't have 'adoptado' so we use 'fallecido' temporarily

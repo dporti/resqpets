@@ -495,6 +495,16 @@ Auditoría 2026-06: revisados los 21 controllers de `backend/src/controllers/`. 
 - ✅ `mensajes.controller.ts`: `getMessages`, `sendMessage` y `markRead` verifican `shelter_id` de la conversación además de la participación del usuario; `createConversation` filtra `participant_ids` para que solo se añadan usuarios del mismo refugio.
 - ✅ `public.controller.ts` (`trackAnimalShare`): solo incrementa el contador de compartidos si `web_publicado=true`.
 
+Auditoría 2026-06 (segunda pasada — controllers restantes: config, instagram, calendario, billing, dashboard, assistant, voluntarios, reportes, acogidas, adopciones). Hallazgos corregidos:
+
+- ✅ `acogidas.controller.ts` (`asignarAnimal`): `animal_id` (del body) ahora se valida contra `refugio_id` antes de crear la asignación y de actualizar `animales` — antes podía asignar/mutar un animal de otro refugio a una familia de acogida.
+- ✅ `adopciones.controller.ts` (`createSolicitud`): `animal_id` ahora se valida contra `refugio_id` antes del INSERT en `adoption_requests` — antes una solicitud podía referenciar un animal de otro refugio. `aprobarSolicitud` y `cerrarExpediente` añaden `AND refugio_id=$N` a los `UPDATE animales` correspondientes (defensa en profundidad).
+- ✅ `config.controller.ts` (`toggleMemberStatus`, `removeMember`): los `UPDATE usuarios` ahora incluyen `AND refugio_id=$N` (antes la verificación de pertenencia era solo en el SELECT previo).
+- ✅ `voluntarios.controller.ts` (`completeTask`): el `UPDATE tasks` y los `UPDATE usuarios SET karma_puntos=...` ahora incluyen `AND refugio_id=$N`.
+- ✅ `calendario.controller.ts` (`createEvent`, `updateEvent`): `animal_id` y `assigned_to` ahora se validan contra `refugio_id` antes de guardarse en el evento.
+
+Sin hallazgos: `instagram.controller.ts`, `billing.controller.ts`, `dashboard.controller.ts`, `assistant.controller.ts`, `reportes.controller.ts`, `voluntarios.controller.ts:getVoluntario`.
+
 Nuevo helper: `backend/src/lib/tenant.ts` con `getRefugioId(req)` y `assertRefugioOwnership(table, id, refugioId)` para futuros endpoints.
 
 Pendiente / fuera de alcance:

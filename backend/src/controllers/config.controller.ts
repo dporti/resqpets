@@ -144,7 +144,7 @@ export async function toggleMemberStatus(req: AuthRequest, res: Response) {
     if (!cur.rows.length) return res.status(404).json({ error: 'Usuario no encontrado' });
 
     const newStatus = !cur.rows[0].activo;
-    await query('UPDATE usuarios SET activo=$1 WHERE id=$2', [newStatus, memberId]);
+    await query('UPDATE usuarios SET activo=$1 WHERE id=$2 AND refugio_id=$3', [newStatus, memberId, refugioId]);
 
     const actorRes = await query('SELECT nombre FROM usuarios WHERE id=$1', [userId]);
     await logAudit(refugioId, userId, actorRes.rows[0]?.nombre, newStatus ? 'user_activated' : 'user_deactivated', 'usuario', Number(memberId), cur.rows[0].nombre);
@@ -166,7 +166,7 @@ export async function removeMember(req: AuthRequest, res: Response) {
     if (!memberRes.rows.length) return res.status(404).json({ error: 'Usuario no encontrado' });
 
     // Desasociar en lugar de eliminar (preserva datos)
-    await query('UPDATE usuarios SET refugio_id=NULL, activo=false WHERE id=$1', [memberId]);
+    await query('UPDATE usuarios SET refugio_id=NULL, activo=false WHERE id=$1 AND refugio_id=$2', [memberId, refugioId]);
 
     const actorRes = await query('SELECT nombre FROM usuarios WHERE id=$1', [userId]);
     await logAudit(refugioId, userId, actorRes.rows[0]?.nombre, 'user_removed', 'usuario', Number(memberId), memberRes.rows[0].nombre);

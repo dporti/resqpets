@@ -95,6 +95,17 @@ export async function createEvent(req: AuthRequest, res: Response) {
 
     if (!title || !start_at) return res.status(400).json({ error: 'Título y fecha requeridos' });
 
+    let validAnimalId = null;
+    if (animal_id) {
+      const a = await query('SELECT id FROM animales WHERE id=$1 AND refugio_id=$2', [animal_id, refugioId]);
+      validAnimalId = a.rows.length ? animal_id : null;
+    }
+    let validAssignedTo: number[] = [];
+    if (assigned_to.length) {
+      const u = await query('SELECT id FROM usuarios WHERE id = ANY($1) AND refugio_id=$2', [assigned_to, refugioId]);
+      validAssignedTo = u.rows.map((r: { id: number }) => r.id);
+    }
+
     const r = await query(`
       INSERT INTO events (shelter_id, title, event_type, color, start_at, end_at, all_day,
         location, description, animal_id, assigned_to, reminder_minutes,
@@ -103,8 +114,8 @@ export async function createEvent(req: AuthRequest, res: Response) {
       RETURNING *
     `, [
       refugioId, title, event_type, color || null, start_at, end_at || null, all_day,
-      location || null, description || null, animal_id || null,
-      assigned_to.length ? assigned_to : null,
+      location || null, description || null, validAnimalId,
+      validAssignedTo.length ? validAssignedTo : null,
       reminder_minutes || null, is_recurring, recurrence_rule || null,
       recurrence_end_date || null, userId,
     ]);
@@ -126,6 +137,17 @@ export async function updateEvent(req: AuthRequest, res: Response) {
       location, description, animal_id, assigned_to, reminder_minutes,
       is_recurring, recurrence_rule, recurrence_end_date,
     } = req.body;
+
+    let validAnimalId = null;
+    if (animal_id) {
+      const a = await query('SELECT id FROM animales WHERE id=$1 AND refugio_id=$2', [animal_id, refugioId]);
+      validAnimalId = a.rows.length ? animal_id : null;
+    }
+    let validAssignedTo: number[] | null = null;
+    if (assigned_to) {
+      const u = await query('SELECT id FROM usuarios WHERE id = ANY($1) AND refugio_id=$2', [assigned_to, refugioId]);
+      validAssignedTo = u.rows.map((r: { id: number }) => r.id);
+    }
 
     const r = await query(`
       UPDATE events SET
@@ -149,8 +171,8 @@ export async function updateEvent(req: AuthRequest, res: Response) {
     `, [
       id, refugioId, title || null, event_type || null, color || null,
       start_at || null, end_at || null, all_day ?? null, location || null,
-      description || null, animal_id || null,
-      assigned_to ? assigned_to : null, reminder_minutes || null,
+      description || null, validAnimalId,
+      validAssignedTo, reminder_minutes || null,
       is_recurring ?? null, recurrence_rule || null, recurrence_end_date || null,
     ]);
 

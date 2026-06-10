@@ -121,6 +121,9 @@ export async function asignarAnimal(req: AuthRequest, res: Response): Promise<vo
     const familia = fam.rows[0];
     if (familia.animales_actuales >= familia.max_animales) { res.status(400).json({ error: 'Familia sin slots disponibles' }); return; }
 
+    const animalRes = await query(`SELECT nombre, estado_salud, fecha_nacimiento FROM animales WHERE id=$1 AND refugio_id=$2`, [animal_id, refugioId]);
+    if (animalRes.rows.length === 0) { res.status(404).json({ error: 'Animal no encontrado' }); return; }
+
     const result = await query(
       `INSERT INTO foster_assignments (refugio_id,animal_id,familia_id,iniciada_at,fin_estimado_at,notas_coordinador,creado_por)
        VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
@@ -133,10 +136,9 @@ export async function asignarAnimal(req: AuthRequest, res: Response): Promise<vo
       [newCount, id]
     );
 
-    const animalRes = await query(`SELECT nombre, estado_salud, fecha_nacimiento FROM animales WHERE id=$1`, [animal_id]);
-    if (animalRes.rows.length > 0) {
+    {
       const a = animalRes.rows[0];
-      await query(`UPDATE animales SET estado='en_acogida', ubicacion_texto=$1 WHERE id=$2`, [familia.nombre, animal_id]);
+      await query(`UPDATE animales SET estado='en_acogida', ubicacion_texto=$1 WHERE id=$2 AND refugio_id=$3`, [familia.nombre, animal_id, refugioId]);
       await query(
         `INSERT INTO actividad (refugio_id,animal_id,usuario_id,tipo,titulo) VALUES ($1,$2,$3,'acogida',$4)`,
         [refugioId, animal_id, req.user!.userId, `Asignado a acogida en ${familia.nombre}`]

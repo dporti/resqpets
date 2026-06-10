@@ -158,8 +158,8 @@ export async function completeTask(req: AuthRequest, res: Response): Promise<voi
     const nuevoEstado = completed ? 'pending' : 'completed';
 
     await query(
-      `UPDATE tasks SET estado=$1, completada_at=$2, completada_por=$3 WHERE id=$4`,
-      [nuevoEstado, completed ? null : new Date().toISOString(), completed ? null : userId, id]
+      `UPDATE tasks SET estado=$1, completada_at=$2, completada_por=$3 WHERE id=$4 AND refugio_id=$5`,
+      [nuevoEstado, completed ? null : new Date().toISOString(), completed ? null : userId, id, refugioId]
     );
 
     // Karma solo al completar, para cada asignado
@@ -171,7 +171,7 @@ export async function completeTask(req: AuthRequest, res: Response): Promise<voi
            VALUES ($1,'voluntario',$2,$3,$4)`,
           [refugioId, uid, pts, `Tarea completada (${task.prioridad}): ${task.titulo}`]
         );
-        await query(`UPDATE usuarios SET karma_puntos=karma_puntos+$1, ultima_actividad=NOW() WHERE id=$2`, [pts, uid]);
+        await query(`UPDATE usuarios SET karma_puntos=karma_puntos+$1, ultima_actividad=NOW() WHERE id=$2 AND refugio_id=$3`, [pts, uid, refugioId]);
       }
     }
 
